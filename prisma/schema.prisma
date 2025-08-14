@@ -1,0 +1,64 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Project {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  longDescription String? @db.Text
+  image       String?
+  images      String[] // untuk multiple images
+  technologies String[] // tech stack yang digunakan
+  demoUrl     String?
+  sourceUrl   String?
+  status      ProjectStatus @default(COMPLETED)
+  featured    Boolean  @default(false) // untuk highlight project tertentu
+  startDate   DateTime?
+  endDate     DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  
+  @@map("projects")
+}
+
+model SocialLink {
+  id       String @id @default(cuid())
+  platform String // "github", "linkedin", "twitter", "email", dll
+  url      String
+  username String?
+  
+  @@map("social_links")
+}
+
+model Tag {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  slug      String   @unique
+  color     String?  // hex color untuk styling
+  createdAt DateTime @default(now())
+  
+  // Relasi
+  
+  @@map("tags")
+}
+
+enum ProjectStatus {
+  PLANNING
+  IN_PROGRESS
+  COMPLETED
+  ON_HOLD
+  ARCHIVED
+}
