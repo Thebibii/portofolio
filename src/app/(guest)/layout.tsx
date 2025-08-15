@@ -1,15 +1,14 @@
-"use client";
 import { AnimatedGridPattern } from "@/components/magicui/animated-grid-pattern";
-import FeaturedSection from "@/components/reusable/home/featured-section";
 import Footer from "@/components/reusable/home/footer";
 import Navbar from "@/components/reusable/navbar";
-
-import { useAdminProjects } from "@/hooks/react-query/admin/projects/use-query";
 import { cn } from "@/lib/utils";
 import { Fragment } from "react";
 
-export default function Home() {
-  const { data } = useAdminProjects();
+export default function Layout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
     <Fragment>
       <AnimatedGridPattern
@@ -17,12 +16,12 @@ export default function Home() {
         maxOpacity={0.1}
         duration={3}
         repeatDelay={1}
-        className={cn("inset-x-0 inset-y-[-30%] -z-50 h-full skew-y-12")}
+        className={cn(
+          "inset-x-0 inset-y-[-30%]  opacity-40 -z-50 h-full skew-y-12"
+        )}
       />
       <Navbar />
-      <main className="">
-        <FeaturedSection data={data?.data} />
-      </main>
+      <main>{children}</main>
       <Footer />
     </Fragment>
   );

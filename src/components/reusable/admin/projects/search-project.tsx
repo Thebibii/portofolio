@@ -128,7 +128,7 @@ export default function SearchProject({
         )}
 
         <Button asChild>
-          <Link href="/project/create">
+          <Link href="/admin/project/create">
             <Icons.Plus className="h-4 w-4" />
             Create
           </Link>

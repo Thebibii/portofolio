@@ -25,19 +25,32 @@ const projectSchema = z.object({
   ),
 });
 
+function isValidCUID(str: string): boolean {
+  const cuidRegex = /^c[0-9a-z]{24}$/i;
+  return cuidRegex.test(str);
+}
+
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ slug: string }> }
 ) {
   try {
-    // Validasi params.id
+    const { slug } = await params;
 
-    const { id } = await params;
+    let data;
 
-    // Ambil data project dari DB
-    const data = await prisma.project.findUnique({
-      where: { id },
-    });
+    if (isValidCUID(slug)) {
+      // Jika UUID, cari berdasarkan id
+      data = await prisma.project.findUnique({
+        where: { id: slug },
+      });
+    } else {
+      data = await prisma.project.findFirst({
+        where: {
+          title: slug,
+        },
+      });
+    }
 
     if (!data) {
       return NextResponse.json(
@@ -48,6 +61,7 @@ export async function GET(
 
     return NextResponse.json({ data });
   } catch (error) {
+    console.error("Error fetching project:", error);
     return NextResponse.json(
       { message: "Terjadi kesalahan pada server" },
       { status: 500 }
@@ -57,17 +71,17 @@ export async function GET(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ slug: string }> }
 ) {
   try {
-    const { id } = await params;
+    const { slug } = await params;
 
-    if (!id) {
+    if (!slug) {
       return NextResponse.json({ message: "ID is required" }, { status: 400 });
     }
 
     const data = await prisma.project.delete({
-      where: { id },
+      where: { id: slug },
       select: { id: true },
     });
 
@@ -90,10 +104,10 @@ export async function DELETE(
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ slug: string }> }
 ) {
   try {
-    const { id } = await params;
+    const { slug } = await params;
     const json = await req.json();
 
     // Validasi body
@@ -101,7 +115,7 @@ export async function PUT(
 
     // Cek apakah project ada
     const existingProject = await prisma.project.findUnique({
-      where: { id },
+      where: { id: slug },
     });
     if (!existingProject) {
       return NextResponse.json(
@@ -112,7 +126,7 @@ export async function PUT(
 
     // Update project
     const data = await prisma.project.update({
-      where: { id },
+      where: { id: slug },
       data: {
         ...body,
         startDate: json.startDate ? new Date(json.startDate) : undefined,

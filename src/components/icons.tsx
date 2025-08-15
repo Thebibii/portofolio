@@ -1,9 +1,11 @@
 import {
   Edit,
   ExternalLink,
+  Eye,
   Filter,
   Github,
   Instagram,
+  Link,
   Mail,
   Menu,
   Plus,
@@ -25,4 +27,6 @@ export const Icons = {
   Plus: (props: IconProps) => <Plus {...props} />,
   Filter: (props: IconProps) => <Filter {...props} />,
   X: (props: IconProps) => <X {...props} />,
+  Eye: (props: IconProps) => <Eye {...props} />,
+  Link: (props: IconProps) => <Link {...props} />,
 };

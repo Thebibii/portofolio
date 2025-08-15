@@ -1,12 +1,12 @@
 "use client";
 import { useState, useCallback } from "react";
-import CardProject from "@/components/reusable/admin/projects/card-project";
 import SearchProject from "@/components/reusable/admin/projects/search-project";
 import { AdminProjectsSkeleton } from "@/components/reusable/skeleton/AdminProjectsSkeleton";
 import LoadingState from "@/components/reusable/state/loading-state";
 
 import { useAdminProjects } from "@/hooks/react-query/admin/projects/use-query";
 import { Project } from "@prisma/client";
+import AdminProjectCard from "@/components/reusable/admin/projects/admin-project-card";
 
 export default function Page() {
   const { data, isLoading } = useAdminProjects();
@@ -33,7 +33,7 @@ export default function Page() {
           onSearchResults={handleSearchResults}
         />
         <div className="grid grid-rows-1 gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-          <CardProject data={projectsToShow} />
+          <AdminProjectCard data={projectsToShow} />
         </div>
       </LoadingState>
     </div>

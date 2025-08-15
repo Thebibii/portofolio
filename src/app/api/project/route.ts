@@ -30,7 +30,9 @@ const projectSchema = z.object({
 
 export async function GET() {
   try {
-    const data = await prisma.project.findMany();
+    const data = await prisma.project.findMany({
+      orderBy: { createdAt: "desc" },
+    });
 
     return NextResponse.json({ success: true, data });
   } catch (error) {

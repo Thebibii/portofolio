@@ -1,6 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import {
+  useController,
+  Control,
+  FieldPath,
+  FieldValues,
+} from "react-hook-form";
 import {
   InitialConfigType,
   LexicalComposer,
@@ -10,10 +16,20 @@ import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary";
 import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
 import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
 import { HeadingNode, QuoteNode } from "@lexical/rich-text";
-import { ParagraphNode, TextNode } from "lexical";
+import { ParagraphNode, TextNode, ElementNode, LexicalNode } from "lexical";
 import { TabIndentationPlugin } from "@lexical/react/LexicalTabIndentationPlugin";
 import { AutoLinkNode, LinkNode } from "@lexical/link";
 import { ClickableLinkPlugin } from "@lexical/react/LexicalClickableLinkPlugin";
+import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
+import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
+import { $generateHtmlFromNodes, $generateNodesFromDOM } from "@lexical/html";
+import {
+  $getRoot,
+  $insertNodes,
+  EditorState,
+  $createTextNode,
+  $createParagraphNode,
+} from "lexical";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { editorTheme } from "./editor/themes/editor-theme";
 import { ToolbarPlugin } from "./editor/plugins/toolbar/toolbar-plugin";
@@ -60,6 +76,10 @@ import { ElementFormatToolbarPlugin } from "./editor/plugins/toolbar/element-for
 import { MarkdownTogglePlugin } from "./editor/plugins/actions/markdown-toggle-plugin";
 import { CodeLanguageToolbarPlugin } from "./editor/plugins/toolbar/code-language-toolbar-plugin";
 import { CodeHighlightNode, CodeNode } from "@lexical/code";
+import {
+  parseHtmlWithStyles,
+  StyledSpanNode,
+} from "./editor/nodes/styled-span-font";
 
 const editorConfig: InitialConfigType = {
   namespace: "Editor",
@@ -78,33 +98,154 @@ const editorConfig: InitialConfigType = {
     YouTubeNode,
     CodeNode,
     CodeHighlightNode,
+    StyledSpanNode, // 🎯 Add our custom node!
   ],
   onError: (error: Error) => {
     console.error(error);
   },
 };
 
-export function RichTextEditorDemo() {
+// Plugin untuk menangani perubahan nilai dan sinkronisasi dengan React Hook Form
+function ReactHookFormPlugin({
+  onChange,
+  onBlur,
+  initialValue,
+}: {
+  onChange: (html: string) => void;
+  onBlur?: () => void;
+  initialValue?: string;
+}) {
+  const [editor] = useLexicalComposerContext();
+  const [isFirstRender, setIsFirstRender] = useState(true);
+
+  useEffect(() => {
+    if (initialValue && isFirstRender) {
+      editor.update(() => {
+        console.log("🚀 Loading initial value:", initialValue);
+
+        // 🔧 Gunakan custom parser untuk preserve styled spans
+        const nodes = parseHtmlWithStyles(initialValue);
+
+        console.log("🏗️ Created nodes:", nodes);
+
+        $getRoot().select();
+        $getRoot().clear();
+        $insertNodes(nodes);
+
+        console.log("✅ Nodes inserted successfully");
+      });
+      setIsFirstRender(false);
+    }
+  }, [editor, initialValue, isFirstRender]);
+
+  useEffect(() => {
+    if (!onBlur) return;
+
+    const removeListener = editor.registerRootListener(
+      (rootElement, prevRootElement) => {
+        if (prevRootElement !== null) {
+          prevRootElement.removeEventListener("blur", onBlur);
+        }
+        if (rootElement !== null) {
+          rootElement.addEventListener("blur", onBlur);
+        }
+      }
+    );
+
+    return () => {
+      removeListener();
+    };
+  }, [editor, onBlur]);
+
+  const handleEditorChange = (editorState: EditorState) => {
+    editorState.read(() => {
+      const htmlString = $generateHtmlFromNodes(editor);
+      console.log("📤 Final HTML output:", htmlString);
+      onChange(htmlString);
+    });
+  };
+
+  return <OnChangePlugin onChange={handleEditorChange} />;
+}
+
+// Props untuk RichTextEditor yang terintegrasi dengan React Hook Form
+interface RichTextEditorProps<
+  TFieldValues extends FieldValues = FieldValues,
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+> {
+  control: Control<TFieldValues>;
+  name: TName;
+  placeholder?: string;
+  disabled?: boolean;
+  className?: string;
+}
+
+export function RichTextEditor<
+  TFieldValues extends FieldValues = FieldValues,
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+>({
+  control,
+  name,
+  placeholder = "Start typing...",
+  disabled = false,
+  className,
+}: RichTextEditorProps<TFieldValues, TName>) {
+  const {
+    field: { onChange, value, onBlur },
+    fieldState: { error },
+  } = useController({
+    name,
+    control,
+  });
+
   return (
-    <div className="bg-background w-full overflow-hidden rounded-lg border">
+    <div
+      className={`bg-background w-full overflow-hidden rounded-lg border ${
+        className || ""
+      } ${error ? "border-destructive" : ""}`}
+    >
       <LexicalComposer
         initialConfig={{
           ...editorConfig,
+          editable: !disabled,
         }}
       >
         <TooltipProvider>
           <FloatingLinkContext>
-            <Plugins />
+            <Plugins
+              placeholder={placeholder}
+              onChange={onChange}
+              onBlur={onBlur}
+              initialValue={value}
+              disabled={disabled}
+            />
           </FloatingLinkContext>
         </TooltipProvider>
       </LexicalComposer>
+      {error && (
+        <p className="text-sm font-medium text-destructive mt-1 px-2">
+          {error.message}
+        </p>
+      )}
     </div>
   );
 }
 
-const placeholder = "Start typing...";
+interface PluginsProps {
+  placeholder: string;
+  onChange: (value: string) => void;
+  onBlur: () => void;
+  initialValue?: string;
+  disabled?: boolean;
+}
 
-export function Plugins() {
+function Plugins({
+  placeholder,
+  onChange,
+  onBlur,
+  initialValue,
+  disabled,
+}: PluginsProps) {
   const [floatingAnchorElem, setFloatingAnchorElem] =
     useState<HTMLDivElement | null>(null);
 
@@ -116,44 +257,44 @@ export function Plugins() {
 
   return (
     <div className="relative">
-      {/* toolbar plugins */}
-      <ToolbarPlugin>
-        {({ blockType }) => (
-          <div className="vertical-align-middle sticky top-0 z-10 flex items-center gap-2 overflow-auto border-b p-1">
-            <HistoryToolbarPlugin />
-            <Separator orientation="vertical" className="!h-7" />
-            <BlockFormatDropDown>
-              <FormatHeading levels={["h1", "h2", "h3"]} />
-              <FormatNumberedList />
-              {/* <FormatBulletedList /> */}
-              <FormatCodeBlock />
-              <FormatQuote />
-            </BlockFormatDropDown>
-            {blockType === "code" ? <CodeLanguageToolbarPlugin /> : <></>}
-            <FontFamilyToolbarPlugin />
-            <FontSizeToolbarPlugin />
-            <Separator orientation="vertical" className="!h-7" />
-            <FontFormatToolbarPlugin format="bold" />
-            <FontFormatToolbarPlugin format="italic" />
-            <FontFormatToolbarPlugin format="underline" />
-            <FontFormatToolbarPlugin format="strikethrough" />
-            <Separator orientation="vertical" className="!h-7" />
-            <SubSuperToolbarPlugin />
-            <LinkToolbarPlugin />
-            <Separator orientation="vertical" className="!h-7" />
-            <ClearFormattingToolbarPlugin />
-            <Separator orientation="vertical" className="!h-7" />
-            <FontColorToolbarPlugin />
-            <FontBackgroundToolbarPlugin />
-            <Separator orientation="vertical" className="!h-7" />
-            <ElementFormatToolbarPlugin />
-            <Separator orientation="vertical" className="!h-7" />
-            <BlockInsertPlugin>
-              <InsertEmbeds />
-            </BlockInsertPlugin>
-          </div>
-        )}
-      </ToolbarPlugin>
+      {!disabled && (
+        <ToolbarPlugin>
+          {({ blockType }) => (
+            <div className="vertical-align-middle sticky top-0 z-10 flex items-center gap-2 overflow-auto border-b p-1">
+              <HistoryToolbarPlugin />
+              <Separator orientation="vertical" className="!h-7" />
+              <BlockFormatDropDown>
+                <FormatHeading levels={["h1", "h2", "h3"]} />
+                <FormatNumberedList />
+                <FormatCodeBlock />
+                <FormatQuote />
+              </BlockFormatDropDown>
+              {blockType === "code" ? <CodeLanguageToolbarPlugin /> : <></>}
+              <FontFamilyToolbarPlugin />
+              <FontSizeToolbarPlugin />
+              <Separator orientation="vertical" className="!h-7" />
+              <FontFormatToolbarPlugin format="bold" />
+              <FontFormatToolbarPlugin format="italic" />
+              <FontFormatToolbarPlugin format="underline" />
+              <FontFormatToolbarPlugin format="strikethrough" />
+              <Separator orientation="vertical" className="!h-7" />
+              <SubSuperToolbarPlugin />
+              <LinkToolbarPlugin />
+              <Separator orientation="vertical" className="!h-7" />
+              <ClearFormattingToolbarPlugin />
+              <Separator orientation="vertical" className="!h-7" />
+              <FontColorToolbarPlugin />
+              <FontBackgroundToolbarPlugin />
+              <Separator orientation="vertical" className="!h-7" />
+              <ElementFormatToolbarPlugin />
+              <Separator orientation="vertical" className="!h-7" />
+              <BlockInsertPlugin>
+                <InsertEmbeds />
+              </BlockInsertPlugin>
+            </div>
+          )}
+        </ToolbarPlugin>
+      )}
 
       <div className="relative">
         <RichTextPlugin
@@ -162,12 +303,20 @@ export function Plugins() {
               <div className="" ref={onRef}>
                 <ContentEditable
                   placeholder={placeholder}
-                  className="ContentEditable__root relative block h-72 min-h-72 min-h-full overflow-auto px-8 py-4 focus:outline-none"
+                  className={`ContentEditable__root relative block h-72 min-h-72 min-h-full overflow-auto px-8 py-4 focus:outline-none ${
+                    disabled ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
                 />
               </div>
             </div>
           }
           ErrorBoundary={LexicalErrorBoundary}
+        />
+
+        <ReactHookFormPlugin
+          onChange={onChange}
+          onBlur={onBlur}
+          initialValue={initialValue}
         />
         <HistoryPlugin />
         <ListPlugin />
@@ -183,29 +332,32 @@ export function Plugins() {
         <FloatingLinkEditorPlugin anchorElem={floatingAnchorElem} />
         <CodeHighlightPlugin />
         <CodeActionMenuPlugin anchorElem={floatingAnchorElem} />
-        {/* rest of the plugins */}
-        <ActionsPlugin>
-          <div className="clear-both flex items-center justify-between gap-2 overflow-auto border-t p-1">
-            <div className="flex flex-1 justify-start">
-              {/* left side action buttons */}
+
+        {!disabled && (
+          <ActionsPlugin>
+            <div className="clear-both flex items-center justify-between gap-2 overflow-auto border-t p-1">
+              <div className="flex flex-1 justify-start">
+                {/* left side action buttons */}
+              </div>
+              <div>
+                {/* center action buttons */}
+                <CounterCharacterPlugin charset="UTF-16" />
+              </div>
+              <div className="flex flex-1 justify-end">
+                {/* right side action buttons */}
+                <>
+                  <EditModeTogglePlugin />
+                  <ClearEditorActionPlugin />
+                  <ClearEditorPlugin />
+                  <SpeechToTextPlugin />
+                </>
+              </div>
             </div>
-            <div>
-              {/* center action buttons */}
-              <CounterCharacterPlugin charset="UTF-16" />
-            </div>
-            <div className="flex flex-1 justify-end">
-              {/* right side action buttons */}
-              <>
-                <EditModeTogglePlugin />
-                <ClearEditorActionPlugin />
-                <ClearEditorPlugin />
-                <SpeechToTextPlugin />
-                <MarkdownTogglePlugin shouldPreserveNewLinesInMarkdown={true} />
-              </>
-            </div>
-          </div>
-        </ActionsPlugin>
+          </ActionsPlugin>
+        )}
       </div>
     </div>
   );
 }
+
+// Export helper functions

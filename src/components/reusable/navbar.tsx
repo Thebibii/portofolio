@@ -16,13 +16,15 @@ export default function Navbar() {
     <header className="w-full font-mono">
       <div className="@container">
         <nav className="flex items-center justify-between p-6 lg:px-12">
-          <div className="group flex items-center space-x-4">
-            <Avatar className="size-10">
-              <AvatarImage src="https://github.com/shadcn.png" />
-              <AvatarFallback>CN</AvatarFallback>
-            </Avatar>
-            <h2>Habibie Bayezid Wildan</h2>
-          </div>
+          <Link href="/">
+            <div className="group flex items-center space-x-4">
+              <Avatar className="size-10">
+                <AvatarImage src="https://github.com/shadcn.png" />
+                <AvatarFallback>CN</AvatarFallback>
+              </Avatar>
+              <h2>Habibie Bayezid Wildan</h2>
+            </div>
+          </Link>
           <ul className="hidden lg:flex lg:space-x-12">
             {NavList.map((item, _) => (
               <li key={_ + 1} className="capitalize">

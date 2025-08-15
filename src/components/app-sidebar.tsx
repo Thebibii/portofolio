@@ -37,7 +37,7 @@ const data = {
     },
     {
       title: "Project",
-      url: "/project",
+      url: "/admin/project",
       icon: Projector,
     },
     {

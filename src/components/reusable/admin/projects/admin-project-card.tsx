@@ -14,10 +14,10 @@ import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 import DeleteProject from "./delete-project";
 import { Project } from "@prisma/client";
-export default function CardProject({ data }: { data: Project[] }) {
+export default function AdminProjectCard({ data }: { data: Project[] }) {
   return (
     <>
-      {data.map((item) => (
+      {data?.map((item) => (
         <Card className="w-full max-w-sm" key={item?.id}>
           <div className="aspect-[16/9] w-full overflow-hidden  bg-gray-100">
             <img
@@ -73,7 +73,7 @@ export default function CardProject({ data }: { data: Project[] }) {
             </div>
             <div className="flex flex-row space-x-2">
               <Button asChild variant={"outline"} size={"icon"}>
-                <Link href={`/project/${item.id}`}>
+                <Link href={`/admin/project/${item.id}`}>
                   <Icons.Edit />
                 </Link>
               </Button>

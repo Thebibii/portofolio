@@ -45,6 +45,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useAdminProjectById } from "@/hooks/react-query/admin/projects/use-query";
 import LoadingState from "../../state/loading-state";
 import ProjectFormSkeleton from "../../skeleton/project-form-skeleton";
+import { RichTextEditor } from "@/components/RichTextEditor";
 
 const projectSchema = z.object({
   title: z.string().min(1, "Title is required"),
@@ -225,26 +226,10 @@ export default function FormEditProject({
                 )}
               />
 
-              <FormField
+              <RichTextEditor
                 control={form.control}
                 name="longDescription"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Detailed Description</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        placeholder="Detailed description of the project, features, and technical details"
-                        className="resize-none"
-                        rows={6}
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormDescription>
-                      Provide a comprehensive overview of the project
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                placeholder="Start typing your detailed description..."
               />
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
