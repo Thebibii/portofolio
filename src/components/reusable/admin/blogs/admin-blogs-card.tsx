@@ -71,7 +71,7 @@ export function AdminBlogsCard({ post, onDelete }: AdminBlogsCardProps) {
             <img
               src={post.coverImage}
               alt={post.title}
-              className="w-full h-32 object-cover"
+              className="w-full object-cover"
             />
           </div>
         )}

@@ -11,8 +11,8 @@ export default function Page() {
   const other = data?.data?.filter((item: Project) => item.featured === false);
 
   return (
-    <div className="space-y-4  font-mono  mx-auto w-full max-w-6xl px-6 lg:px-8 xl:px-0">
-      <section className="lg:pt-24 pt-9 space-y-6 pb-10">
+    <div className="space-y-4 font-mono lg:pt-24 pt-9 mx-auto w-full max-w-6xl px-6 lg:px-8 xl:px-0">
+      <section className=" space-y-6 pb-10">
         <header className="space-y-4">
           <h1 className="font-bold tracking-tight font-mono text-5xl">
             Main Projects

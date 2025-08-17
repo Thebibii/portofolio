@@ -3,21 +3,17 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
-  CardAction,
-  CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
-import { Project } from "@prisma/client";
-export default function ProjectCard({ data }: { data: Project[] }) {
+export default function ProjectCard({ data }: { data: any }) {
   return (
     <>
-      {data?.slice(0, 4).map((item) => (
-        <Card className="w-full font-mono " key={item?.id}>
+      {data?.map((item: any) => (
+        <Card className="w-full font-mono " key={item?.slug}>
           <CardHeader className="space-y-1">
             <div className="aspect-[16/9] w-full overflow-hidden rounded-md bg-gray-100 ">
               <img

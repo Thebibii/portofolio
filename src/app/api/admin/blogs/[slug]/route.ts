@@ -25,7 +25,7 @@ export async function GET(
     const { slug } = await params;
 
     const data = await prisma.post.findUnique({
-      where: { slug },
+      where: { slug, type: "BLOG" },
     });
 
     if (!data) {

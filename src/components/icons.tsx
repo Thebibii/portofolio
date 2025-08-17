@@ -1,4 +1,5 @@
 import {
+  BookOpen,
   Calendar,
   Clock,
   Edit,
@@ -6,6 +7,7 @@ import {
   Eye,
   Filter,
   Github,
+  Heart,
   Instagram,
   Link,
   Mail,
@@ -39,4 +41,6 @@ export const Icons = {
   StarOff: (props: IconProps) => <StarOff {...props} />,
   Calendar: (props: IconProps) => <Calendar {...props} />,
   Clock: (props: IconProps) => <Clock {...props} />,
+  BookOpen: (props: IconProps) => <BookOpen {...props} />,
+  Heart: (props: IconProps) => <Heart {...props} />,
 };
