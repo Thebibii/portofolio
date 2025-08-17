@@ -1,3 +1,4 @@
+import { generateSlug } from "@/lib/genarate-slug";
 import prisma from "@/lib/prisma";
 import { ProjectFormData, ProjectStatus } from "@/types/projects";
 import { NextRequest, NextResponse } from "next/server";
@@ -54,6 +55,7 @@ export async function POST(req: NextRequest) {
         ...body,
         startDate: json.startDate ? new Date(json.startDate) : undefined,
         endDate: json.endDate ? new Date(json.endDate) : undefined,
+        slug: generateSlug(body.title),
       },
     });
 

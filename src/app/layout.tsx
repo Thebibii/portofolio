@@ -4,6 +4,7 @@ import "./globals.css";
 import { AnimatedGridPattern } from "@/components/magicui/animated-grid-pattern";
 import { cn } from "@/lib/utils";
 import { ReactQueryClientProvider } from "@/provider/react-query";
+import ProgressProvider from "@/provider/proggres-bar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,7 +31,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ReactQueryClientProvider>{children}</ReactQueryClientProvider>
+        <ReactQueryClientProvider>
+          <ProgressProvider>{children}</ProgressProvider>
+        </ReactQueryClientProvider>
       </body>
     </html>
   );

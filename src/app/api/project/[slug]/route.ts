@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import z from "zod";
 import { ProjectStatus } from "@prisma/client";
+import { generateSlug } from "@/lib/genarate-slug";
 const projectSchema = z.object({
   title: z.string().min(1, "Title is required"),
   description: z.string().min(1, "Description is required"),
@@ -47,7 +48,7 @@ export async function GET(
     } else {
       data = await prisma.project.findFirst({
         where: {
-          title: slug,
+          slug,
         },
       });
     }
@@ -131,6 +132,7 @@ export async function PUT(
         ...body,
         startDate: json.startDate ? new Date(json.startDate) : undefined,
         endDate: json.endDate ? new Date(json.endDate) : undefined,
+        slug: generateSlug(body.title),
       },
     });
 

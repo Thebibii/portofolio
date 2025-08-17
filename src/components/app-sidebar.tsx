@@ -46,8 +46,8 @@ const data = {
       icon: NotebookText,
     },
     {
-      title: "Blog",
-      url: "#",
+      title: "Blogs",
+      url: "/admin/blogs",
       icon: Folder,
     },
     {

@@ -16,6 +16,7 @@ datasource db {
 model Project {
   id          String   @id @default(cuid())
   title       String
+  slug        String
   description String?
   longDescription String? @db.Text
   image       String?
@@ -25,6 +26,7 @@ model Project {
   sourceUrl   String?
   status      ProjectStatus @default(COMPLETED)
   featured    Boolean  @default(false) // untuk highlight project tertentu
+  views       Int      @default(0) // tracking views/popularity
   startDate   DateTime?
   endDate     DateTime?
   createdAt   DateTime @default(now())
@@ -43,22 +45,100 @@ model SocialLink {
   @@map("social_links")
 }
 
-model Tag {
-  id        String   @id @default(cuid())
-  name      String   @unique
-  slug      String   @unique
-  color     String?  // hex color untuk styling
-  createdAt DateTime @default(now())
-  
-  // Relasi
-  
-  @@map("tags")
-}
-
 enum ProjectStatus {
   PLANNING
   IN_PROGRESS
   COMPLETED
   ON_HOLD
   ARCHIVED
+}
+
+model Post {
+  id          String      @id @default(cuid())
+  title       String
+  slug        String      @unique
+  content     String      @db.Text
+  excerpt     String?
+  coverImage  String?
+  status      PostStatus  @default(DRAFT)
+  featured    Boolean     @default(false)
+  type        PostType    @default(BLOG) // Tambah field ini
+  viewCount   Int         @default(0)
+  readingTime Int         @default(0) // dalam menit
+  publishedAt DateTime?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  // Relations
+  categoryId String?
+  category   Category?   @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  tags       PostTag[]
+  likes      Like[]
+
+  @@map("posts")
+}
+
+model Category {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  slug        String   @unique
+  description String?
+  color       String?  // untuk styling kategori
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  posts Post[]
+
+  @@map("categories")
+}
+
+model Tag {
+  id        String    @id @default(cuid())
+  name      String    @unique
+  slug      String    @unique
+  color     String?   // untuk styling tag
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  // Relations
+  posts PostTag[]
+
+  @@map("tags")
+}
+
+model PostTag {
+  postId String
+  tagId  String
+
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  tag  Tag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([postId, tagId])
+  @@map("post_tags")
+}
+
+model Like {
+  id           String   @id @default(cuid())
+  ipAddress    String   // untuk tracking like tanpa user authentication
+  userAgent    String?  // optional: untuk tracking device/browser
+  createdAt    DateTime @default(now())
+
+  // Relations
+  postId String
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@unique([ipAddress, postId]) // Satu IP hanya bisa like sekali per post
+  @@map("likes")
+}
+
+enum PostStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum PostType {
+  BLOG
+  WRITING
 }

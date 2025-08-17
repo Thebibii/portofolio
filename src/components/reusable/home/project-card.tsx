@@ -72,7 +72,7 @@ export default function ProjectCard({ data }: { data: Project[] }) {
               )}
             </div>
             <Button asChild className="bg-primary/90">
-              <Link href={`/projects/${item.title}`}>View detail</Link>
+              <Link href={`/projects/${item.slug}`}>View detail</Link>
             </Button>
           </CardFooter>
         </Card>

@@ -20,9 +20,11 @@ export default function Layout({
           "inset-x-0 inset-y-[-30%]  opacity-40 -z-50 h-full skew-y-12"
         )}
       />
-      <Navbar />
-      <main>{children}</main>
-      <Footer />
+      <div className="flex flex-col min-h-screen">
+        <Navbar />
+        <main className="flex-grow">{children}</main>
+        <Footer />
+      </div>
     </Fragment>
   );
 }

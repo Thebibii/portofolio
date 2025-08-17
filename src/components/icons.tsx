@@ -1,4 +1,6 @@
 import {
+  Calendar,
+  Clock,
   Edit,
   ExternalLink,
   Eye,
@@ -8,8 +10,11 @@ import {
   Link,
   Mail,
   Menu,
+  MoreHorizontal,
   Plus,
   Search,
+  Star,
+  StarOff,
   Trash2,
   X,
 } from "lucide-react";
@@ -29,4 +34,9 @@ export const Icons = {
   X: (props: IconProps) => <X {...props} />,
   Eye: (props: IconProps) => <Eye {...props} />,
   Link: (props: IconProps) => <Link {...props} />,
+  MoreHorizontal: (props: IconProps) => <MoreHorizontal {...props} />,
+  Star: (props: IconProps) => <Star {...props} />,
+  StarOff: (props: IconProps) => <StarOff {...props} />,
+  Calendar: (props: IconProps) => <Calendar {...props} />,
+  Clock: (props: IconProps) => <Clock {...props} />,
 };

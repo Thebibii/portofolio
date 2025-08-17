@@ -10,24 +10,27 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="">
+    <footer className="bg-neutral-50 text-sm">
       <Separator
         orientation="horizontal"
         className="bg-gradient-to-r from-[#f5f5f5] via-[#e5e5e5] to-[#f5f5f5]"
       />
-      <div className="font-mono @container w-full shrink-0 bg-neutral-50 text-sm px-24 py-8 grid md:grid-cols-2 gap-8 md:gap-16">
+      <div className="font-mono @container w-full shrink-0 px-24 py-8 grid md:grid-cols-2 gap-8 md:gap-16">
+        {/* Column 1: About */}
         <div>
-          <h4 className="text-lg">Habibie Bayezid Wildan</h4>
+          <h2 className="text-lg">Habibie Bayezid Wildan</h2>
           <p className="mt-3 text-muted-foreground">
             Help you rebuild and redefine fundamental concepts through mental
             models.
           </p>
           <div className="flex gap-3 mt-6">
-            {SocialMediaList.map((item, _) => (
-              <Tooltip key={_ + 1}>
+            {SocialMediaList.map((item, index) => (
+              <Tooltip key={index}>
                 <TooltipTrigger asChild>
                   <Button asChild size={"icon"} variant={"ghost"}>
-                    <Link href={item.link}>{item.icon}</Link>
+                    <Link href={item.link} aria-label={item.name}>
+                      {item.icon}
+                    </Link>
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
@@ -37,13 +40,16 @@ export default function Footer() {
             ))}
           </div>
         </div>
+
+        {/* Column 2: Navigation */}
         <div className="@container">
           <div className="@sm:grid-cols-3 grid-cols-2 grid gap-4 gap-y-10">
-            <div>
-              <p className="text-sm ">General</p>
+            {/* General Links */}
+            <nav aria-label="General links">
+              <p className="text-sm font-semibold">General</p>
               <ul className="mt-4 space-y-3 text-sm">
-                {NavList.map((item, _) => (
-                  <li key={_ + 1} className="capitalize">
+                {NavList.map((item, index) => (
+                  <li key={index} className="capitalize">
                     <Link
                       href={item.href}
                       className="text-muted-foreground hover:text-primary transition-colors"
@@ -53,60 +59,62 @@ export default function Footer() {
                   </li>
                 ))}
               </ul>
-            </div>
-            <div>
+            </nav>
+
+            {/* The Website Links */}
+            <nav aria-label="The Website links">
               <p className="text-sm text-neutral-500">The Website</p>
-              <ul className="text-neutral-300 mt-4 space-y-3 text-sm">
+              <ul className="mt-4 space-y-3 text-sm text-neutral-300">
                 <li>
                   <Link
-                    className="hover:text-neutral-50 transition-colors"
                     href="/bucket-list"
+                    className="hover:text-neutral-50 transition-colors"
                   >
                     Bucket List
                   </Link>
                 </li>
                 <li>
                   <Link
-                    className="hover:text-neutral-50 transition-colors"
                     href="/uses"
+                    className="hover:text-neutral-50 transition-colors"
                   >
                     Uses
                   </Link>
                 </li>
                 <li>
                   <Link
-                    className="hover:text-neutral-50 transition-colors"
                     href="/side-quests"
+                    className="hover:text-neutral-50 transition-colors"
                   >
                     Side Quests
                   </Link>
                 </li>
                 <li>
                   <Link
-                    className="hover:text-neutral-50 transition-colors"
                     href="/attribution"
+                    className="hover:text-neutral-50 transition-colors"
                   >
                     Attribution
                   </Link>
                 </li>
                 <li>
                   <Link
-                    className="hover:text-neutral-50 transition-colors"
                     href="/statistics"
+                    className="hover:text-neutral-50 transition-colors"
                   >
                     Statistics
                   </Link>
                 </li>
                 <li>
                   <Link
-                    className="hover:text-neutral-50 transition-colors"
                     href="/guestbook"
+                    className="hover:text-neutral-50 transition-colors"
                   >
                     Guest Book
                   </Link>
                 </li>
               </ul>
-            </div>
+            </nav>
           </div>
         </div>
       </div>
