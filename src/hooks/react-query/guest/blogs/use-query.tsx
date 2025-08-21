@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 interface BlogFilters {
   search?: string;
   tag?: string;
+  category?: string; // Add this line
   limit?: number;
   page?: number;
   sortBy?: string;
@@ -18,6 +19,7 @@ export const useGetGuestBlogs = (filters?: BlogFilters) => {
 
       if (filters?.search) params.append("search", filters.search);
       if (filters?.tag) params.append("tag", filters.tag);
+      if (filters?.category) params.append("category", filters.category); // Add this line
       if (filters?.limit) params.append("limit", filters.limit.toString());
       if (filters?.page) params.append("page", filters.page.toString());
       if (filters?.sortBy) params.append("sortBy", filters.sortBy);

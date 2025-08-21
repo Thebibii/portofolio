@@ -6,11 +6,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useGetGuestBlogs } from "@/hooks/react-query/guest/blogs/use-query";
 import { useGuestTags } from "@/hooks/react-query/guest/tags/use-query";
+import { useGuestCategory } from "@/hooks/react-query/guest/category/use-query";
+import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useDebounce } from "@/hooks/use-debounce"; // Anda perlu membuat hook ini atau install library
-import LoadingState from "@/components/reusable/state/loading-state";
-import { BlogsSkeleton } from "@/components/reusable/skeleton/blogs-skeleton";
+import { useDebounce } from "@/hooks/use-debounce";
 import {
   Select,
   SelectContent,
@@ -18,10 +18,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import LoadingState from "@/components/reusable/state/loading-state";
+import { BlogsSkeleton } from "@/components/reusable/skeleton/blogs-skeleton";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Scrollbar } from "@radix-ui/react-scroll-area";
 
 export default function Page() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const isMobile = useIsMobile();
 
   // State untuk filters
   const [searchQuery, setSearchQuery] = useState(
@@ -41,48 +47,145 @@ export default function Page() {
   const debouncedSearchQuery = useDebounce(searchQuery, 500);
 
   const activeTag = searchParams.get("tag");
+  const activeCategory = searchParams.get("category");
 
   // Fetch data dengan filters
   const { data, isLoading, error } = useGetGuestBlogs({
     search: debouncedSearchQuery,
     tag: activeTag || undefined,
+    category: activeCategory || undefined,
     page: currentPage,
-    limit: 2,
+    limit: 5,
     sortBy,
     sortOrder,
   });
 
-  const { data: tags } = useGuestTags();
+  const { data: category, isLoading: isLoadingCategory } = useGuestCategory();
+  const { data: tags, isLoading: isLoadingTags } = useGuestTags();
 
-  // Update URL when filters change
+  // Sync URL state with component state on mount
   useEffect(() => {
-    const params = new URLSearchParams();
+    const urlSearch = searchParams.get("search") || "";
+    const urlPage = parseInt(searchParams.get("page") || "1");
+    const urlSortBy = searchParams.get("sortBy") || "createdAt";
+    const urlSortOrder =
+      (searchParams.get("sortOrder") as "asc" | "desc") || "desc";
 
-    if (debouncedSearchQuery) params.set("search", debouncedSearchQuery);
-    if (activeTag) params.set("tag", activeTag);
-    if (currentPage > 1) params.set("page", currentPage.toString());
-    if (sortBy !== "createdAt") params.set("sortBy", sortBy);
-    if (sortOrder !== "desc") params.set("sortOrder", sortOrder);
+    if (urlSearch !== searchQuery) setSearchQuery(urlSearch);
+    if (urlPage !== currentPage) setCurrentPage(urlPage);
+    if (urlSortBy !== sortBy) setSortBy(urlSortBy);
+    if (urlSortOrder !== sortOrder) setSortOrder(urlSortOrder);
+  }, [searchParams]);
+
+  // Update URL when search changes (only search resets page to 1)
+  useEffect(() => {
+    const params = new URLSearchParams(searchParams);
+
+    if (debouncedSearchQuery) {
+      params.set("search", debouncedSearchQuery);
+      // Only reset page when search changes
+      params.delete("page");
+      setCurrentPage(1);
+    } else {
+      params.delete("search");
+    }
+
+    // Keep other existing params
+    const currentTag = searchParams.get("tag");
+    const currentCategory = searchParams.get("category");
+    const currentSortBy = searchParams.get("sortBy");
+    const currentSortOrder = searchParams.get("sortOrder");
+
+    if (currentTag) params.set("tag", currentTag);
+    if (currentCategory) params.set("category", currentCategory);
+    if (currentSortBy) params.set("sortBy", currentSortBy);
+    if (currentSortOrder) params.set("sortOrder", currentSortOrder);
 
     const queryString = params.toString();
     const newUrl = queryString ? `?${queryString}` : window.location.pathname;
 
-    router.replace(newUrl);
-  }, [debouncedSearchQuery, activeTag, currentPage, sortBy, sortOrder, router]);
+    // Only update URL if search actually changed
+    const currentSearch = searchParams.get("search") || "";
+    if (currentSearch !== debouncedSearchQuery) {
+      if (queryString) {
+        router.replace(newUrl);
+      } else {
+        router.replace(window.location.pathname);
+      }
+    }
+  }, [debouncedSearchQuery]);
+
+  // Separate useEffect for non-search URL updates
+  useEffect(() => {
+    const params = new URLSearchParams(searchParams);
+
+    if (currentPage > 1) {
+      params.set("page", currentPage.toString());
+    } else {
+      params.delete("page");
+    }
+
+    if (sortBy !== "createdAt") {
+      params.set("sortBy", sortBy);
+    } else {
+      params.delete("sortBy");
+    }
+
+    if (sortOrder !== "desc") {
+      params.set("sortOrder", sortOrder);
+    } else {
+      params.delete("sortOrder");
+    }
+
+    const queryString = params.toString();
+    const newUrl = queryString ? `?${queryString}` : window.location.pathname;
+
+    // Only update URL if it's actually different
+    if (window.location.search !== `?${queryString}` && queryString !== "") {
+      router.replace(newUrl);
+    } else if (queryString === "" && window.location.search !== "") {
+      router.replace(window.location.pathname);
+    }
+  }, [currentPage, sortBy, sortOrder]);
 
   // Handle tag click
   const handleTagClick = (tagSlug: string) => {
     const params = new URLSearchParams(searchParams);
 
     if (activeTag === tagSlug) {
+      // Remove tag filter, keep current page
       params.delete("tag");
     } else {
+      // Add tag filter, keep current page
       params.set("tag", tagSlug);
-      params.delete("page"); // Reset page when filtering
+    }
+
+    // Keep current page
+    if (currentPage > 1) {
+      params.set("page", currentPage.toString());
     }
 
     router.push(`?${params.toString()}`);
-    setCurrentPage(1);
+  };
+
+  // Handle category click
+  const handleCategoryClick = (categorySlug: string) => {
+    const params = new URLSearchParams(searchParams);
+
+    if (activeCategory === categorySlug) {
+      // Remove category filter, keep current page
+      params.delete("category");
+    } else {
+      // Add category filter, keep current page
+      params.set("category", categorySlug);
+    }
+
+    // Keep current page
+    if (currentPage > 1) {
+      params.set("page", currentPage.toString());
+    }
+
+    router.push(`?${params.toString()}`);
   };
 
   // Clear all filters
@@ -97,7 +200,52 @@ export default function Page() {
   // Handle pagination
   const handlePageChange = (newPage: number) => {
     setCurrentPage(newPage);
+    const params = new URLSearchParams(searchParams);
+    if (newPage > 1) {
+      params.set("page", newPage.toString());
+    } else {
+      params.delete("page");
+    }
+    router.push(`?${params.toString()}`);
   };
+
+  // Handle sort changes
+  const handleSortChange = (newSortBy: string) => {
+    setSortBy(newSortBy);
+    const params = new URLSearchParams(searchParams);
+
+    // Keep current page
+    if (currentPage > 1) {
+      params.set("page", currentPage.toString());
+    }
+
+    if (newSortBy !== "createdAt") {
+      params.set("sortBy", newSortBy);
+    } else {
+      params.delete("sortBy");
+    }
+    router.push(`?${params.toString()}`);
+  };
+
+  const handleSortOrderToggle = () => {
+    const newOrder = sortOrder === "asc" ? "desc" : "asc";
+    setSortOrder(newOrder);
+    const params = new URLSearchParams(searchParams);
+
+    // Keep current page
+    if (currentPage > 1) {
+      params.set("page", currentPage.toString());
+    }
+
+    if (newOrder !== "desc") {
+      params.set("sortOrder", newOrder);
+    } else {
+      params.delete("sortOrder");
+    }
+    router.push(`?${params.toString()}`);
+  };
+
+  const hasActiveFilters = activeTag || activeCategory || searchQuery;
 
   if (error) {
     return (
@@ -106,29 +254,32 @@ export default function Page() {
   }
 
   return (
-    <LoadingState data={!isLoading} loadingFallback={<BlogsSkeleton />}>
-      <div className="space-y-4 font-mono lg:pt-24 pt-9 mx-auto w-full max-w-6xl px-6 lg:px-8 xl:px-0">
+    <LoadingState
+      data={!isLoading && !isLoadingTags && !isLoadingCategory}
+      loadingFallback={<BlogsSkeleton />}
+    >
+      <div className="space-y-12 font-mono pt-9 pb-12 lg:pt-24 mx-auto w-full max-w-6xl px-6 lg:px-8 xl:px-0">
         <div className="flex flex-col space-y-8 items-center max-w-3xl mx-auto w-full justify-center">
           <header className="text-5xl font-bold">Blogs</header>
-
           <div className="flex flex-col gap-4 w-full">
             {/* Filter Controls */}
             <div className="flex space-x-2 justify-center flex-wrap">
               <Button
                 className="rounded-full"
-                variant={!activeTag && !searchQuery ? "default" : "secondary"}
+                variant={!hasActiveFilters ? "default" : "secondary"}
                 onClick={clearFilters}
               >
                 Semua
               </Button>
-              <Select
-                value={sortBy}
-                onValueChange={(value) => setSortBy(value)}
-              >
-                <SelectTrigger className="w-[220px] rounded-full border border-primary">
-                  <SelectValue placeholder="Pilih urutan" />
+              <Select value={sortBy} onValueChange={handleSortChange}>
+                <SelectTrigger className="md:w-[220px] w-fit rounded-full border border-primary">
+                  {isMobile ? (
+                    <Icons.Filter />
+                  ) : (
+                    <SelectValue placeholder="Pilih urutan" />
+                  )}
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="font-mono">
                   <SelectItem value="createdAt">Terbaru</SelectItem>
                   <SelectItem value="viewCount">
                     Paling Banyak Dilihat
@@ -138,14 +289,32 @@ export default function Page() {
               </Select>
               <Button
                 variant="outline"
-                onClick={() =>
-                  setSortOrder(sortOrder === "asc" ? "desc" : "asc")
-                }
+                onClick={handleSortOrderToggle}
                 className="rounded-full"
               >
                 {sortOrder === "desc" ? "↓" : "↑"}
               </Button>
             </div>
+
+            {/* Category Filter */}
+            <ScrollArea className="w-full whitespace-nowrap rounded-md border p-2">
+              <div className="flex w-max space-x-2">
+                {category?.data?.map((item: { name: string; slug: string }) => (
+                  <Button
+                    size="sm"
+                    key={item.slug}
+                    className="cursor-pointer transition-colors"
+                    variant={
+                      activeCategory === item.slug ? "default" : "secondary"
+                    }
+                    onClick={() => handleCategoryClick(item.slug)}
+                  >
+                    {item?.name}
+                  </Button>
+                ))}
+              </div>
+              <Scrollbar orientation="horizontal" />
+            </ScrollArea>
 
             {/* Search Input */}
             <div className="relative flex-1">
@@ -163,10 +332,8 @@ export default function Page() {
               {tags?.data?.map((item: { name: string; slug: string }) => (
                 <Badge
                   key={item.slug}
-                  className={`cursor-pointer transition-colors`}
-                  variant={`${
-                    activeTag === item.slug ? "default" : "secondary"
-                  }`}
+                  className="cursor-pointer transition-colors"
+                  variant={activeTag === item.slug ? "default" : "secondary"}
                   onClick={() => handleTagClick(item.slug)}
                 >
                   {item?.name}
@@ -194,6 +361,16 @@ export default function Page() {
                       {tags?.data?.find((t: any) => t.slug === activeTag)?.name}
                     </Badge>
                   )}
+                  {activeCategory && (
+                    <Badge variant="outline" className="text-xs">
+                      Kategori:{" "}
+                      {
+                        category?.data?.find(
+                          (c: any) => c.slug === activeCategory
+                        )?.name
+                      }
+                    </Badge>
+                  )}
                 </div>
               </div>
             )}
@@ -201,7 +378,7 @@ export default function Page() {
         </div>
 
         {/* Results */}
-        <div className="grid w-full grid-cols-1 gap-6 py-12">
+        <div className="grid w-full grid-cols-1 gap-6">
           {isLoading ? (
             <div className="text-center py-12">Loading...</div>
           ) : data?.data?.length > 0 ? (

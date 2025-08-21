@@ -1,3 +1,4 @@
+"use client";
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import {
@@ -10,8 +11,12 @@ import {
 import { Button } from "../ui/button";
 import { Icons } from "../icons";
 import { NavList } from "@/lib/constant";
+import { usePathname } from "next/navigation";
+import clsx from "clsx";
 
 export default function Navbar() {
+  const pathname = usePathname();
+
   return (
     <header className="w-full font-mono">
       <div className="@container">
@@ -26,11 +31,24 @@ export default function Navbar() {
             </div>
           </Link>
           <ul className="hidden lg:flex lg:space-x-12">
-            {NavList.map((item, _) => (
-              <li key={_ + 1} className="capitalize">
-                <Link href={item.href}>{item.name}</Link>{" "}
-              </li>
-            ))}
+            {NavList.map((item, _) => {
+              const isActive =
+                pathname === item.href || pathname.startsWith(`${item.href}/`);
+
+              return (
+                <li
+                  key={_ + 1}
+                  className={clsx(
+                    "transition-colors capitalize",
+                    isActive
+                      ? "text-destructive underline"
+                      : "hover:underline transition-all"
+                  )}
+                >
+                  <Link href={item.href}>{item.name}</Link>{" "}
+                </li>
+              );
+            })}
           </ul>
           <DropdownMenu>
             <DropdownMenuTrigger asChild className="lg:hidden">

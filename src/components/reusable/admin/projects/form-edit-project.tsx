@@ -46,6 +46,10 @@ import { useAdminProjectById } from "@/hooks/react-query/admin/projects/use-quer
 import LoadingState from "../../state/loading-state";
 import ProjectFormSkeleton from "../../skeleton/project-form-skeleton";
 import { RichTextEditor } from "@/components/RichTextEditor";
+import {
+  MultipleImageUploader,
+  SingleImageUploader,
+} from "@/components/ui/image-uploader";
 
 const projectSchema = z.object({
   title: z.string().min(1, "Title is required"),
@@ -432,65 +436,60 @@ export default function FormEditProject({
             </CardContent>
           </Card>
 
-          {/* Images */}
+          {/* Images Section - Updated with Supabase Upload */}
           <Card className="bg-gradient-card border-border">
             <CardHeader>
-              <CardTitle>Images</CardTitle>
+              <CardTitle>Project Images</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-6">
+              {/* Main Image */}
               <FormField
                 control={form.control}
                 name="image"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Main Image URL</FormLabel>
+                    <FormLabel>Main Project Image</FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder="https://example.com/image.jpg"
-                        {...field}
+                      <SingleImageUploader
+                        value={field.value}
+                        onChange={field.onChange}
+                        onRemove={() => field.onChange("")}
+                        bucket="projects"
+                        folder="main"
+                        placeholder="Upload main project image"
                       />
                     </FormControl>
                     <FormDescription>
-                      Main preview image for the project
+                      This will be the primary image displayed for your project
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
               />
 
-              <div>
-                <FormLabel>Additional Images</FormLabel>
-                <div className="flex gap-2 mt-2">
-                  <Input
-                    placeholder="https://example.com/image.jpg"
-                    value={newImage}
-                    onChange={(e) => setNewImage(e.target.value)}
-                    onKeyPress={(e) =>
-                      e.key === "Enter" && (e.preventDefault(), addImage())
-                    }
-                  />
-                  <Button type="button" onClick={addImage}>
-                    <Plus className="h-4 w-4" />
-                  </Button>
-                </div>
-
-                <div className="flex flex-wrap gap-2 mt-2">
-                  {(form.watch("images") || []).map((imageUrl, index) => (
-                    <Badge
-                      key={index}
-                      variant="outline"
-                      className="flex items-center gap-1"
-                    >
-                      <Upload className="h-3 w-3" />
-                      Image {index + 1}
-                      <X
-                        className="h-3 w-3 cursor-pointer"
-                        onClick={() => removeImage(imageUrl)}
+              {/* Additional Images Gallery */}
+              <FormField
+                control={form.control}
+                name="images"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Project Gallery</FormLabel>
+                    <FormControl>
+                      <MultipleImageUploader
+                        value={field.value || []}
+                        onChange={field.onChange}
+                        bucket="projects"
+                        folder="gallery"
+                        maxImages={8}
                       />
-                    </Badge>
-                  ))}
-                </div>
-              </div>
+                    </FormControl>
+                    <FormDescription>
+                      Additional images to showcase your project (max 8 images)
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </CardContent>
           </Card>
 

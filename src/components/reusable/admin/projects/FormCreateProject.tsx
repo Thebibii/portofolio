@@ -31,7 +31,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
-import { CalendarIcon, Plus, X, Upload } from "lucide-react";
+import { CalendarIcon, Plus, X } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { ProjectFormData, ProjectStatus } from "@/types/projects";
@@ -42,6 +42,10 @@ import { useQueryClient } from "@tanstack/react-query";
 import { RichTextEditor } from "@/components/RichTextEditor";
 import LoadingState from "../../state/loading-state";
 import ProjectFormSkeleton from "../../skeleton/project-form-skeleton";
+import {
+  SingleImageUploader,
+  MultipleImageUploader,
+} from "@/components/ui/image-uploader";
 
 const projectSchema = z.object({
   title: z.string().min(1, "Title is required"),
@@ -62,13 +66,11 @@ const projectSchema = z.object({
 
 interface ProjectFormProps {
   initialData?: ProjectFormData;
-  //   onSubmit: (data: ProjectFormData) => Promise<void>;
   isEditing?: boolean;
 }
 
 export default function FormCreateProject({
   initialData,
-  //   onSubmit,
   isEditing = false,
 }: ProjectFormProps) {
   const [isMounted, setIsMounted] = useState(false);
@@ -76,14 +78,13 @@ export default function FormCreateProject({
   const router = useRouter();
   const queryClient = useQueryClient();
   const [newTechnology, setNewTechnology] = useState("");
-  const [newImage, setNewImage] = useState("");
+
   const { mutate, isPending } = useCreateProject({
     onSuccess: (body) => {
       queryClient.invalidateQueries({ queryKey: ["get.admin.projects"] });
       toast.success("Success", {
         description: body.message,
       });
-
       router.back();
     },
     onError: (error: any) => {
@@ -97,6 +98,7 @@ export default function FormCreateProject({
       });
     },
   });
+
   const form = useForm({
     resolver: zodResolver(projectSchema),
     defaultValues: initialData || {
@@ -118,7 +120,6 @@ export default function FormCreateProject({
   const handleSubmit = async (data: ProjectFormData) => {
     try {
       mutate(data);
-      //   await onSubmit(data);
     } catch (e) {
       console.log(e);
     }
@@ -145,26 +146,7 @@ export default function FormCreateProject({
     );
   };
 
-  const addImage = () => {
-    if (newImage.trim()) {
-      const currentImages = form.getValues("images") || []; // tambah fallback
-      if (!currentImages.includes(newImage.trim())) {
-        form.setValue("images", [...currentImages, newImage.trim()]);
-      }
-      setNewImage("");
-    }
-  };
-
-  const removeImage = (imageUrl: string) => {
-    const currentImages = form.getValues("images") || []; // tambah fallback
-    form.setValue(
-      "images",
-      currentImages.filter((img) => img !== imageUrl)
-    );
-  };
-
   useEffect(() => {
-    // Agar render hanya dilakukan setelah client mount
     setIsMounted(true);
   }, []);
 
@@ -214,10 +196,25 @@ export default function FormCreateProject({
               )}
             />
 
-            <RichTextEditor
+            <FormField
               control={form.control}
               name="longDescription"
-              placeholder="Start typing your detailed description..."
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Content</FormLabel>
+                  <FormControl>
+                    <RichTextEditor
+                      control={form.control}
+                      name="longDescription"
+                      placeholder="Write your post content here..."
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    Write your post content using the rich text editor
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -282,6 +279,63 @@ export default function FormCreateProject({
                 )}
               />
             </div>
+          </CardContent>
+        </Card>
+
+        {/* Images Section - Updated with Supabase Upload */}
+        <Card className="bg-gradient-card border-border">
+          <CardHeader>
+            <CardTitle>Project Images</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {/* Main Image */}
+            <FormField
+              control={form.control}
+              name="image"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Main Project Image</FormLabel>
+                  <FormControl>
+                    <SingleImageUploader
+                      value={field.value}
+                      onChange={field.onChange}
+                      onRemove={() => field.onChange("")}
+                      bucket="projects"
+                      folder="main"
+                      placeholder="Upload main project image"
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    This will be the primary image displayed for your project
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Additional Images Gallery */}
+            <FormField
+              control={form.control}
+              name="images"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Project Gallery</FormLabel>
+                  <FormControl>
+                    <MultipleImageUploader
+                      value={field.value || []}
+                      onChange={field.onChange}
+                      bucket="projects"
+                      folder="gallery"
+                      maxImages={8}
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    Additional images to showcase your project (max 8 images)
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           </CardContent>
         </Card>
 
@@ -377,6 +431,9 @@ export default function FormCreateProject({
 
         {/* Technologies */}
         <Card className="bg-gradient-card border-border">
+          <CardHeader>
+            <CardTitle>Technologies Used</CardTitle>
+          </CardHeader>
           <CardContent className="space-y-4">
             <FormField
               control={form.control}
@@ -394,7 +451,11 @@ export default function FormCreateProject({
                         (e.preventDefault(), addTechnology())
                       }
                     />
-                    <Button type="button" onClick={addTechnology}>
+                    <Button
+                      type="button"
+                      onClick={addTechnology}
+                      disabled={!newTechnology.trim()}
+                    >
                       <Plus className="h-4 w-4" />
                     </Button>
                   </div>
@@ -404,11 +465,13 @@ export default function FormCreateProject({
                       <Badge
                         key={tech}
                         variant="secondary"
-                        className="flex items-center gap-1 cursor-default"
-                        onClick={() => removeTechnology(tech)}
+                        className="flex items-center gap-1 cursor-default hover:bg-destructive/10"
                       >
                         {tech}
-                        <X className="h-3 w-3 cursor-pointer" />
+                        <X
+                          className="h-3 w-3 cursor-pointer hover:text-destructive"
+                          onClick={() => removeTechnology(tech)}
+                        />
                       </Badge>
                     ))}
                   </div>
@@ -417,68 +480,6 @@ export default function FormCreateProject({
                 </FormItem>
               )}
             />
-          </CardContent>
-        </Card>
-
-        {/* Images */}
-        <Card className="bg-gradient-card border-border">
-          <CardHeader>
-            <CardTitle>Images</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <FormField
-              control={form.control}
-              name="image"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Main Image URL</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="https://example.com/image.jpg"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormDescription>
-                    Main preview image for the project
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <div>
-              <FormLabel>Additional Images</FormLabel>
-              <div className="flex gap-2 mt-2">
-                <Input
-                  placeholder="https://example.com/image.jpg"
-                  value={newImage}
-                  onChange={(e) => setNewImage(e.target.value)}
-                  onKeyPress={(e) =>
-                    e.key === "Enter" && (e.preventDefault(), addImage())
-                  }
-                />
-                <Button type="button" onClick={addImage}>
-                  <Plus className="h-4 w-4" />
-                </Button>
-              </div>
-
-              <div className="flex flex-wrap gap-2 mt-2">
-                {(form.watch("images") || []).map((imageUrl, index) => (
-                  <Badge
-                    key={index}
-                    variant="outline"
-                    className="flex items-center gap-1"
-                  >
-                    <Upload className="h-3 w-3" />
-                    Image {index + 1}
-                    <X
-                      className="h-3 w-3 cursor-pointer"
-                      onClick={() => removeImage(imageUrl)}
-                    />
-                  </Badge>
-                ))}
-              </div>
-            </div>
           </CardContent>
         </Card>
 

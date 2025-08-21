@@ -56,7 +56,7 @@ export default function Page() {
             aria-label="Link to project repository"
           >
             <Icons.Heart className="size-4" />
-            <span>Repository</span>
+            <span>Likes</span>
           </p>
         </div>
 

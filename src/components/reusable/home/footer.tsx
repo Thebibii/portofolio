@@ -10,12 +10,12 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="bg-neutral-50 text-sm">
+    <footer className="bg-neutral-50 text-sm ">
       <Separator
         orientation="horizontal"
         className="bg-gradient-to-r from-[#f5f5f5] via-[#e5e5e5] to-[#f5f5f5]"
       />
-      <div className="font-mono @container w-full shrink-0 px-24 py-8 grid md:grid-cols-2 gap-8 md:gap-16">
+      <div className="font-mono @container w-full shrink-0  px-6 md:px-8 lg:px-24 py-8 grid md:grid-cols-2 gap-8 md:gap-16">
         {/* Column 1: About */}
         <div>
           <h2 className="text-lg">Habibie Bayezid Wildan</h2>
@@ -63,12 +63,12 @@ export default function Footer() {
 
             {/* The Website Links */}
             <nav aria-label="The Website links">
-              <p className="text-sm text-neutral-500">The Website</p>
-              <ul className="mt-4 space-y-3 text-sm text-neutral-300">
+              <p className="text-sm font-semibold">The Website</p>
+              <ul className="mt-4 space-y-3 text-sm">
                 <li>
                   <Link
                     href="/bucket-list"
-                    className="hover:text-neutral-50 transition-colors"
+                    className="text-muted-foreground hover:text-primary  transition-colors"
                   >
                     Bucket List
                   </Link>
@@ -76,39 +76,23 @@ export default function Footer() {
                 <li>
                   <Link
                     href="/uses"
-                    className="hover:text-neutral-50 transition-colors"
+                    className="text-muted-foreground hover:text-primary  transition-colors"
                   >
                     Uses
                   </Link>
                 </li>
                 <li>
                   <Link
-                    href="/side-quests"
-                    className="hover:text-neutral-50 transition-colors"
-                  >
-                    Side Quests
-                  </Link>
-                </li>
-                <li>
-                  <Link
                     href="/attribution"
-                    className="hover:text-neutral-50 transition-colors"
+                    className="text-muted-foreground hover:text-primary  transition-colors"
                   >
                     Attribution
                   </Link>
                 </li>
                 <li>
                   <Link
-                    href="/statistics"
-                    className="hover:text-neutral-50 transition-colors"
-                  >
-                    Statistics
-                  </Link>
-                </li>
-                <li>
-                  <Link
                     href="/guestbook"
-                    className="hover:text-neutral-50 transition-colors"
+                    className="text-muted-foreground hover:text-primary  transition-colors"
                   >
                     Guest Book
                   </Link>

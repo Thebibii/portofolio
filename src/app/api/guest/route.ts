@@ -11,6 +11,7 @@ export async function GET() {
         title: true,
         description: true,
         technologies: true,
+        image: true,
       },
     });
     const blogs = await prisma.post.findMany({

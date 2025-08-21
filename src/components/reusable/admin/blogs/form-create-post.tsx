@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -27,6 +28,8 @@ import { Badge } from "@/components/ui/badge";
 import { Save, Eye, Upload, X } from "lucide-react";
 import { Category, Post, PostStatus, PostType, Tag } from "@/types/blogs";
 import EmptyState from "../../state/empty-state";
+import { RichTextEditor } from "@/components/RichTextEditor";
+import { SingleImageUploader } from "@/components/ui/image-uploader";
 
 const postSchema = z.object({
   title: z.string().min(1, "Title is required").max(200, "Title too long"),
@@ -194,7 +197,7 @@ export function FormCreatePost({
                   )}
                 />
 
-                <FormField
+                {/* <FormField
                   control={form.control}
                   name="content"
                   render={({ field }) => (
@@ -207,6 +210,26 @@ export function FormCreatePost({
                           {...field}
                         />
                       </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                /> */}
+                <FormField
+                  control={form.control}
+                  name="content"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Content</FormLabel>
+                      <FormControl>
+                        <RichTextEditor
+                          control={form.control}
+                          name="content"
+                          placeholder="Write your post content here..."
+                        />
+                      </FormControl>
+                      <FormDescription>
+                        Write your post content using the rich text editor
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -305,7 +328,7 @@ export function FormCreatePost({
                             <SelectValue placeholder="Select category" />
                           </SelectTrigger>
                         </FormControl>
-                        <SelectContent>
+                        <SelectContent className="font-mono">
                           <SelectItem value="none">No Category</SelectItem>
                           {categories?.map((category) => (
                             <SelectItem key={category.id} value={category.id}>
@@ -418,20 +441,21 @@ export function FormCreatePost({
                   name="coverImage"
                   render={({ field }) => (
                     <FormItem>
+                      <FormLabel>Project Gallery</FormLabel>
                       <FormControl>
-                        <div className="space-y-2">
-                          <Input placeholder="Image URL..." {...field} />
-                          <Button
-                            type="button"
-                            variant="outline"
-                            size="sm"
-                            className="w-full"
-                          >
-                            <Upload className="mr-2 h-4 w-4" />
-                            Upload Image
-                          </Button>
-                        </div>
+                        <SingleImageUploader
+                          value={field.value}
+                          onChange={field.onChange}
+                          onRemove={() => field.onChange("")}
+                          bucket="posts"
+                          folder="main"
+                          placeholder="Upload main project image"
+                        />
                       </FormControl>
+                      <FormDescription>
+                        Additional images to showcase your project (max 8
+                        images)
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}

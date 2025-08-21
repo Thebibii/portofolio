@@ -1,0 +1,16 @@
+import { baseURL } from "@/lib/api";
+import { useQuery } from "@tanstack/react-query";
+
+export const useGuestCategory = () => {
+  return useQuery({
+    queryKey: ["get.guest.category"],
+    queryFn: async () => {
+      const res = await fetch(`${baseURL}/guest/category`);
+
+      const data = await res.json();
+      if (!res.ok) throw new Error("Failed to fetch category");
+      return data;
+    },
+    refetchOnWindowFocus: false,
+  });
+};

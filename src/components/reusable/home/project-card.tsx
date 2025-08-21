@@ -10,6 +10,8 @@ import {
 } from "@/components/ui/card";
 import Link from "next/link";
 export default function ProjectCard({ data }: { data: any }) {
+  console.log(data);
+
   return (
     <>
       {data?.map((item: any) => (

@@ -9,6 +9,7 @@ export async function GET(request: NextRequest) {
     // Get query parameters
     const search = searchParams.get("search") || "";
     const tagSlug = searchParams.get("tag") || "";
+    const categorySlug = searchParams.get("category") || ""; // Add this line
     const limit = parseInt(searchParams.get("limit") || "10");
     const page = parseInt(searchParams.get("page") || "1");
     const sortBy = searchParams.get("sortBy") || "createdAt";
@@ -54,6 +55,13 @@ export async function GET(request: NextRequest) {
       };
     }
 
+    // Add category filter
+    if (categorySlug) {
+      whereClause.category = {
+        slug: categorySlug,
+      };
+    }
+
     // Calculate skip for pagination
     const skip = (page - 1) * limit;
 
@@ -81,6 +89,13 @@ export async function GET(request: NextRequest) {
         viewCount: true,
         readingTime: true,
         createdAt: true,
+        category: {
+          // Add category to select
+          select: {
+            name: true,
+            slug: true,
+          },
+        },
         tags: {
           select: {
             tag: {
@@ -112,6 +127,7 @@ export async function GET(request: NextRequest) {
       filters: {
         search,
         tag: tagSlug,
+        category: categorySlug, // Add this line
         sortBy,
         sortOrder,
       },

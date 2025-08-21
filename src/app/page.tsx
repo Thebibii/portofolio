@@ -3,15 +3,12 @@ import { AnimatedGridPattern } from "@/components/magicui/animated-grid-pattern"
 import FeaturedSection from "@/components/reusable/home/featured-section";
 import Footer from "@/components/reusable/home/footer";
 import Navbar from "@/components/reusable/navbar";
-
-import { useAdminProjects } from "@/hooks/react-query/admin/projects/use-query";
 import { useGetDataHome } from "@/hooks/react-query/guest/use-query";
 import { cn } from "@/lib/utils";
 import { Fragment } from "react";
 
 export default function Home() {
   const { data } = useGetDataHome();
-  console.log(data?.data);
 
   return (
     <Fragment>

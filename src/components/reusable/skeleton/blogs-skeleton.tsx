@@ -2,7 +2,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export function BlogsSkeleton() {
   return (
-    <div className="space-y-4 font-mono lg:pt-24 pt-9 mx-auto w-full max-w-6xl px-6 lg:px-8 xl:px-0">
+    <div className="space-y-12  pt-9 pb-12 lg:pt-24 mx-auto w-full max-w-6xl px-6 lg:px-8 xl:px-0">
       <div className="flex flex-col space-y-8 items-center max-w-3xl mx-auto w-full justify-center">
         {/* Header */}
         <Skeleton className="h-12 w-40" />
@@ -20,7 +20,7 @@ export function BlogsSkeleton() {
 
           {/* Tags Filter */}
           <div className="flex space-x-2 flex-wrap gap-2">
-            {Array.from({ length: 5 }).map((_, i) => (
+            {Array.from({ length: 3 }).map((_, i) => (
               <Skeleton key={i} className="h-6 w-20 rounded-full" />
             ))}
           </div>

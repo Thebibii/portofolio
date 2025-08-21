@@ -9,6 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import Image from "next/image";
 import Link from "next/link";
 export default function BlogsCard({ data }: { data: any }) {
   return (
@@ -18,16 +19,18 @@ export default function BlogsCard({ data }: { data: any }) {
           <div className="flex flex-col md:flex-row">
             {/* Gambar - Muncul pertama di mobile, kedua di desktop */}
             <div className="flex-none p-4 flex items-center md:basis-80 order-1 md:order-2">
-              <div className="aspect-video w-full overflow-hidden rounded-md bg-gray-100">
-                <img
-                  src={
-                    item?.coverImage && item.coverImage.trim() !== ""
-                      ? item.coverImage
-                      : "https://via.placeholder.com/400x225?text=No+Image"
-                  }
-                  alt={item?.title || "No image available"}
-                  className="h-full w-full object-cover"
-                />
+              <div className="aspect-video w-full overflow-hidden rounded-md bg-gray-100 flex items-center justify-center">
+                {item?.coverImage && item.coverImage.trim() !== "" ? (
+                  <Image
+                    src={item.coverImage}
+                    alt={item?.title || "Image"}
+                    className="h-full w-full object-cover"
+                    width={400}
+                    height={225}
+                  />
+                ) : (
+                  <span className="text-gray-500 font-bold">400 x 225</span>
+                )}
               </div>
             </div>
 
