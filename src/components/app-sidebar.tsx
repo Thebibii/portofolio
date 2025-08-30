@@ -15,11 +15,14 @@ import { NavMain } from "./nav-main";
 import { NavSecondary } from "./nav-secondary";
 import {
   Folder,
+  HelpCircle,
   IndianRupee,
   LayoutDashboard,
   Network,
   NotebookText,
   Projector,
+  Settings,
+  Tags,
 } from "lucide-react";
 import { NavUser } from "./nav-user";
 
@@ -41,8 +44,8 @@ const data = {
       icon: Projector,
     },
     {
-      title: "Writing",
-      url: "#",
+      title: "Writings",
+      url: "/admin/writings",
       icon: NotebookText,
     },
     {
@@ -56,23 +59,18 @@ const data = {
       icon: Network,
     },
   ],
-  //   navSecondary: [
-  //     {
-  //       title: "Settings",
-  //       url: "#",
-  //       icon: Setting,
-  //     },
-  //     {
-  //       title: "Get Help",
-  //       url: "#",
-  //       icon: IconHelp,
-  //     },
-  //     {
-  //       title: "Search",
-  //       url: "#",
-  //       icon: IconSearch,
-  //     },
-  //   ],
+  navSecondary: [
+    {
+      title: "Categories",
+      url: "/admin/categories",
+      icon: Folder,
+    },
+    {
+      title: "Tags",
+      url: "/admin/tags",
+      icon: Tags,
+    },
+  ],
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
@@ -87,7 +85,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             >
               <a href="#">
                 <IndianRupee className="!size-5" />
-                <span className="text-base font-semibold">Acme Inc.</span>
+                <span className="text-base font-semibold">The Bibi</span>
               </a>
             </SidebarMenuButton>
           </SidebarMenuItem>
@@ -95,7 +93,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
-        {/* <NavSecondary items={data.navSecondary} className="mt-auto" /> */}
+        <NavSecondary items={data.navSecondary} />
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={data.user} />

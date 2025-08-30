@@ -19,6 +19,7 @@ export async function GET(
         viewCount: true,
         readingTime: true,
         content: true,
+        createdAt: true,
         tags: {
           select: {
             tag: {

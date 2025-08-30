@@ -25,6 +25,7 @@ import { Fragment, useState } from "react";
 type DropdownBlogsProps = {
   post: PostDelete;
   onDelete: (data: { slug: string; title: string }) => void;
+  href: "blogs" | "writings";
 };
 
 type DeleteAlertDialogProps = {
@@ -36,7 +37,11 @@ type DeleteAlertDialogProps = {
   onDelete: (data: { slug: string; title: string }) => void;
 };
 
-export default function DropdownBlogs({ post, onDelete }: DropdownBlogsProps) {
+export default function DropdownBlogs({
+  post,
+  onDelete,
+  href,
+}: DropdownBlogsProps) {
   const [openDeleteAlertDialog, setOpenDeleteAlertDialog] = useState(false);
   return (
     <Fragment>
@@ -46,10 +51,10 @@ export default function DropdownBlogs({ post, onDelete }: DropdownBlogsProps) {
             <Icons.MoreHorizontal className="h-4 w-4" />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
+        <DropdownMenuContent align="end" className="font-mono">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <Link href={`/admin/blogs/${post.slug}`}>
+          <Link href={`/admin/${href}/${post.slug}`}>
             <DropdownMenuItem>
               <Icons.Edit className="mr-2 h-4 w-4" />
               Edit

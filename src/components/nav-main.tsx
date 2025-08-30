@@ -40,7 +40,7 @@ export function NavMain({
                   className={clsx(
                     "transition-colors",
                     isActive
-                      ? "bg-primary text-primary-foreground"
+                      ? "bg-primary text-primary-foreground hover:bg-primary/80 hover:text-accent"
                       : "hover:bg-accent hover:text-accent-foreground"
                   )}
                 >

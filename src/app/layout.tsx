@@ -5,6 +5,8 @@ import { AnimatedGridPattern } from "@/components/magicui/animated-grid-pattern"
 import { cn } from "@/lib/utils";
 import { ReactQueryClientProvider } from "@/provider/react-query";
 import ProgressProvider from "@/provider/proggres-bar";
+import { Toaster } from "sonner";
+import { Providers } from "@/provider/next-auth";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,9 +33,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ReactQueryClientProvider>
-          <ProgressProvider>{children}</ProgressProvider>
-        </ReactQueryClientProvider>
+        <Providers>
+          <ReactQueryClientProvider>
+            <ProgressProvider>{children}</ProgressProvider>
+            <Toaster closeButton position="top-right" richColors />
+          </ReactQueryClientProvider>
+        </Providers>
       </body>
     </html>
   );

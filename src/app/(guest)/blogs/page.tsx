@@ -7,7 +7,6 @@ import { Input } from "@/components/ui/input";
 import { useGetGuestBlogs } from "@/hooks/react-query/guest/blogs/use-query";
 import { useGuestTags } from "@/hooks/react-query/guest/tags/use-query";
 import { useGuestCategory } from "@/hooks/react-query/guest/category/use-query";
-import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useDebounce } from "@/hooks/use-debounce";
@@ -23,11 +22,11 @@ import { BlogsSkeleton } from "@/components/reusable/skeleton/blogs-skeleton";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Scrollbar } from "@radix-ui/react-scroll-area";
+import { Label } from "@/components/ui/label";
 
 export default function Page() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const isMobile = useIsMobile();
 
   // State untuk filters
   const [searchQuery, setSearchQuery] = useState(
@@ -60,8 +59,10 @@ export default function Page() {
     sortOrder,
   });
 
-  const { data: category, isLoading: isLoadingCategory } = useGuestCategory();
-  const { data: tags, isLoading: isLoadingTags } = useGuestTags();
+  const { data: category, isLoading: isLoadingCategory } =
+    useGuestCategory("blog");
+
+  const { data: tags, isLoading: isLoadingTags } = useGuestTags("blog");
 
   // Sync URL state with component state on mount
   useEffect(() => {
@@ -153,17 +154,16 @@ export default function Page() {
     const params = new URLSearchParams(searchParams);
 
     if (activeTag === tagSlug) {
-      // Remove tag filter, keep current page
+      // Remove tag filter
       params.delete("tag");
     } else {
-      // Add tag filter, keep current page
+      // Add tag filter
       params.set("tag", tagSlug);
     }
 
-    // Keep current page
-    if (currentPage > 1) {
-      params.set("page", currentPage.toString());
-    }
+    // Reset to page 1 when filter changes
+    params.delete("page");
+    setCurrentPage(1);
 
     router.push(`?${params.toString()}`);
   };
@@ -173,17 +173,16 @@ export default function Page() {
     const params = new URLSearchParams(searchParams);
 
     if (activeCategory === categorySlug) {
-      // Remove category filter, keep current page
+      // Remove category filter
       params.delete("category");
     } else {
-      // Add category filter, keep current page
+      // Add category filter
       params.set("category", categorySlug);
     }
 
-    // Keep current page
-    if (currentPage > 1) {
-      params.set("page", currentPage.toString());
-    }
+    // Reset to page 1 when filter changes
+    params.delete("page");
+    setCurrentPage(1);
 
     router.push(`?${params.toString()}`);
   };
@@ -260,7 +259,12 @@ export default function Page() {
     >
       <div className="space-y-12 font-mono pt-9 pb-12 lg:pt-24 mx-auto w-full max-w-6xl px-6 lg:px-8 xl:px-0">
         <div className="flex flex-col space-y-8 items-center max-w-3xl mx-auto w-full justify-center">
-          <header className="text-5xl font-bold">Blogs</header>
+          <div className="space-y-4 items-center justify-center flex flex-col">
+            <header className="text-5xl font-bold">Blogs</header>
+            <p className="transition-colors bg-gradient-to-r from-gray-500/80 via-black to-gray-500/80 bg-clip-text text-transparent">
+              A story of growth and discovery
+            </p>
+          </div>
           <div className="flex flex-col gap-4 w-full">
             {/* Filter Controls */}
             <div className="flex space-x-2 justify-center flex-wrap">
@@ -272,12 +276,14 @@ export default function Page() {
                 Semua
               </Button>
               <Select value={sortBy} onValueChange={handleSortChange}>
-                <SelectTrigger className="md:w-[220px] w-fit rounded-full border border-primary">
-                  {isMobile ? (
+                <SelectTrigger className="sm:w-[220px] w-fit rounded-full border border-primary">
+                  {/* Icon untuk mobile, text untuk desktop */}
+                  <span className="block sm:hidden">
                     <Icons.Filter />
-                  ) : (
+                  </span>
+                  <span className="hidden sm:block">
                     <SelectValue placeholder="Pilih urutan" />
-                  )}
+                  </span>
                 </SelectTrigger>
                 <SelectContent className="font-mono">
                   <SelectItem value="createdAt">Terbaru</SelectItem>
@@ -297,29 +303,36 @@ export default function Page() {
             </div>
 
             {/* Category Filter */}
-            <ScrollArea className="w-full whitespace-nowrap rounded-md border p-2">
-              <div className="flex w-max space-x-2">
-                {category?.data?.map((item: { name: string; slug: string }) => (
-                  <Button
-                    size="sm"
-                    key={item.slug}
-                    className="cursor-pointer transition-colors"
-                    variant={
-                      activeCategory === item.slug ? "default" : "secondary"
-                    }
-                    onClick={() => handleCategoryClick(item.slug)}
-                  >
-                    {item?.name}
-                  </Button>
-                ))}
-              </div>
-              <Scrollbar orientation="horizontal" />
-            </ScrollArea>
+            {category?.data?.length > 0 && (
+              <ScrollArea className="w-full whitespace-nowrap rounded-md border p-2">
+                <div className="flex w-max space-x-2">
+                  {category?.data?.map(
+                    (item: { name: string; slug: string }) => (
+                      <Button
+                        size="sm"
+                        key={item.slug}
+                        className="cursor-pointer transition-colors"
+                        variant={
+                          activeCategory === item.slug ? "default" : "secondary"
+                        }
+                        onClick={() => handleCategoryClick(item.slug)}
+                      >
+                        {item?.name}
+                      </Button>
+                    )
+                  )}
+                </div>
+                <Scrollbar orientation="horizontal" />
+              </ScrollArea>
+            )}
 
             {/* Search Input */}
             <div className="relative flex-1">
-              <Icons.Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Label htmlFor="search">
+                <Icons.Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              </Label>
               <Input
+                id="search"
                 placeholder="Cari blog..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -383,7 +396,14 @@ export default function Page() {
             <div className="text-center py-12">Loading...</div>
           ) : data?.data?.length > 0 ? (
             <>
-              <BlogsCard data={data.data} />
+              <BlogsCard
+                to="blogs"
+                data={data.data}
+                onTagClick={handleTagClick}
+                onCategoryClick={handleCategoryClick}
+                activeTag={activeTag}
+                activeCategory={activeCategory}
+              />
 
               {/* Pagination */}
               {data.meta.totalPages > 1 && (

@@ -3,7 +3,7 @@ import { Icons } from "@/components/icons";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { useGuestBlogBySlug } from "@/hooks/react-query/guest/blogs/use-query";
-import Link from "next/link";
+import { formatCreatedUpdated } from "@/hooks/use-formatted-date";
 import { useParams } from "next/navigation";
 
 export default function Page() {
@@ -13,19 +13,54 @@ export default function Page() {
     <div className="space-y-4 pt-9 pb-10 lg:pt-24 mx-auto w-full max-w-6xl px-6 lg:px-8 xl:px-0">
       {/* Project content */}
       <article className="space-y-4 font-mono">
-        <h1 className="text-4xl font-bold">{data?.data?.title}</h1>
-
         {/* Technologies */}
-        <div className="flex" aria-label="Technologies used">
+        <div className="flex space-x-2" aria-label="Technologies used">
           {data?.data?.tags?.map(({ tag }: { tag: any }) => (
             <Badge variant={"outline"} key={tag.slug}>
               {tag?.name}
             </Badge>
           ))}
         </div>
-
-        {/* Short description */}
-        <p>{data?.data?.excerpt}</p>
+        <div className="space-y-2">
+          <h1 className="text-4xl font-bold">{data?.data?.title}</h1>
+          {/* Short description */}
+          <p>{data?.data?.excerpt}</p>
+        </div>
+        <div className="flex gap-3 items-center mt-10">
+          <div className="size-10 rounded-full overflow-hidden">
+            <figure className="isolate z-[1] overflow-hidden select-none pointer-events-none object-cover">
+              <div
+                className="jsx-496024066 img-blur"
+                style={{
+                  position: "relative",
+                  height: 0,
+                  paddingTop: "100%",
+                  cursor: "default",
+                }}
+              >
+                <div className="jsx-496024066 absolute left-0 top-0">
+                  <img
+                    alt="Theodorus Clarence"
+                    title="Theodorus Clarence"
+                    loading="lazy"
+                    width={350}
+                    height={350}
+                    decoding="async"
+                    data-nimg={1}
+                    src="https://images.theodorusclarence.com/upload/q_auto,f_auto/theodorusclarence/about/me-2024.jpg"
+                    style={{ color: "transparent" }}
+                  />
+                </div>
+              </div>
+            </figure>
+          </div>
+          <div>
+            <h4 className="text-sm">Habibie Bayezid Wildan</h4>
+            <p className="text-xs mt-0.5 text-neutral-600">
+              {formatCreatedUpdated(data?.data?.createdAt)}
+            </p>
+          </div>
+        </div>
 
         <Separator orientation="horizontal" />
 

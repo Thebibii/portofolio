@@ -12,21 +12,24 @@ import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 import DeleteProject from "./delete-project";
 import { Project } from "@prisma/client";
+import Image from "next/image";
 export default function AdminProjectCard({ data }: { data: Project[] }) {
   return (
     <>
       {data?.map((item) => (
         <Card className="w-full max-w-sm" key={item?.id}>
           <div className="aspect-[16/9] w-full overflow-hidden  bg-gray-100">
-            <img
-              src={
-                item?.image && item.image.trim() !== ""
-                  ? item.image
-                  : "https://via.placeholder.com/400x225?text=No+Image"
-              }
-              alt={item?.title || "No image available"}
-              className="h-full w-full object-cover"
-            />
+            {item?.image && item.image.trim() !== "" ? (
+              <Image
+                src={item.image}
+                alt={item?.title || "Image"}
+                className="h-full w-full object-cover"
+                width={400}
+                height={225}
+              />
+            ) : (
+              <span className="text-gray-500 font-bold">400 x 225</span>
+            )}
           </div>
           <Separator orientation="horizontal" />
           <CardHeader>

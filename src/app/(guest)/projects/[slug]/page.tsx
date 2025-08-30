@@ -3,14 +3,22 @@
 import { Icons } from "@/components/icons";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { useAdminProjectById } from "@/hooks/react-query/admin/projects/use-query";
+import { useGuestProjectBySlug } from "@/hooks/react-query/guest/projects/use-query";
 import Link from "next/link";
 import { useParams } from "next/navigation";
+import { toast } from "sonner";
 
 export default function Page() {
   const params = useParams<{ slug: string }>();
-  const { data } = useAdminProjectById({ id: params.slug });
-
+  const { data, isError, error, isLoading } = useGuestProjectBySlug({
+    slug: params.slug,
+  });
+  if (isError && error) {
+    toast.error("Gagal memuat data", {
+      description: error.message,
+      id: "project-error", // Prevent duplicate toasts
+    });
+  }
   return (
     <div className="space-y-4 pt-9 pb-10 lg:pt-24 mx-auto w-full max-w-6xl px-6 lg:px-8 xl:px-0">
       {/* Project content */}

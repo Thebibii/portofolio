@@ -10,6 +10,7 @@ import {
   Heart,
   Instagram,
   Link,
+  Loader,
   Mail,
   Menu,
   MoreHorizontal,
@@ -43,4 +44,5 @@ export const Icons = {
   Clock: (props: IconProps) => <Clock {...props} />,
   BookOpen: (props: IconProps) => <BookOpen {...props} />,
   Heart: (props: IconProps) => <Heart {...props} />,
+  Loader: (props: IconProps) => <Loader {...props} />,
 };

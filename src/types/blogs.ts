@@ -18,7 +18,6 @@ export interface Post {
   coverImage?: string;
   status: PostStatus;
   featured: boolean;
-  type: PostType;
   viewCount: number;
   readingTime: number;
   publishedAt?: Date;

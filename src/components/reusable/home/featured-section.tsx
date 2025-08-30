@@ -2,8 +2,18 @@ import { Project } from "@prisma/client";
 import ProjectCard from "./project-card";
 import Link from "next/link";
 import BlogsCard from "./blogs-card";
+import LoadingState from "../state/loading-state";
+import { BlogsSkeleton } from "../skeleton/blogs-skeleton";
+import { BlogsCardSkeleton } from "../skeleton/blogs-card-skeleton";
+import ProjectCardSkeleton from "../skeleton/project-card-skeleton";
 
-export default function FeaturedSection({ data }: { data: any }) {
+export default function FeaturedSection({
+  data,
+  isLoadingError,
+}: {
+  data: any;
+  isLoadingError: boolean;
+}) {
   return (
     <div className="mx-auto w-full max-w-6xl px-6 xl:px-0 font-mono">
       <section className="space-y-6 pt-9 pb-10 lg:pt-12 w-full">
@@ -17,7 +27,12 @@ export default function FeaturedSection({ data }: { data: any }) {
           </p>
         </header>
         <div className="grid w-full grid-cols-1 gap-12 lg:grid-cols-2">
-          <ProjectCard data={data?.projects} />
+          <LoadingState
+            data={isLoadingError}
+            loadingFallback={<ProjectCardSkeleton />}
+          >
+            <ProjectCard data={data?.projects} />
+          </LoadingState>
         </div>
         <Link
           href="/projects"
@@ -36,7 +51,12 @@ export default function FeaturedSection({ data }: { data: any }) {
           </p>
         </header>
         <div className="grid w-full grid-cols-1 gap-6">
-          <BlogsCard data={data?.blogs} />
+          <LoadingState
+            data={isLoadingError}
+            loadingFallback={<BlogsCardSkeleton />}
+          >
+            <BlogsCard to="blogs" data={data?.blogs} />
+          </LoadingState>
         </div>
         <Link
           href="/blogs"

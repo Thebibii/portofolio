@@ -39,7 +39,6 @@ const postSchema = z.object({
   coverImage: z.string().optional(),
   status: z.nativeEnum(PostStatus),
   featured: z.boolean(),
-  type: z.nativeEnum(PostType),
   readingTime: z.number().min(1, "Reading time must be at least 1 minute"),
   categoryId: z.string().optional(),
   tagIds: z.array(z.string()).optional(),
@@ -65,7 +64,7 @@ export function FormCreatePost({
   isLoading = false,
 }: FormCreatePostProps) {
   const [selectedTags, setSelectedTags] = useState<string[]>(
-    post?.tags?.map((tag) => tag.id) || []
+    post?.tags?.map(({ tag }: any) => tag.id) || []
   );
 
   const form = useForm<FormCreatePostData>({
@@ -78,7 +77,6 @@ export function FormCreatePost({
       coverImage: post?.coverImage || "",
       status: post?.status || PostStatus.DRAFT,
       featured: post?.featured || false,
-      type: post?.type || PostType.BLOG,
       readingTime: post?.readingTime || 1,
       categoryId: post?.categoryId || "none",
       tagIds: selectedTags,
@@ -197,23 +195,6 @@ export function FormCreatePost({
                   )}
                 />
 
-                {/* <FormField
-                  control={form.control}
-                  name="content"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Content</FormLabel>
-                      <FormControl>
-                        <Textarea
-                          placeholder="Write your post content here..."
-                          className="min-h-[400px]"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                /> */}
                 <FormField
                   control={form.control}
                   name="content"
@@ -286,33 +267,6 @@ export function FormCreatePost({
               <CardContent className="space-y-4">
                 <FormField
                   control={form.control}
-                  name="type"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Type</FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select type" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value={PostType.BLOG}>Blog</SelectItem>
-                          <SelectItem value={PostType.WRITING}>
-                            Writing
-                          </SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
                   name="categoryId"
                   render={({ field }) => (
                     <FormItem>
@@ -324,7 +278,7 @@ export function FormCreatePost({
                         }
                       >
                         <FormControl>
-                          <SelectTrigger>
+                          <SelectTrigger className="w-full">
                             <SelectValue placeholder="Select category" />
                           </SelectTrigger>
                         </FormControl>

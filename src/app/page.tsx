@@ -6,9 +6,17 @@ import Navbar from "@/components/reusable/navbar";
 import { useGetDataHome } from "@/hooks/react-query/guest/use-query";
 import { cn } from "@/lib/utils";
 import { Fragment } from "react";
+import { toast } from "sonner";
 
 export default function Home() {
-  const { data } = useGetDataHome();
+  const { data, isLoading, isError, error } = useGetDataHome();
+
+  if (isError && error) {
+    toast.error("Gagal memuat data", {
+      description: error.message,
+      id: "home-error", // Prevent duplicate toasts
+    });
+  }
 
   return (
     <Fragment>
@@ -21,7 +29,10 @@ export default function Home() {
       />
       <Navbar />
       <main className="">
-        <FeaturedSection data={data?.data} />
+        <FeaturedSection
+          data={data?.data}
+          isLoadingError={!isLoading && !isError}
+        />
       </main>
       <Footer />
     </Fragment>

@@ -9,9 +9,10 @@ import { Icons } from "@/components/icons";
 interface AdminBlogsCardProps {
   post: Post;
   onDelete: (data: PostDelete) => void;
+  href: "blogs" | "writings";
 }
 
-export function AdminBlogsCard({ post, onDelete }: AdminBlogsCardProps) {
+export function AdminBlogsCard({ post, onDelete, href }: AdminBlogsCardProps) {
   return (
     <Card className="group hover:shadow-lg transition-all duration-200 h-full">
       <CardHeader className="pb-3">
@@ -21,7 +22,7 @@ export function AdminBlogsCard({ post, onDelete }: AdminBlogsCardProps) {
               <Badge className="text-xs" variant={"outline"}>
                 {post.status}
               </Badge>
-              <TypeBadge type={post.type} />
+              {/* <TypeBadge type={post.type} /> */}
               {post.featured && (
                 <Badge
                   variant="outline"
@@ -58,6 +59,7 @@ export function AdminBlogsCard({ post, onDelete }: AdminBlogsCardProps) {
 
             <DropdownBlogs
               post={{ slug: post.slug, title: post.title }}
+              href={href}
               onDelete={onDelete}
             />
           </div>

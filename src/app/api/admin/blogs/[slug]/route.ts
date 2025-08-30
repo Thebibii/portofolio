@@ -11,7 +11,6 @@ const postSchema = z.object({
   coverImage: z.string().optional(),
   status: z.nativeEnum(PostStatus),
   featured: z.boolean(),
-  type: z.nativeEnum(PostType),
   readingTime: z.number().min(1, "Reading time must be at least 1 minute"),
   categoryId: z.string().optional(),
   tagIds: z.array(z.string()).optional(),
@@ -26,6 +25,13 @@ export async function GET(
 
     const data = await prisma.post.findUnique({
       where: { slug, type: "BLOG" },
+      include: {
+        tags: {
+          select: {
+            tag: true,
+          },
+        },
+      },
     });
 
     if (!data) {
@@ -59,7 +65,7 @@ export async function PUT(
     // Pisahkan tagIds dari data lainnya
     const { tagIds, ...postData } = body;
     const existingBlog = await prisma.post.findUnique({
-      where: { slug },
+      where: { slug, type: PostType.BLOG },
     });
 
     if (!existingBlog) {
@@ -121,7 +127,7 @@ export async function DELETE(
   const { slug } = await params;
 
   const existingBlog = await prisma.post.findUnique({
-    where: { slug },
+    where: { slug, type: PostType.BLOG },
   });
 
   if (!existingBlog) {

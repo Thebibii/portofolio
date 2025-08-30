@@ -5,13 +5,27 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import Image from "next/image";
 import Link from "next/link";
-export default function BlogsCard({ data }: { data: any }) {
+
+export default function BlogsCard({
+  data,
+  to = "blogs",
+  onTagClick,
+  onCategoryClick,
+  activeTag,
+  activeCategory,
+}: {
+  data: any;
+  to: "blogs" | "writings";
+  onTagClick?: (tagSlug: string) => void;
+  onCategoryClick?: (categorySlug: string) => void;
+  activeTag?: string | null;
+  activeCategory?: string | null;
+}) {
   return (
     <>
       {data?.map((item: any) => (
@@ -35,24 +49,55 @@ export default function BlogsCard({ data }: { data: any }) {
             </div>
 
             {/* Konten - Muncul kedua di mobile, pertama di desktop */}
-            <div className="flex-1 flex space-y-2  flex-col h-full order-2 md:order-1">
+            <div className="flex-1 flex space-y-2 flex-col h-full order-2 md:order-1">
               <CardHeader className="space-y-1">
-                <CardTitle className="text-lg">{item?.title}</CardTitle>
-                <CardDescription className=" w-full space-y-2">
+                <CardTitle className="text-lg space-y-2">
+                  {(item?.category || item?.tags.length > 0) && (
+                    <div className="flex space-x-2 justify-between">
+                      {item?.category && (
+                        <Badge
+                          className={
+                            onCategoryClick
+                              ? "cursor-pointer hover:opacity-80 transition-opacity"
+                              : ""
+                          }
+                          onClick={() =>
+                            onCategoryClick?.(item?.category?.slug)
+                          }
+                        >
+                          {item?.category?.slug}
+                        </Badge>
+                      )}
+                      {item?.tags?.length > 0 && (
+                        <div className="flex space-x-2 ">
+                          {item?.tags?.map(({ tag }: { tag: any }) => (
+                            <Badge
+                              variant={
+                                activeTag === tag.slug ? "default" : "outline"
+                              }
+                              key={tag.slug}
+                              className={
+                                onTagClick
+                                  ? "cursor-pointer hover:opacity-80 transition-opacity"
+                                  : ""
+                              }
+                              onClick={() => onTagClick?.(tag.slug)}
+                            >
+                              # {tag?.name}
+                            </Badge>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                  <p>{item?.title}</p>
+                </CardTitle>
+                <CardDescription className="w-full space-y-2">
                   <p>{item?.excerpt}</p>
-                  <div className="flex space-x-2">
-                    {item?.tags?.map(({ tag }: { tag: any }) => (
-                      <Badge variant={"outline"} key={tag.slug}>
-                        {tag?.name}
-                      </Badge>
-                    ))}
-                  </div>
                 </CardDescription>
               </CardHeader>
-              <CardContent className="flex-1 flex flex-col justify-end ">
-                {/* Tombol di kiri - lebih natural untuk reading flow */}
-
-                {/* Stats dan Tags di bawah */}
+              <CardContent className="flex-1 flex flex-col justify-end">
+                {/* Stats dan Button */}
                 <div className="flex items-center flex-wrap space-y-2 sm:space-y-0">
                   <div className="flex flex-row space-x-4 mr-auto">
                     <p className="flex items-center space-x-2 text-xs">
@@ -64,9 +109,13 @@ export default function BlogsCard({ data }: { data: any }) {
                       <span>{item?.viewCount} views</span>
                     </p>
                   </div>
-                  <div className="">
-                    <Button asChild size="sm" className="bg-primary/90">
-                      <Link href={`/blogs/${item.slug}`}>
+                  <div className="w-full sm:w-fit mt-4 sm:mt-0">
+                    <Button
+                      asChild
+                      size="sm"
+                      className="bg-primary/90 hover:bg-primary/80 w-full"
+                    >
+                      <Link href={`/${to}/${item.slug}`}>
                         Baca selengkapnya
                       </Link>
                     </Button>

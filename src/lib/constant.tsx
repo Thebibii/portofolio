@@ -14,10 +14,6 @@ export const NavList = [
     href: "/blogs",
   },
   {
-    name: "now",
-    href: "/now",
-  },
-  {
     name: "about",
     href: "/about",
   },

@@ -27,7 +27,7 @@ export default function Navbar() {
                 <AvatarImage src="https://github.com/shadcn.png" />
                 <AvatarFallback>CN</AvatarFallback>
               </Avatar>
-              <h2>Habibie Bayezid Wildan</h2>
+              <h2 className="text-lg font-semibold">The Bibi</h2>
             </div>
           </Link>
           <ul className="hidden lg:flex lg:space-x-12">
