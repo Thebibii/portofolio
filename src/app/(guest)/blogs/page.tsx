@@ -1,4 +1,5 @@
 "use client";
+import { Suspense } from "react";
 import { Icons } from "@/components/icons";
 import BlogsCard from "@/components/reusable/home/blogs-card";
 import { Badge } from "@/components/ui/badge";
@@ -24,7 +25,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Scrollbar } from "@radix-ui/react-scroll-area";
 import { Label } from "@/components/ui/label";
 
-export default function Page() {
+function BlogsContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -460,5 +461,19 @@ export default function Page() {
         </div>
       </div>
     </LoadingState>
+  );
+}
+
+// Loading fallback component
+function BlogsPageFallback() {
+  return <BlogsSkeleton />;
+}
+
+// Main component with Suspense boundary
+export default function Page() {
+  return (
+    <Suspense fallback={<BlogsPageFallback />}>
+      <BlogsContent />
+    </Suspense>
   );
 }
