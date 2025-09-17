@@ -1,4 +1,5 @@
 import { baseURL } from "@/lib/api";
+import { APIResponse } from "@/types/response";
 import { useMutation } from "@tanstack/react-query";
 
 export interface TagFormData {
@@ -10,7 +11,7 @@ export const useCreateCategory = ({
   onSuccess,
   onError,
 }: {
-  onSuccess: (body: any) => void;
+  onSuccess: (body: APIResponse) => void;
   onError?: (body: any) => void;
 }) => {
   return useMutation({
@@ -49,7 +50,7 @@ export const useUpdateCategory = ({
   onError,
 }: {
   id: string;
-  onSuccess: (body: any) => void;
+  onSuccess: (body: APIResponse) => void;
   onError?: (body: any) => void;
 }) => {
   return useMutation({
@@ -86,7 +87,7 @@ export const useDeleteCategory = ({
   onSuccess,
   onError,
 }: {
-  onSuccess: (body: any) => void;
+  onSuccess: (body: APIResponse) => void;
   onError?: (body: any) => void;
 }) => {
   return useMutation({

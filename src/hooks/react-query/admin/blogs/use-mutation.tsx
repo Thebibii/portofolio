@@ -1,13 +1,14 @@
 import { baseURL } from "@/lib/api";
 import { Post, PostDelete } from "@/types/blogs";
 import { ProjectFormData } from "@/types/projects";
+import { APIResponse } from "@/types/response";
 import { useMutation } from "@tanstack/react-query";
 
 export const useCreateBlog = ({
   onSuccess,
   onError,
 }: {
-  onSuccess: (body: any) => void;
+  onSuccess: (body: APIResponse) => void;
   onError?: (body: any) => void;
 }) => {
   return useMutation({
@@ -44,7 +45,7 @@ export const useDeleteBlog = ({
   onSuccess,
   onError,
 }: {
-  onSuccess: (body: any) => void;
+  onSuccess: (body: APIResponse) => void;
   onError?: (body: any) => void;
 }) => {
   return useMutation({
@@ -83,7 +84,7 @@ export const useUpdateBlog = ({
   onError,
 }: {
   slug: string;
-  onSuccess: (body: any) => void;
+  onSuccess: (body: APIResponse) => void;
   onError?: (body: any) => void;
 }) => {
   return useMutation({

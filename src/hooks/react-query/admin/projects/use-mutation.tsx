@@ -1,12 +1,13 @@
 import { baseURL } from "@/lib/api";
 import { ProjectFormData } from "@/types/projects";
+import { APIResponse } from "@/types/response";
 import { useMutation } from "@tanstack/react-query";
 
 export const useCreateProject = ({
   onSuccess,
   onError,
 }: {
-  onSuccess: (body: any) => void;
+  onSuccess: (body: APIResponse) => void;
   onError?: (body: any) => void;
 }) => {
   return useMutation({
@@ -43,7 +44,7 @@ export const useDeleteProject = ({
   onSuccess,
   onError,
 }: {
-  onSuccess: (body: any) => void;
+  onSuccess: (body: APIResponse) => void;
   onError?: (body: any) => void;
 }) => {
   return useMutation({
@@ -82,7 +83,7 @@ export const useUpdateProject = ({
   onError,
 }: {
   id: string;
-  onSuccess: (body: any) => void;
+  onSuccess: (body: APIResponse) => void;
   onError?: (body: any) => void;
 }) => {
   return useMutation({

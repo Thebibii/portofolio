@@ -1,4 +1,5 @@
 import { baseURL } from "@/lib/api";
+import { APIResponse } from "@/types/response";
 import { useMutation } from "@tanstack/react-query";
 
 export interface TagFormData {
@@ -10,7 +11,7 @@ export const useCreateTag = ({
   onSuccess,
   onError,
 }: {
-  onSuccess: (body: any) => void;
+  onSuccess: (body: APIResponse) => void;
   onError?: (body: any) => void;
 }) => {
   return useMutation({
@@ -49,7 +50,7 @@ export const useUpdateTag = ({
   onError,
 }: {
   id: string;
-  onSuccess: (body: any) => void;
+  onSuccess: (body: APIResponse) => void;
   onError?: (body: any) => void;
 }) => {
   console.log(id);
@@ -88,7 +89,7 @@ export const useDeleteTag = ({
   onSuccess,
   onError,
 }: {
-  onSuccess: (body: any) => void;
+  onSuccess: (body: APIResponse) => void;
   onError?: (body: any) => void;
 }) => {
   return useMutation({

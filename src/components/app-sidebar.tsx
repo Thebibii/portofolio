@@ -35,28 +35,43 @@ const data = {
   navMain: [
     {
       title: "Dashboard",
-      url: "#",
+      url: "/admin/dashboard",
       icon: LayoutDashboard,
+      collapsible: false,
     },
     {
       title: "Project",
       url: "/admin/project",
       icon: Projector,
+      collapsible: false,
     },
     {
       title: "Writings",
       url: "/admin/writings",
       icon: NotebookText,
+      collapsible: false,
     },
     {
       title: "Blogs",
       url: "/admin/blogs",
       icon: Folder,
+      collapsible: false,
     },
     {
-      title: "Now",
-      url: "#",
+      title: "About",
+      url: "/admin/about",
       icon: Network,
+      collapsible: true,
+      items: [
+        {
+          title: "Experiences",
+          url: "/admin/about/experiences",
+        },
+        {
+          title: "Current Activity",
+          url: "/admin/about/current-activities",
+        },
+      ],
     },
   ],
   navSecondary: [

@@ -3,16 +3,16 @@ import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
-    const experience = await prisma.experience.findMany({
-      orderBy: { startDate: "desc" },
+    const experiences = await prisma.experience.findMany({
+      orderBy: { startDate: "asc" },
     });
-    const currentActivity = await prisma.currentActivity.findMany({
-      orderBy: { createdAt: "desc" },
+    const currentActivities = await prisma.currentActivity.findMany({
+      orderBy: { createdAt: "asc" },
     });
 
     return NextResponse.json({
       success: true,
-      data: { experience, currentActivity },
+      data: { experiences, currentActivities },
     });
   } catch (error) {
     const message =
