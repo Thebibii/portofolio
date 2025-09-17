@@ -8,7 +8,7 @@ import { id } from "date-fns/locale";
  * @param {string} dateFormat - Format tanggal (hanya digunakan jika mode = "default")
  * @returns {string} - Hasil format tanggal
  */
-export function useFormattedDate(
+export function formattedDate(
   date: string | number | Date | undefined,
   mode = "default",
   dateFormat = "dd MMMM yyyy"

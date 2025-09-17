@@ -1,6 +1,6 @@
 "use client";
 import { useGetDataAbout } from "@/hooks/react-query/guest/use-query";
-import { useFormattedDate } from "@/hooks/use-formatted-date";
+import { formattedDate } from "@/hooks/use-formatted-date";
 
 export default function Page() {
   const { data } = useGetDataAbout();
@@ -22,9 +22,7 @@ export default function Page() {
               key={_}
             >
               <p className="tracking-wide uppercase self-start py-2 -mt-1 text-sm  font-semibold">
-                <span>
-                  {useFormattedDate(e.startDate, "default", "MMM yyyy")}
-                </span>
+                <span>{formattedDate(e.startDate, "default", "MMM yyyy")}</span>
                 <span> - </span>
                 <span>{e.endDate ?? "PRESENT"}</span>
               </p>

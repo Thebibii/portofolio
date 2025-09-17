@@ -38,7 +38,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { useAdminTag } from "@/hooks/react-query/admin/tag/use-query";
-import { useFormattedDate } from "@/hooks/use-formatted-date";
+import { formattedDate } from "@/hooks/use-formatted-date";
 import { Tag } from "@/types/tags";
 import {
   useCreateTag,
@@ -347,7 +347,7 @@ export default function Page() {
                       </Badge>
                     </TableCell>
                     <TableCell className="text-muted-foreground">
-                      {useFormattedDate(tag.createdAt)}
+                      {formattedDate(tag.createdAt)}
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex items-center justify-end space-x-2">

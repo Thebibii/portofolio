@@ -1,1 +1,1 @@
-export type APIResponse = { data: unknown; message: string; success?: number };
+export type APIResponse = { data: any; message: string; success?: number };

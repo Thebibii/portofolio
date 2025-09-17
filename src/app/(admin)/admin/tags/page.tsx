@@ -38,7 +38,6 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { useAdminTag } from "@/hooks/react-query/admin/tag/use-query";
-import { useFormattedDate } from "@/hooks/use-formatted-date";
 import { Tag } from "@/types/tags";
 import {
   useCreateTag,
@@ -60,6 +59,7 @@ import {
 import LoadingState from "@/components/reusable/state/loading-state";
 import AdminTagsSkeleton from "@/components/reusable/skeleton/AdminTagsSkeleton";
 import { Icons } from "@/components/icons";
+import { formattedDate } from "@/hooks/use-formatted-date";
 
 export default function Page() {
   const { data, isLoading: isLoadingData } = useAdminTag();
@@ -340,7 +340,7 @@ export default function Page() {
                       </Badge>
                     </TableCell>
                     <TableCell className="text-muted-foreground">
-                      {useFormattedDate(tag.createdAt)}
+                      {formattedDate(tag.createdAt)}
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex items-center justify-end space-x-2">
