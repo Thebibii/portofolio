@@ -19,7 +19,7 @@ export default function Page() {
   const { mutate } = useCreateBlog({
     onSuccess: (data) => {
       toast.success("Post created successfully", {
-        description: `"${data.title}" has been created and saved.`,
+        description: `"${data.data.title}" has been created and saved.`,
       });
       queryClient.invalidateQueries({ queryKey: ["get.admin.blogs"] });
       router.back();
