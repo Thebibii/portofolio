@@ -50,7 +50,7 @@ export default function Navbar() {
               );
             })}
           </ul>
-          <DropdownMenu>
+          <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild className="lg:hidden">
               <Button variant="outline" size={"icon"}>
                 <Icons.Menu />

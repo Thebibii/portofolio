@@ -79,3 +79,46 @@ export function BlogsSkeleton() {
     </div>
   );
 }
+
+export function FilterSkeleton() {
+  return (
+    <div className="flex flex-col gap-4 w-full">
+      {/* Filter Controls Skeleton */}
+      <div className="flex space-x-2 justify-center flex-wrap">
+        <Skeleton className="h-10 w-20 rounded-full" />
+        <Skeleton className="h-10 sm:w-[220px] w-24 rounded-full" />
+        <Skeleton className="h-10 w-10 rounded-full" />
+      </div>
+
+      {/* Category Filter Skeleton */}
+      <div className="w-full whitespace-nowrap rounded-md border p-2">
+        <div className="flex w-max space-x-2">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <Skeleton key={i} className="h-8 w-16 rounded-full" />
+          ))}
+        </div>
+      </div>
+
+      {/* Search Input Skeleton */}
+      <div className="relative flex-1">
+        <Skeleton className="h-10 w-full rounded-full" />
+      </div>
+
+      {/* Tags Filter Skeleton */}
+      <div className="flex space-x-2 flex-wrap gap-2">
+        {Array.from({ length: 5 }).map((_, i) => (
+          <Skeleton key={i} className="h-6 w-14 rounded-full" />
+        ))}
+      </div>
+
+      {/* Filter Info Skeleton */}
+      <div className="flex items-center justify-between text-sm">
+        <Skeleton className="h-4 w-40" />
+        <div className="flex gap-2">
+          <Skeleton className="h-4 w-12 rounded" />
+          <Skeleton className="h-4 w-16 rounded" />
+        </div>
+      </div>
+    </div>
+  );
+}

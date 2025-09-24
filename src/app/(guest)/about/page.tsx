@@ -15,10 +15,10 @@ export default function Page() {
             A story of growth and discovery
           </p>
         </div>
-        <div className="flex flex-col gap-20 mt-16 w-full">
+        <div className="flex flex-col gap-16 md:gap-20 mt-16 w-full">
           {data?.data?.experiences?.map((e: any, _: any) => (
             <div
-              className="grid gap-4 grid-cols-[300px_1fr] w-full md:gap-8"
+              className="grid gap-4 md:grid-cols-[260px_1fr] w-full md:gap-8"
               key={_}
             >
               <p className="tracking-wide uppercase self-start py-2 -mt-1 text-sm  font-semibold">

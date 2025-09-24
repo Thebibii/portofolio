@@ -19,11 +19,23 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import LoadingState from "@/components/reusable/state/loading-state";
-import { BlogsSkeleton } from "@/components/reusable/skeleton/blogs-skeleton";
+import {
+  BlogsSkeleton,
+  FilterSkeleton,
+} from "@/components/reusable/skeleton/blogs-skeleton";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Scrollbar } from "@radix-ui/react-scroll-area";
 import { Label } from "@/components/ui/label";
+import { BlogsCardSkeleton } from "@/components/reusable/skeleton/blogs-card-skeleton";
+import { PopoverAnchor } from "@radix-ui/react-popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Check, ChevronDown } from "lucide-react";
+import SortPopover from "@/components/reusable/guest/sort-popover";
 
 function BlogsContent() {
   const router = useRouter();
@@ -254,18 +266,18 @@ function BlogsContent() {
   }
 
   return (
-    <LoadingState
-      data={!isLoading && !isLoadingTags && !isLoadingCategory}
-      loadingFallback={<BlogsSkeleton />}
-    >
-      <div className="space-y-12 font-mono pt-9 pb-12 lg:pt-24 mx-auto w-full max-w-6xl px-6 lg:px-8 xl:px-0">
-        <div className="flex flex-col space-y-8 items-center max-w-3xl mx-auto w-full justify-center">
-          <div className="space-y-4 items-center justify-center flex flex-col">
-            <header className="text-5xl font-bold">Blogs</header>
-            <p className="transition-colors bg-gradient-to-r from-gray-500/80 via-black to-gray-500/80 bg-clip-text text-transparent">
-              A story of growth and discovery
-            </p>
-          </div>
+    <div className="space-y-12 font-mono pt-9 pb-12 lg:pt-24 mx-auto w-full max-w-6xl px-6 lg:px-8 xl:px-0">
+      <div className="flex flex-col space-y-8 items-center max-w-3xl mx-auto w-full justify-center">
+        <div className="space-y-4 items-center justify-center flex flex-col">
+          <header className="text-5xl font-bold">Blogs</header>
+          <p className="transition-colors bg-gradient-to-r from-gray-500/80 via-black to-gray-500/80 bg-clip-text text-transparent">
+            A story of growth and discovery
+          </p>
+        </div>
+        <LoadingState
+          data={!isLoadingCategory && !isLoadingTags}
+          loadingFallback={<FilterSkeleton />}
+        >
           <div className="flex flex-col gap-4 w-full">
             {/* Filter Controls */}
             <div className="flex space-x-2 justify-center flex-wrap">
@@ -276,24 +288,7 @@ function BlogsContent() {
               >
                 Semua
               </Button>
-              <Select value={sortBy} onValueChange={handleSortChange}>
-                <SelectTrigger className="sm:w-[220px] w-fit rounded-full border border-primary">
-                  {/* Icon untuk mobile, text untuk desktop */}
-                  <span className="block sm:hidden">
-                    <Icons.Filter />
-                  </span>
-                  <span className="hidden sm:block">
-                    <SelectValue placeholder="Pilih urutan" />
-                  </span>
-                </SelectTrigger>
-                <SelectContent className="font-mono">
-                  <SelectItem value="createdAt">Terbaru</SelectItem>
-                  <SelectItem value="viewCount">
-                    Paling Banyak Dilihat
-                  </SelectItem>
-                  <SelectItem value="title">Judul A-Z</SelectItem>
-                </SelectContent>
-              </Select>
+              <SortPopover onSortChange={handleSortChange} sortBy={sortBy} />
               <Button
                 variant="outline"
                 onClick={handleSortOrderToggle}
@@ -389,78 +384,74 @@ function BlogsContent() {
               </div>
             )}
           </div>
-        </div>
+        </LoadingState>
+      </div>
 
-        {/* Results */}
-        <div className="grid w-full grid-cols-1 gap-6">
-          {isLoading ? (
-            <div className="text-center py-12">Loading...</div>
-          ) : data?.data?.length > 0 ? (
-            <>
-              <BlogsCard
-                to="blogs"
-                data={data.data}
-                onTagClick={handleTagClick}
-                onCategoryClick={handleCategoryClick}
-                activeTag={activeTag}
-                activeCategory={activeCategory}
-              />
+      {/* Results */}
+      <div className="grid w-full grid-cols-1 gap-6">
+        {isLoading ? (
+          <BlogsCardSkeleton />
+        ) : data?.data?.length > 0 ? (
+          <>
+            <BlogsCard
+              to="blogs"
+              data={data.data}
+              onTagClick={handleTagClick}
+              onCategoryClick={handleCategoryClick}
+              activeTag={activeTag}
+              activeCategory={activeCategory}
+            />
 
-              {/* Pagination */}
-              {data.meta.totalPages > 1 && (
-                <div className="flex justify-center space-x-2 mt-8">
-                  <Button
-                    variant="outline"
-                    onClick={() => handlePageChange(currentPage - 1)}
-                    disabled={!data.meta.hasPrevPage}
-                  >
-                    Previous
-                  </Button>
-
-                  {Array.from(
-                    { length: data.meta.totalPages },
-                    (_, i) => i + 1
-                  ).map((pageNum) => (
-                    <Button
-                      key={pageNum}
-                      variant={currentPage === pageNum ? "default" : "outline"}
-                      onClick={() => handlePageChange(pageNum)}
-                      className="w-10"
-                    >
-                      {pageNum}
-                    </Button>
-                  ))}
-
-                  <Button
-                    variant="outline"
-                    onClick={() => handlePageChange(currentPage + 1)}
-                    disabled={!data.meta.hasNextPage}
-                  >
-                    Next
-                  </Button>
-                </div>
-              )}
-            </>
-          ) : (
-            <div className="text-center py-12">
-              <div className="text-muted-foreground">
-                <p className="text-lg mb-2">Tidak ada blog yang ditemukan</p>
-                <p className="text-sm">
-                  Coba ubah kata kunci pencarian atau filter
-                </p>
+            {/* Pagination */}
+            {data.meta.totalPages > 1 && (
+              <div className="flex justify-center space-x-2 mt-8">
                 <Button
                   variant="outline"
-                  onClick={clearFilters}
-                  className="mt-4"
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={!data.meta.hasPrevPage}
                 >
-                  Reset Filter
+                  Previous
+                </Button>
+
+                {Array.from(
+                  { length: data.meta.totalPages },
+                  (_, i) => i + 1
+                ).map((pageNum) => (
+                  <Button
+                    key={pageNum}
+                    variant={currentPage === pageNum ? "default" : "outline"}
+                    onClick={() => handlePageChange(pageNum)}
+                    className="w-10"
+                  >
+                    {pageNum}
+                  </Button>
+                ))}
+
+                <Button
+                  variant="outline"
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={!data.meta.hasNextPage}
+                >
+                  Next
                 </Button>
               </div>
+            )}
+          </>
+        ) : (
+          <div className="text-center py-12">
+            <div className="text-muted-foreground">
+              <p className="text-lg mb-2">Tidak ada blog yang ditemukan</p>
+              <p className="text-sm">
+                Coba ubah kata kunci pencarian atau filter
+              </p>
+              <Button variant="outline" onClick={clearFilters} className="mt-4">
+                Reset Filter
+              </Button>
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
-    </LoadingState>
+    </div>
   );
 }
 

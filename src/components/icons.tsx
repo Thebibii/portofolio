@@ -1,6 +1,8 @@
 import {
   BookOpen,
   Calendar,
+  Check,
+  ChevronDown,
   Clock,
   Edit,
   ExternalLink,
@@ -45,4 +47,6 @@ export const Icons = {
   BookOpen: (props: IconProps) => <BookOpen {...props} />,
   Heart: (props: IconProps) => <Heart {...props} />,
   Loader: (props: IconProps) => <Loader {...props} />,
+  ChevronDown: (props: IconProps) => <ChevronDown {...props} />,
+  Check: (props: IconProps) => <Check {...props} />,
 };
