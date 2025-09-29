@@ -8,6 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { shimmer, toBase64 } from "@/lib/utils/shimmer";
 import Image from "next/image";
 import Link from "next/link";
 export default function ProjectCard({ data }: { data: any }) {
@@ -24,6 +25,10 @@ export default function ProjectCard({ data }: { data: any }) {
                   className="h-full w-full object-cover"
                   width={400}
                   height={225}
+                  placeholder="blur"
+                  blurDataURL={`data:image/svg+xml;base64,${toBase64(
+                    shimmer(400, 225)
+                  )}`}
                 />
               ) : (
                 <span className="text-gray-500 font-bold">400 x 225</span>
