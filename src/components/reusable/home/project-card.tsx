@@ -8,6 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import Image from "next/image";
 import Link from "next/link";
 export default function ProjectCard({ data }: { data: any }) {
   return (
@@ -15,16 +16,18 @@ export default function ProjectCard({ data }: { data: any }) {
       {data?.map((item: any) => (
         <Card className="w-full font-mono " key={item?.slug}>
           <CardHeader className="space-y-1">
-            <div className="aspect-[16/9] w-full overflow-hidden rounded-md bg-gray-100 ">
-              <img
-                src={
-                  item?.image && item.image.trim() !== ""
-                    ? item.image
-                    : "https://via.placeholder.com/400x225?text=No+Image"
-                }
-                alt={item?.title || "No image available"}
-                className="h-full w-full object-cover"
-              />
+            <div className="aspect-[16/9] w-full flex items-center justify-center overflow-hidden rounded-md bg-gray-100 ">
+              {item?.image && item.image.trim() !== "" ? (
+                <Image
+                  src={item.image}
+                  alt={item?.title || "Image"}
+                  className="h-full w-full object-cover"
+                  width={400}
+                  height={225}
+                />
+              ) : (
+                <span className="text-gray-500 font-bold">400 x 225</span>
+              )}
             </div>
             <CardTitle className="text-lg">{item?.title}</CardTitle>
             <CardDescription className="space-y-2">

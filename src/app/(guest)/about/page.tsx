@@ -4,7 +4,6 @@ import { formattedDate } from "@/hooks/use-formatted-date";
 
 export default function Page() {
   const { data } = useGetDataAbout();
-  console.log(data?.data);
 
   return (
     <div className="space-y-12 font-mono pt-9 pb-12 lg:pt-24 mx-auto w-full max-w-6xl px-6 lg:px-8 xl:px-0">
