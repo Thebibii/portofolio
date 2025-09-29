@@ -1,11 +1,11 @@
 "use client";
 import { Icons } from "@/components/icons";
-import EmptyState from "@/components/reusable/state/empty-state";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { useGuestBlogBySlug } from "@/hooks/react-query/guest/blogs/use-query";
+import ProfileImage from "../../../../../public/profile.png";
 import { useGuestWritingBySlug } from "@/hooks/react-query/guest/writings/use-query";
 import { formatCreatedUpdated } from "@/hooks/use-formatted-date";
+import Image from "next/image";
 import { useParams } from "next/navigation";
 
 export default function Page() {
@@ -41,14 +41,14 @@ export default function Page() {
                 }}
               >
                 <div className="jsx-496024066 absolute left-0 top-0">
-                  <img
+                  <Image
                     alt="Habibie"
                     title="Habibie"
-                    decoding="async"
                     loading="lazy"
                     width={350}
                     height={350}
-                    src="/profile.png"
+                    decoding="async"
+                    src={ProfileImage}
                   />
                 </div>
               </div>

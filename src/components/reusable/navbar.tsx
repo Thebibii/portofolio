@@ -13,6 +13,7 @@ import { Icons } from "../icons";
 import { NavList } from "@/lib/constant";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
+import Image from "next/image";
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -23,10 +24,30 @@ export default function Navbar() {
         <nav className="flex items-center justify-between p-6 lg:px-12">
           <Link href="/">
             <div className="group flex items-center space-x-4">
-              <Avatar className="size-10">
-                <AvatarImage src="https://github.com/shadcn.png" />
-                <AvatarFallback>CN</AvatarFallback>
-              </Avatar>
+              <div className="size-10 rounded-full overflow-hidden">
+                <figure className="isolate z-[1] overflow-hidden select-none pointer-events-none object-cover">
+                  <div
+                    style={{
+                      position: "relative",
+                      height: 0,
+                      paddingTop: "100%",
+                      cursor: "default",
+                    }}
+                  >
+                    <div className="jsx-496024066 absolute left-0 top-0">
+                      <Image
+                        alt="Habibie"
+                        title="Habibie"
+                        loading="lazy"
+                        width={350}
+                        height={350}
+                        decoding="async"
+                        src="https://atoknuupgrcxghtwmogg.supabase.co/storage/v1/object/public/profile/Foto.png"
+                      />
+                    </div>
+                  </div>
+                </figure>
+              </div>
               <h2 className="text-lg font-semibold">The Bibi</h2>
             </div>
           </Link>
