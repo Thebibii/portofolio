@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { useGuestBlogBySlug } from "@/hooks/react-query/guest/blogs/use-query";
 import { formatCreatedUpdated } from "@/hooks/use-formatted-date";
+import Image from "next/image";
 import { useParams } from "next/navigation";
 
 export default function Page() {
@@ -40,15 +41,13 @@ export default function Page() {
               >
                 <div className="jsx-496024066 absolute left-0 top-0">
                   <img
-                    alt="Theodorus Clarence"
-                    title="Theodorus Clarence"
+                    alt="Habibie"
+                    title="Habibie"
+                    decoding="async"
                     loading="lazy"
                     width={350}
                     height={350}
-                    decoding="async"
-                    data-nimg={1}
-                    src="https://images.theodorusclarence.com/upload/q_auto,f_auto/theodorusclarence/about/me-2024.jpg"
-                    style={{ color: "transparent" }}
+                    src="/profile.png"
                   />
                 </div>
               </div>
