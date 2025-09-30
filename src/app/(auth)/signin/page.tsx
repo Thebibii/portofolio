@@ -42,7 +42,7 @@ export default function SignInPage() {
       if (result?.error) {
         setError("Invalid credentials");
       } else {
-        router.push("/dashboard"); // Redirect ke dashboard atau halaman utama
+        router.push("/admin/dashboard"); // Redirect ke dashboard atau halaman utama
         router.refresh();
       }
     } catch (error) {

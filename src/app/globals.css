@@ -120,6 +120,10 @@
     @apply bg-background text-foreground;
   }
 
+  .h1 {
+    @apply font-bold tracking-tight font-mono text-4xl sm:text-5xl;
+  }
+
   :root {
     --sidebar: oklch(0.985 0 0);
     --sidebar-foreground: oklch(0.145 0 0);

@@ -17,7 +17,7 @@ export default function ProjectCard({ data }: { data: any }) {
       {data?.map((item: any) => (
         <Card className="w-full font-mono " key={item?.slug}>
           <CardHeader className="space-y-1">
-            <div className="aspect-[16/9] w-full flex items-center justify-center overflow-hidden rounded-md bg-gray-100 ">
+            <div className="aspect-[4/3] sm:aspect-video w-full flex items-center justify-center overflow-hidden rounded-md bg-gray-100 ">
               {item?.image && item.image.trim() !== "" ? (
                 <Image
                   src={item.image}
@@ -51,10 +51,14 @@ export default function ProjectCard({ data }: { data: any }) {
               </div>
             </CardDescription>
           </CardHeader>
-          <CardFooter className="flex-row justify-between">
-            <div className="flex flex-row space-x-2">
+          <CardFooter className="flex-col sm:flex-row gap-2 justify-between">
+            <div className="flex flex-row space-x-2 w-full sm:w-fit">
               {item.demoUrl && (
-                <Button asChild variant="outline">
+                <Button
+                  asChild
+                  variant="outline"
+                  className="flex-1 sm:flex-initial"
+                >
                   <Link target="_blank" href={item.demoUrl} className="text-sm">
                     <Icons.ExternalLink className="size-4" />
                     Link Demo
@@ -63,7 +67,11 @@ export default function ProjectCard({ data }: { data: any }) {
               )}
 
               {item.sourceUrl && (
-                <Button asChild variant="outline" size="icon">
+                <Button
+                  asChild
+                  variant="outline"
+                  className="flex-1 sm:flex-initial"
+                >
                   <Link
                     target="_blank"
                     href={item.sourceUrl}
@@ -75,7 +83,7 @@ export default function ProjectCard({ data }: { data: any }) {
                 </Button>
               )}
             </div>
-            <Button asChild className="bg-primary/90">
+            <Button asChild className="bg-primary/90 w-full sm:w-fit">
               <Link href={`/projects/${item.slug}`}>View detail</Link>
             </Button>
           </CardFooter>

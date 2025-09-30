@@ -34,7 +34,7 @@ export default function BlogsCard({
           <div className="flex flex-col md:flex-row">
             {/* Gambar - Muncul pertama di mobile, kedua di desktop */}
             <div className="flex-none p-4 flex items-center md:basis-80 order-1 md:order-2">
-              <div className="aspect-video w-full overflow-hidden rounded-md bg-gray-100 flex items-center justify-center">
+              <div className="aspect-[4/3] sm:aspect-video w-full overflow-hidden rounded-md bg-gray-100 flex items-center justify-center">
                 {item?.coverImage && item.coverImage.trim() !== "" ? (
                   <Image
                     src={item.coverImage}

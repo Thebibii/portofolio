@@ -9,7 +9,6 @@ export const useGetDataHome = () => {
       const res = await fetch(`${baseURL}/guest`);
 
       const data = await res.json();
-      console.log(data);
       if (!res.ok) throw new Error(data.error);
       return data;
     },
@@ -24,7 +23,6 @@ export const useGetDataAbout = () => {
       const res = await fetch(`${baseURL}/guest/about`);
 
       const data = await res.json();
-      console.log(data);
       if (!res.ok) throw new Error(data.error);
       return data;
     },

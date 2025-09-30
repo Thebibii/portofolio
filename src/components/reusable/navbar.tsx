@@ -14,10 +14,11 @@ import { NavList } from "@/lib/constant";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
 import Image from "next/image";
+import { useState } from "react";
 
 export default function Navbar() {
   const pathname = usePathname();
-
+  const [isOpen, setIsOpen] = useState(false);
   return (
     <header className="w-full font-mono">
       <div className="@container">
@@ -71,7 +72,7 @@ export default function Navbar() {
               );
             })}
           </ul>
-          <DropdownMenu modal={false}>
+          <DropdownMenu modal={false} open={isOpen} onOpenChange={setIsOpen}>
             <DropdownMenuTrigger asChild className="lg:hidden">
               <Button variant="outline" size={"icon"}>
                 <Icons.Menu />
@@ -83,6 +84,7 @@ export default function Navbar() {
                   <DropdownMenuItem
                     key={_ + 1}
                     className="capitalize justify-end"
+                    onClick={() => setIsOpen(false)}
                   >
                     <Link href={item.href}>{item.name}</Link>
                   </DropdownMenuItem>

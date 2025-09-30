@@ -19,12 +19,10 @@ export default function Page() {
     });
   }
   return (
-    <div className="space-y-4 font-mono lg:pt-24 pt-9 mx-auto w-full max-w-6xl px-6 lg:px-8 xl:px-0">
+    <div className="space-y-12 font-mono pt-9 pb-12 lg:pt-24 mx-auto w-full max-w-6xl px-6 lg:px-8 xl:px-0">
       <section className=" space-y-6 pb-10">
         <header className="space-y-4">
-          <h1 className="font-bold tracking-tight font-mono text-5xl">
-            Main Projects
-          </h1>
+          <h1 className="h1">Main Projects</h1>
           <p className="text-muted-foreground">
             Core projects with ongoing attention and long-term goals.
           </p>
@@ -40,9 +38,7 @@ export default function Page() {
       </section>
       <section className="lg:py-24 pt-9 space-y-6">
         <header className="space-y-4">
-          <h1 className="font-bold tracking-tight font-mono text-5xl">
-            Other Projects
-          </h1>
+          <h1 className="h1">Other Projects</h1>
           <p className="text-muted-foreground">
             Side projects, experiments, and past builds.
           </p>
