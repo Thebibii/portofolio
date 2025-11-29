@@ -1,10 +1,9 @@
 import { baseURL } from "@/lib/api";
 import { Post, PostDelete } from "@/types/blogs";
-import { ProjectFormData } from "@/types/projects";
 import { APIResponse } from "@/types/response";
 import { useMutation } from "@tanstack/react-query";
 
-export const useCreateBlog = ({
+export const useCreateWriting = ({
   onSuccess,
   onError,
 }: {
@@ -12,10 +11,10 @@ export const useCreateBlog = ({
   onError?: (body: any) => void;
 }) => {
   return useMutation({
-    mutationKey: ["admin.create.blog"],
+    mutationKey: ["admin.create.writing"],
     mutationFn: async (body: Post) => {
       try {
-        const res = await fetch(`${baseURL}/admin/blogs`, {
+        const res = await fetch(`${baseURL}/admin/writings`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -26,7 +25,7 @@ export const useCreateBlog = ({
         if (!res.ok) {
           const errors = await res.json().catch(() => ({}));
 
-          throw new Error(errors.error || "Gagal membuat blogs");
+          throw new Error(errors.error || "Gagal membuat writings");
         }
 
         return res.json();
@@ -41,7 +40,7 @@ export const useCreateBlog = ({
   });
 };
 
-export const useDeleteBlog = ({
+export const useDeleteWriting = ({
   onSuccess,
   onError,
 }: {
@@ -49,10 +48,10 @@ export const useDeleteBlog = ({
   onError?: (body: any) => void;
 }) => {
   return useMutation({
-    mutationKey: ["admin.delete.blog"],
+    mutationKey: ["admin.delete.writing"],
     mutationFn: async (body: PostDelete) => {
       try {
-        const res = await fetch(`${baseURL}/admin/blogs/${body.slug}`, {
+        const res = await fetch(`${baseURL}/admin/writings/${body.slug}`, {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
@@ -78,7 +77,7 @@ export const useDeleteBlog = ({
   });
 };
 
-export const useUpdateBlog = ({
+export const useUpdateWriting = ({
   slug,
   onSuccess,
   onError,
@@ -88,10 +87,10 @@ export const useUpdateBlog = ({
   onError?: (body: any) => void;
 }) => {
   return useMutation({
-    mutationKey: ["admin.update.blog", slug],
+    mutationKey: ["admin.update.writing", slug],
     mutationFn: async (body: Post) => {
       try {
-        const res = await fetch(`${baseURL}/admin/blogs/${slug}`, {
+        const res = await fetch(`${baseURL}/admin/writings/${slug}`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",

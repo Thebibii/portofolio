@@ -47,8 +47,22 @@ export const useGuestWritingBySlug = ({ slug }: { slug: string }) => {
       const res = await fetch(`${baseURL}/guest/writings/${slug}`);
 
       const data = await res.json();
-      if (!res.ok) throw new Error("Failed to fetch writings");
+
+      if (!res.ok) {
+        // Lempar error dengan status code
+        const error: any = new Error(
+          data.message || "Failed to fetch writings"
+        );
+        error.status = res.status;
+        throw error;
+      }
+
       return data;
+    },
+    retry: (failureCount, error: any) => {
+      // Jangan retry jika 404
+      if (error?.status === 404) return false;
+      return failureCount < 3;
     },
   });
 };

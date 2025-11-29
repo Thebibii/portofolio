@@ -10,6 +10,7 @@ import {
   Filter,
   Github,
   Heart,
+  Home,
   Instagram,
   Link,
   Loader,
@@ -27,6 +28,7 @@ import {
 type IconProps = React.HTMLAttributes<SVGElement>;
 export const Icons = {
   Menu: (props: IconProps) => <Menu {...props} />,
+  Home: (props: IconProps) => <Home {...props} />,
   Github: (props: IconProps) => <Github {...props} />,
   Mail: (props: IconProps) => <Mail {...props} />,
   Instagram: (props: IconProps) => <Instagram {...props} />,

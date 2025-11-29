@@ -39,13 +39,13 @@ import { useCreateProject } from "@/hooks/react-query/admin/projects/use-mutatio
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
-import { RichTextEditor } from "@/components/RichTextEditor";
 import LoadingState from "../../state/loading-state";
 import ProjectFormSkeleton from "../../skeleton/project-form-skeleton";
 import {
   SingleImageUploader,
   MultipleImageUploader,
 } from "@/components/ui/image-uploader";
+import { PlateEditor } from "@/components/plate-editor";
 
 const projectSchema = z.object({
   title: z.string().min(1, "Title is required"),
@@ -119,7 +119,10 @@ export default function FormCreateProject({
 
   const handleSubmit = async (data: ProjectFormData) => {
     try {
-      mutate(data);
+      mutate({
+        longDescription: JSON.stringify(data.longDescription),
+        ...data,
+      });
     } catch (e) {
       console.log(e);
     }
@@ -203,10 +206,10 @@ export default function FormCreateProject({
                 <FormItem>
                   <FormLabel>Content</FormLabel>
                   <FormControl>
-                    <RichTextEditor
-                      control={form.control}
-                      name="longDescription"
-                      placeholder="Write your post content here..."
+                    <PlateEditor
+                      {...field}
+                      placeholder="Type your project content..."
+                      className="min-h-[200px] overflow-y-auto  sm:px-8 sm:py-2"
                     />
                   </FormControl>
                   <FormDescription>

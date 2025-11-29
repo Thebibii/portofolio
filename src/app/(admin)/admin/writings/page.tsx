@@ -19,7 +19,7 @@ export default function Page() {
       toast.success("Success", {
         description: body.message,
       });
-      queryClient.invalidateQueries({ queryKey: ["get.admin.blogs"] });
+      queryClient.invalidateQueries({ queryKey: ["get.admin.writings"] });
     },
   });
 
@@ -44,7 +44,7 @@ export default function Page() {
           ))}
         </div>
         <Button asChild>
-          <Link href="/admin/blogs/create">Create Blog</Link>
+          <Link href="/admin/writings/create">Create Blog</Link>
         </Button>
       </LoadingState>
     </div>

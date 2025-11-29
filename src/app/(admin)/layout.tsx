@@ -1,7 +1,6 @@
 import { AppSidebar } from "@/components/app-sidebar";
 import { SiteHeader } from "@/components/site-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import { Toaster } from "@/components/ui/sonner";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -22,7 +21,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <main className="flex flex-col gap-4 py-4 px-6 md:gap-6 md:py-6">
               {children}
             </main>
-            <Toaster closeButton position="top-right" richColors />
           </div>
         </div>
       </SidebarInset>

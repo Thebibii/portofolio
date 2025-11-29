@@ -28,8 +28,8 @@ import { Badge } from "@/components/ui/badge";
 import { Save, Eye, Upload, X } from "lucide-react";
 import { Category, Post, PostStatus, PostType, Tag } from "@/types/blogs";
 import EmptyState from "../../state/empty-state";
-import { RichTextEditor } from "@/components/RichTextEditor";
 import { SingleImageUploader } from "@/components/ui/image-uploader";
+import { PlateEditor } from "@/components/plate-editor";
 
 const postSchema = z.object({
   title: z.string().min(1, "Title is required").max(200, "Title too long"),
@@ -202,9 +202,9 @@ export function FormCreatePost({
                     <FormItem>
                       <FormLabel>Content</FormLabel>
                       <FormControl>
-                        <RichTextEditor
-                          control={form.control}
-                          name="content"
+                        <PlateEditor
+                          {...field}
+                          className="min-h-[200px] overflow-y-auto  sm:px-8 sm:py-2"
                           placeholder="Write your post content here..."
                         />
                       </FormControl>

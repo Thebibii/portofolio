@@ -25,7 +25,9 @@ export default function Home() {
         maxOpacity={0.1}
         duration={3}
         repeatDelay={1}
-        className={cn("inset-x-0 inset-y-[-30%] -z-50 h-full skew-y-12")}
+        className={cn(
+          "inset-x-0 inset-y-[-30%] opacity-40  -z-50 h-full skew-y-12"
+        )}
       />
       <Navbar />
       <main className="">

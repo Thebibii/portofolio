@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { AnimatedGridPattern } from "@/components/magicui/animated-grid-pattern";
-import { cn } from "@/lib/utils";
 import { ReactQueryClientProvider } from "@/provider/react-query";
 import ProgressProvider from "@/provider/proggres-bar";
 import { Toaster } from "sonner";

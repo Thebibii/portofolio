@@ -10,7 +10,6 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 export default function Page() {
-  // const navigate = usee();
   const { data: tag, isLoading: isLoadingTag } = useAdminTag();
   const { data: categories, isLoading: isLoadingCategories } =
     useAdminCategory();
