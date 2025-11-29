@@ -31,6 +31,7 @@ import { FloatingToolbarKit } from "./floating-toolbar-kit";
 import { BlockPlaceholderKit } from "./block-placeholder-kit";
 import { DocxKit } from "./docx-kit";
 import { AutoformatKit } from "./autoformat-kit";
+import { CursorOverlayKit } from "./cursor-overlay-kit";
 
 export const EditorKit = [
   //   ...CopilotKit,
@@ -67,7 +68,7 @@ export const EditorKit = [
   // Editing
   //   ...SlashKit,
   ...AutoformatKit,
-  //   ...CursorOverlayKit,
+  ...CursorOverlayKit,
   ...BlockMenuKit,
   ...DndKit,
   //   ...EmojiKit,

@@ -209,7 +209,7 @@ export default function FormCreateProject({
                     <PlateEditor
                       {...field}
                       placeholder="Type your project content..."
-                      className="min-h-[200px] overflow-y-auto  sm:px-8 sm:py-2"
+                      className="h-[200px] overflow-y-auto  sm:px-8 sm:py-2"
                     />
                   </FormControl>
                   <FormDescription>

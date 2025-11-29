@@ -1,19 +1,18 @@
 "use client";
 
-import { Plate, usePlateEditor } from "platejs/react";
+import { Plate, usePlateEditor, useEditorScrollRef } from "platejs/react";
 
 import { EditorKit } from "@/components/editor-kit";
 import { Editor, EditorContainer } from "@/components/ui/editor";
 
 interface PlateEditorProps {
-  value?: string; // JSON string dari react-hook-form
-  onChange?: (value: string) => void; // Mengirim JSON string
+  value?: string;
+  onChange?: (value: string) => void;
   placeholder?: string;
   className?: string;
   disabled?: boolean;
 }
 
-// Helper function untuk parse value
 function parseEditorValue(value?: string) {
   if (!value) {
     return [{ type: "p", children: [{ text: "" }] }];
@@ -27,14 +26,35 @@ function parseEditorValue(value?: string) {
   }
 }
 
+// Komponen yang menggunakan scroll ref
+function EditorContent({
+  placeholder,
+  disabled,
+}: {
+  placeholder: string;
+  disabled: boolean;
+}) {
+  const scrollRef = useEditorScrollRef();
+
+  return (
+    <div ref={scrollRef} className="h-[650px] overflow-y-auto">
+      <EditorContainer className="border rounded-md h-full">
+        <Editor
+          variant="default"
+          placeholder={placeholder}
+          disabled={disabled}
+        />
+      </EditorContainer>
+    </div>
+  );
+}
+
 export function PlateEditor({
   value,
   onChange,
   placeholder = "Type...",
-  className = "h-[650px] overflow-y-auto",
   disabled = false,
 }: PlateEditorProps) {
-  // Parse string JSON menjadi array untuk editor
   const editorValue = parseEditorValue(value);
 
   const editor = usePlateEditor({
@@ -46,18 +66,10 @@ export function PlateEditor({
     <Plate
       editor={editor}
       onChange={({ value: newValue }) => {
-        // Convert array kembali ke JSON string untuk react-hook-form
         onChange?.(JSON.stringify(newValue));
       }}
     >
-      <EditorContainer className="border rounded-md h-full">
-        <Editor
-          variant="default"
-          className={className}
-          placeholder={placeholder}
-          disabled={disabled}
-        />
-      </EditorContainer>
+      <EditorContent placeholder={placeholder} disabled={disabled} />
     </Plate>
   );
 }
