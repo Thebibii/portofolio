@@ -1,35 +1,45 @@
-import * as React from 'react';
+import * as React from "react";
 
-import type { SlateElementProps } from 'platejs/static';
+import type { SlateElementProps } from "platejs/static";
 
-import { type VariantProps, cva } from 'class-variance-authority';
-import { SlateElement } from 'platejs/static';
+import { type VariantProps, cva } from "class-variance-authority";
 
-const headingVariants = cva('relative mb-1', {
+const headingVariants = cva("relative mb-1", {
   variants: {
     variant: {
-      h1: 'mt-[1.6em] pb-1 font-bold font-heading text-4xl',
-      h2: 'mt-[1.4em] pb-px font-heading font-semibold text-2xl tracking-tight',
-      h3: 'mt-[1em] pb-px font-heading font-semibold text-xl tracking-tight',
-      h4: 'mt-[0.75em] font-heading font-semibold text-lg tracking-tight',
-      h5: 'mt-[0.75em] font-semibold text-lg tracking-tight',
-      h6: 'mt-[0.75em] font-semibold text-base tracking-tight',
+      h1: "mt-[1.6em] pb-1 font-bold font-heading text-4xl",
+      h2: "mt-[1.4em] pb-px font-heading font-semibold text-2xl tracking-tight",
+      h3: "mt-[1em] pb-px font-heading font-semibold text-xl tracking-tight",
+      h4: "mt-[0.75em] font-heading font-semibold text-lg tracking-tight",
+      h5: "mt-[0.75em] font-semibold text-lg tracking-tight",
+      h6: "mt-[0.75em] font-semibold text-base tracking-tight",
     },
   },
 });
 
+function slugify(text: string) {
+  return text
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, "")
+    .replace(/\s+/g, "-");
+}
+
 export function HeadingElementStatic({
-  variant = 'h1',
+  variant = "h1",
   ...props
 }: SlateElementProps & VariantProps<typeof headingVariants>) {
+  // Ambil plain text dari children
+  const text =
+    props.element?.children?.map?.((c: any) => c.text).join(" ") ?? "";
+  const id = slugify(text);
+
+  // Render langsung elemen HTML heading
+  const Tag = variant as React.ElementType;
   return (
-    <SlateElement
-      as={variant!}
-      className={headingVariants({ variant })}
-      {...props}
-    >
+    <Tag {...props.attributes} id={id} className={headingVariants({ variant })}>
       {props.children}
-    </SlateElement>
+    </Tag>
   );
 }
 
