@@ -204,7 +204,7 @@ export function FormCreatePost({
                       <FormControl>
                         <PlateEditor
                           {...field}
-                          className="min-h-[200px] overflow-y-auto  sm:px-8 sm:py-2"
+                          className="h-[400px] overflow-y-auto"
                           placeholder="Write your post content here..."
                         />
                       </FormControl>

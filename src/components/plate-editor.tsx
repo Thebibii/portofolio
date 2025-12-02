@@ -1,6 +1,6 @@
 "use client";
 
-import { Plate, usePlateEditor, useEditorScrollRef } from "platejs/react";
+import { Plate, usePlateEditor } from "platejs/react";
 
 import { EditorKit } from "@/components/editor-kit";
 import { Editor, EditorContainer } from "@/components/ui/editor";
@@ -26,34 +26,12 @@ function parseEditorValue(value?: string) {
   }
 }
 
-// Komponen yang menggunakan scroll ref
-function EditorContent({
-  placeholder,
-  disabled,
-}: {
-  placeholder: string;
-  disabled: boolean;
-}) {
-  const scrollRef = useEditorScrollRef();
-
-  return (
-    <div ref={scrollRef} className="h-[650px] overflow-y-auto">
-      <EditorContainer className="border rounded-md h-full">
-        <Editor
-          variant="default"
-          placeholder={placeholder}
-          disabled={disabled}
-        />
-      </EditorContainer>
-    </div>
-  );
-}
-
 export function PlateEditor({
   value,
   onChange,
   placeholder = "Type...",
   disabled = false,
+  className,
 }: PlateEditorProps) {
   const editorValue = parseEditorValue(value);
 
@@ -69,7 +47,15 @@ export function PlateEditor({
         onChange?.(JSON.stringify(newValue));
       }}
     >
-      <EditorContent placeholder={placeholder} disabled={disabled} />
+      <div className="relative overflow-x-scroll scrollbar-hide">
+        <EditorContainer className={`border rounded-md ${className}`}>
+          <Editor
+            variant="fullWidth"
+            placeholder={placeholder}
+            disabled={disabled}
+          />
+        </EditorContainer>
+      </div>
     </Plate>
   );
 }

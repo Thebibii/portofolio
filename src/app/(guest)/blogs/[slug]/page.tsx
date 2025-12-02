@@ -111,9 +111,10 @@ export default function Page() {
 
             <Separator orientation="horizontal" />
           </article>
-
-          {/* Long description */}
-          <DisplayPlate value={data.data.content} />
+          <div className="relative">
+            {/* Long description */}
+            <DisplayPlate value={data.data.content} />
+          </div>
         </div>
       )}
     </LoadingState>

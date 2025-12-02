@@ -201,7 +201,7 @@ export default function FormEditProject({
                     <PlateEditor
                       {...field}
                       placeholder="Type your project content..."
-                      className="h-[650px] overflow-y-auto"
+                      className="h-[300px] overflow-y-auto"
                     />
                   </FormControl>
                   <FormDescription>
