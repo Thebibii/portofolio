@@ -10,7 +10,7 @@ import { SlateElement } from "platejs/static";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
-const headingItemVariants = cva(
+export const headingItemVariants = cva(
   "block h-auto w-full cursor-pointer truncate rounded-none px-0.5 py-1.5 text-left font-medium text-muted-foreground underline decoration-[0.5px] underline-offset-4 hover:bg-accent hover:text-muted-foreground",
   {
     variants: {
@@ -18,6 +18,10 @@ const headingItemVariants = cva(
         1: "pl-0.5",
         2: "pl-[26px]",
         3: "pl-[50px]",
+      },
+      style: {
+        clean:
+          "text-sm transition-colors font-medium hover:text-primary focus:outline-none focus-visible:text-neutral-700 text-neutral-900",
       },
     },
   }
@@ -71,7 +75,7 @@ const headingDepth: Record<string, number> = {
   h6: 6,
 };
 
-const getHeadingList = (editor?: SlateEditor) => {
+export const getHeadingList = (editor?: SlateEditor) => {
   if (!editor) return [];
 
   const options = editor.getOptions(BaseTocPlugin);
