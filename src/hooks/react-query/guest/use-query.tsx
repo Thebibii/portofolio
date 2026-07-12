@@ -18,7 +18,7 @@ export const useGetDataHome = () => {
 
 export const useGetDataAbout = () => {
   return useQuery({
-    queryKey: ["get.guest"],
+    queryKey: ["get.guest.about"],
     queryFn: async () => {
       const res = await fetch(`${baseURL}/guest/about`);
 
