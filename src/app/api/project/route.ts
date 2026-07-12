@@ -1,6 +1,8 @@
+import { authOptions } from "@/lib/auth";
 import { generateSlug } from "@/lib/genarate-slug";
 import prisma from "@/lib/prisma";
 import { ProjectFormData, ProjectStatus } from "@/types/projects";
+import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 import z from "zod";
 
@@ -45,6 +47,14 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   try {
+    const session = await getServerSession(authOptions);
+    if (!session?.user) {
+      return NextResponse.json(
+        { error: "Authentication required" },
+        { status: 401 }
+      );
+    }
+
     const json = await req.json();
 
     // Validasi body
