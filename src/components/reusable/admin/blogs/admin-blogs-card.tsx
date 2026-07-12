@@ -5,76 +5,77 @@ import { Post, PostDelete } from "@/types/blogs";
 import { TypeBadge } from "./type-badge";
 import DropdownBlogs from "./dropdown-blogs";
 import { Icons } from "@/components/icons";
+import { ImageIcon } from "lucide-react";
 
 interface AdminBlogsCardProps {
   post: Post;
   onDelete: (data: PostDelete) => void;
+  onToggleFeatured?: (post: Post) => void;
   href: "blogs" | "writings";
 }
 
-export function AdminBlogsCard({ post, onDelete, href }: AdminBlogsCardProps) {
+export function AdminBlogsCard({ post, onDelete, onToggleFeatured, href }: AdminBlogsCardProps) {
   return (
     <Card className="group hover:shadow-lg transition-all duration-200 h-full">
-      <CardHeader className="pb-3">
-        <div className="flex items-start justify-between">
-          <div className="flex-1">
-            <div className="flex items-center gap-2 mb-2">
-              <Badge className="text-xs" variant={"outline"}>
-                {post.status}
+      <CardHeader className="flex items-start justify-between">
+        <div className="flex-1">
+          <div className="flex items-center gap-2 mb-2">
+            <Badge className="text-xs" variant={"outline"}>
+              {post.status}
+            </Badge>
+            {post.type && <TypeBadge type={post.type} />}
+            {post.featured && (
+              <Badge variant="outline" className="text-warning border-warning">
+                <Icons.Star className="w-3 h-3 mr-1 fill-current" />
+                Featured
               </Badge>
-              {/* <TypeBadge type={post.type} /> */}
-              {post.featured && (
-                <Badge
-                  variant="outline"
-                  className="text-warning border-warning"
-                >
-                  <Icons.Star className="w-3 h-3 mr-1 fill-current" />
-                  Featured
-                </Badge>
-              )}
-            </div>
-            <h3 className="font-semibold text-lg line-clamp-2 mb-1">
-              {post.title}
-            </h3>
-            {post.excerpt && (
-              <p className="text-muted-foreground text-sm line-clamp-2">
-                {post.excerpt}
-              </p>
             )}
           </div>
+          <h3 className="font-semibold text-lg line-clamp-2 mb-1">
+            {post.title}
+          </h3>
+          {post.excerpt && (
+            <p className="text-muted-foreground text-sm line-clamp-2">
+              {post.excerpt}
+            </p>
+          )}
+        </div>
 
-          <div className="flex items-center gap-1">
-            <Button
-              variant="ghost"
-              size="sm"
-              // onClick={() => onToggleFeatured(post)}
-              className="h-8 w-8 p-0"
-            >
-              {post.featured ? (
-                <Icons.Star className="h-4 w-4 fill-current text-warning" />
-              ) : (
-                <Icons.StarOff className="h-4 w-4 text-muted-foreground" />
-              )}
-            </Button>
+        <div className="flex items-center gap-1">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => onToggleFeatured?.(post)}
+            className="h-8 w-8 p-0"
+          >
+            {post.featured ? (
+              <Icons.Star className="h-4 w-4 fill-current text-warning" />
+            ) : (
+              <Icons.StarOff className="h-4 w-4 text-muted-foreground" />
+            )}
+          </Button>
 
-            <DropdownBlogs
-              post={{ slug: post.slug, title: post.title }}
-              href={href}
-              onDelete={onDelete}
-            />
-          </div>
+          <DropdownBlogs
+            post={{ slug: post.slug, title: post.title }}
+            href={href}
+            onDelete={onDelete}
+          />
         </div>
       </CardHeader>
 
       <CardContent className="pt-0">
         {/* Cover Image */}
-        {post.coverImage && (
+        {post.coverImage ? (
           <div className="mb-4 rounded-lg overflow-hidden">
             <img
               src={post.coverImage}
               alt={post.title}
-              className="w-full object-cover"
+              className="w-full aspect-video object-cover"
             />
+          </div>
+        ) : (
+          <div className="mb-4 rounded-lg overflow-hidden bg-muted flex items-center justify-center aspect-video">
+            <ImageIcon className="h-8 w-8 text-muted-foreground/50" />
           </div>
         )}
 

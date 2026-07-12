@@ -16,6 +16,7 @@ export interface Post {
   content: string;
   excerpt?: string;
   coverImage?: string;
+  type?: PostType;
   status: PostStatus;
   featured: boolean;
   viewCount: number;

@@ -77,6 +77,48 @@ export const useDeleteProject = ({
   });
 };
 
+export const useToggleFeaturedProject = ({
+  onSuccess,
+  onError,
+}: {
+  onSuccess: (body: APIResponse) => void;
+  onError?: (body: any) => void;
+}) => {
+  return useMutation({
+    mutationKey: ["admin.toggle.featured.project"],
+    mutationFn: async ({
+      id,
+      featured,
+    }: {
+      id: string;
+      featured: boolean;
+    }) => {
+      try {
+        const res = await fetch(`${baseURL}/project/${id}/featured`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ featured }),
+        });
+
+        if (!res.ok) {
+          const data = await res.json().catch(() => ({}));
+          throw new Error(data.message || "Gagal mengubah featured status");
+        }
+
+        return res.json();
+      } catch (error) {
+        throw new Error(
+          error instanceof Error ? error.message : "Terjadi kesalahan"
+        );
+      }
+    },
+    onSuccess,
+    onError,
+  });
+};
+
 export const useUpdateProject = ({
   id,
   onSuccess,

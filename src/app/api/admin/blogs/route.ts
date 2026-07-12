@@ -22,9 +22,22 @@ export async function GET() {
     const data = await prisma.post.findMany({
       where: { type: "BLOG" },
       orderBy: { createdAt: "desc" },
+      include: {
+        category: true,
+        tags: {
+          include: {
+            tag: true,
+          },
+        },
+      },
     });
 
-    return NextResponse.json({ success: true, data });
+    const transformed = data.map((p) => ({
+      ...p,
+      tags: p.tags?.map((pt) => pt.tag) || [],
+    }));
+
+    return NextResponse.json({ success: true, data: transformed });
   } catch (error) {
     const message =
       error instanceof Error ? error.message : "Terjadi kesalahan";

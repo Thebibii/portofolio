@@ -78,6 +78,51 @@ export const useDeleteBlog = ({
   });
 };
 
+export const useToggleFeaturedPost = ({
+  onSuccess,
+  onError,
+}: {
+  onSuccess: (body: APIResponse) => void;
+  onError?: (body: any) => void;
+}) => {
+  return useMutation({
+    mutationKey: ["admin.toggle.featured.post"],
+    mutationFn: async ({
+      slug,
+      featured,
+    }: {
+      slug: string;
+      featured: boolean;
+    }) => {
+      try {
+        const res = await fetch(
+          `${baseURL}/admin/posts/${slug}/featured`,
+          {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ featured }),
+          }
+        );
+
+        if (!res.ok) {
+          const data = await res.json().catch(() => ({}));
+          throw new Error(data.message || "Gagal mengubah featured status");
+        }
+
+        return res.json();
+      } catch (error) {
+        throw new Error(
+          error instanceof Error ? error.message : "Terjadi kesalahan"
+        );
+      }
+    },
+    onSuccess,
+    onError,
+  });
+};
+
 export const useUpdateBlog = ({
   slug,
   onSuccess,
