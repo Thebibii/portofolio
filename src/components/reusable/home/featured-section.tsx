@@ -2,9 +2,11 @@ import ProjectCard from "./project-card";
 import Link from "next/link";
 import BlogsCard from "./blogs-card";
 import LoadingState from "../state/loading-state";
+import EmptyState from "../state/empty-state";
 import { BlogsCardSkeleton } from "../skeleton/blogs-card-skeleton";
 import ProjectCardSkeleton from "../skeleton/project-card-skeleton";
 import { CardTitle } from "@/components/ui/card";
+import { Rocket, BookOpen } from "lucide-react";
 
 export default function FeaturedSection({
   data,
@@ -30,7 +32,20 @@ export default function FeaturedSection({
             data={isLoadingError}
             loadingFallback={<ProjectCardSkeleton />}
           >
-            <ProjectCard data={data?.projects} />
+            <EmptyState
+              data={data?.projects}
+              emptyFallback={
+                <div className="flex flex-col items-center justify-center py-16 text-center col-span-full">
+                  <Rocket className="h-12 w-12 text-muted-foreground/40 mb-3" />
+                  <h3 className="font-semibold">No featured projects</h3>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Check back later.
+                  </p>
+                </div>
+              }
+            >
+              <ProjectCard data={data?.projects} />
+            </EmptyState>
           </LoadingState>
         </div>
         <Link
@@ -54,7 +69,20 @@ export default function FeaturedSection({
             data={isLoadingError}
             loadingFallback={<BlogsCardSkeleton />}
           >
-            <BlogsCard to="blogs" data={data?.blogs} />
+            <EmptyState
+              data={data?.blogs}
+              emptyFallback={
+                <div className="flex flex-col items-center justify-center py-16 text-center col-span-full">
+                  <BookOpen className="h-12 w-12 text-muted-foreground/40 mb-3" />
+                  <h3 className="font-semibold">No featured posts</h3>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Check back later.
+                  </p>
+                </div>
+              }
+            >
+              <BlogsCard to="blogs" data={data?.blogs} />
+            </EmptyState>
           </LoadingState>
         </div>
         <Link

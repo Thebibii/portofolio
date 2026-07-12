@@ -2,9 +2,11 @@
 import ProjectCard from "@/components/reusable/home/project-card";
 import ProjectCardSkeleton from "@/components/reusable/skeleton/project-card-skeleton";
 import LoadingState from "@/components/reusable/state/loading-state";
+import EmptyState from "@/components/reusable/state/empty-state";
 import { useGetGuestProjects } from "@/hooks/react-query/guest/projects/use-query";
 import { Project } from "@prisma/client";
 import { toast } from "sonner";
+import { Rocket, Archive } from "lucide-react";
 
 export default function Page() {
   const { data, isLoading, isError, error } = useGetGuestProjects();
@@ -32,7 +34,20 @@ export default function Page() {
             data={!isLoading && !isError}
             loadingFallback={<ProjectCardSkeleton />}
           >
-            <ProjectCard data={main} />
+            <EmptyState
+              data={main}
+              emptyFallback={
+                <div className="flex flex-col items-center justify-center py-16 text-center col-span-full">
+                  <Rocket className="h-12 w-12 text-muted-foreground/40 mb-3" />
+                  <h3 className="font-semibold">No featured projects</h3>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Check back later.
+                  </p>
+                </div>
+              }
+            >
+              <ProjectCard data={main} />
+            </EmptyState>
           </LoadingState>
         </div>
       </section>
@@ -48,7 +63,20 @@ export default function Page() {
             data={!isLoading && !isError}
             loadingFallback={<ProjectCardSkeleton />}
           >
-            <ProjectCard data={other} />
+            <EmptyState
+              data={other}
+              emptyFallback={
+                <div className="flex flex-col items-center justify-center py-16 text-center col-span-full">
+                  <Archive className="h-12 w-12 text-muted-foreground/40 mb-3" />
+                  <h3 className="font-semibold">No other projects</h3>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Check back later.
+                  </p>
+                </div>
+              }
+            >
+              <ProjectCard data={other} />
+            </EmptyState>
           </LoadingState>
         </div>
       </section>
