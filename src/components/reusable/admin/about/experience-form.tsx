@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
-import { CalendarIcon, Plus, Trash2 } from "lucide-react";
+import { CalendarIcon, Plus, Trash2, X } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -111,6 +111,25 @@ function ExperienceItem({
 
   const startDate = watch(`experiences.${index}.startDate`);
   const endDate = watch(`experiences.${index}.endDate`);
+
+  useEffect(() => {
+    if (startDate && endDate) {
+      const start = new Date(startDate);
+      const end = new Date(endDate);
+      let years = end.getFullYear() - start.getFullYear();
+      let months = end.getMonth() - start.getMonth();
+      if (months < 0) {
+        years--;
+        months += 12;
+      }
+      const parts: string[] = [];
+      if (years > 0) parts.push(`${years} yr`);
+      if (months > 0) parts.push(`${months} mon`);
+      setValue(`experiences.${index}.duration`, parts.join(" ") || "0 mon");
+    } else if (!endDate) {
+      setValue(`experiences.${index}.duration`, "");
+    }
+  }, [startDate, endDate, index, setValue]);
 
   return (
     <Card className="border-dashed">
@@ -227,31 +246,44 @@ function ExperienceItem({
 
           <div className="space-y-2">
             <Label>End Date</Label>
-            <Popover open={endDateOpen} onOpenChange={setEndDateOpen}>
-              <PopoverTrigger asChild>
+            <div className="flex gap-2">
+              <Popover open={endDateOpen} onOpenChange={setEndDateOpen}>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className={cn(
+                      "flex-1 justify-start text-left font-normal",
+                      !endDate && "text-muted-foreground"
+                    )}
+                  >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {endDate ? format(endDate, "PPP") : "Present / Pick end date"}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0">
+                  <Calendar
+                    mode="single"
+                    selected={endDate ?? undefined}
+                    onSelect={(date) => {
+                      setValue(`experiences.${index}.endDate`, date ?? undefined);
+                      setEndDateOpen(false);
+                    }}
+                    initialFocus
+                  />
+                </PopoverContent>
+              </Popover>
+              {endDate && (
                 <Button
+                  type="button"
                   variant="outline"
-                  className={cn(
-                    "w-full justify-start text-left font-normal",
-                    !endDate && "text-muted-foreground"
-                  )}
+                  size="icon"
+                  onClick={() => setValue(`experiences.${index}.endDate`, null)}
+                  className="shrink-0"
                 >
-                  <CalendarIcon className="mr-2 h-4 w-4" />
-                  {endDate ? format(endDate, "PPP") : "Present / Pick end date"}
+                  <X className="h-4 w-4" />
                 </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0">
-                <Calendar
-                  mode="single"
-                  selected={endDate ?? undefined}
-                  onSelect={(date) => {
-                    setValue(`experiences.${index}.endDate`, date ?? undefined);
-                    setEndDateOpen(false);
-                  }}
-                  initialFocus
-                />
-              </PopoverContent>
-            </Popover>
+              )}
+            </div>
           </div>
         </div>
         <div className="space-y-2">

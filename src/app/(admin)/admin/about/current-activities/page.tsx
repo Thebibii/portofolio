@@ -18,13 +18,17 @@ import { toast } from "sonner";
 import { CurrentActivity } from "@prisma/client";
 import { useQueryClient } from "@tanstack/react-query";
 import { APIResponse } from "@/types/response";
+import LoadingState from "@/components/reusable/state/loading-state";
+import { Skeleton } from "@/components/ui/skeleton";
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 
 const schema = z.object({
   currentActivities: currentActivitiesSchema,
 });
 
 export default function Page() {
-  const { data } = useAdminAbout();
+  const { data, isLoading } = useAdminAbout();
   const queryClient = useQueryClient();
 
   const form = useForm<any>({
@@ -32,7 +36,7 @@ export default function Page() {
     values: {
       currentActivities:
         data?.data?.currentActivities?.map((exp: CurrentActivity) => ({
-          dbId: exp.id, // simpan id asli ke sini
+          dbId: exp.id,
           title: exp.title,
           content: exp.content,
         })) ?? [],
@@ -69,16 +73,47 @@ export default function Page() {
   };
 
   return (
-    <FormProvider {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit, onError)}
-        className="space-y-6"
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <Button variant="ghost" size="icon" asChild>
+            <Link href="/admin/about">
+              <ArrowLeft className="h-5 w-5" />
+            </Link>
+          </Button>
+          <div>
+            <h2 className="text-3xl font-bold text-foreground">
+              Current Activities
+            </h2>
+            <p className="text-muted-foreground mt-1">
+              Manage your current activities and ongoing projects
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <LoadingState
+        data={!isLoading}
+        loadingFallback={
+          <div className="space-y-4">
+            <Skeleton className="h-10 w-full" />
+            <Skeleton className="h-48 w-full" />
+            <Skeleton className="h-10 w-full" />
+          </div>
+        }
       >
-        <CurrentActivityForm onRemove={onRemove} />
-        <Button type="submit" className="w-full">
-          Save
-        </Button>
-      </form>
-    </FormProvider>
+        <FormProvider {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit, onError)}
+            className="space-y-6"
+          >
+            <CurrentActivityForm onRemove={onRemove} />
+            <Button type="submit" className="w-full">
+              Save
+            </Button>
+          </form>
+        </FormProvider>
+      </LoadingState>
+    </div>
   );
 }

@@ -52,7 +52,7 @@ export default function Page() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-primary">
-              {data?.data?.currentActivity?.length}
+              {data?.data?.currentActivities?.length}
             </div>
             <p className="text-xs text-muted-foreground">Active projects</p>
           </CardContent>
@@ -108,7 +108,7 @@ export default function Page() {
           </CardHeader>
           <CardContent className="space-y-4 ">
             <Button asChild className="w-full">
-              <Link href="/admin/about/experiences">
+              <Link href="/admin/about/current-activities">
                 <Plus className="h-4 w-4 mr-2" />
                 Manage Current Activities
               </Link>
