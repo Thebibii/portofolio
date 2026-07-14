@@ -1,6 +1,7 @@
 import {
   BookOpen,
   Calendar,
+  ChartNoAxesCombined,
   Check,
   ChevronDown,
   ChevronLeft,
@@ -48,6 +49,7 @@ export const Icons = {
   Calendar: (props: IconProps) => <Calendar {...props} />,
   Clock: (props: IconProps) => <Clock {...props} />,
   BookOpen: (props: IconProps) => <BookOpen {...props} />,
+  ChartNoAxesCombined: (props: IconProps) => <ChartNoAxesCombined {...props} />,
   Heart: (props: IconProps) => <Heart {...props} />,
   Loader: (props: IconProps) => <Loader {...props} />,
   ChevronDown: (props: IconProps) => <ChevronDown {...props} />,
