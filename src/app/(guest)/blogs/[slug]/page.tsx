@@ -6,9 +6,13 @@ import { useGuestBlogBySlug } from "@/hooks/react-query/guest/blogs/use-query";
 import { formatCreatedUpdated } from "@/hooks/use-formatted-date";
 import Image from "next/image";
 import ProfileImage from "../../../../../public/profile.png";
+import Link from "next/link";
 import { useParams } from "next/navigation";
 import LoadingState from "@/components/reusable/state/loading-state";
+import { ArrowLeft } from "lucide-react";
+import { useIncrementBlogView } from "@/hooks/react-query/guest/blogs/use-mutation";
 import { toast } from "sonner";
+import { useEffect, useRef } from "react";
 import { DisplayPlate } from "@/components/reusable/display-plate";
 import { PostDetailSkeleton } from "@/components/reusable/skeleton/post-detail-skeleton";
 
@@ -17,6 +21,17 @@ export default function Page() {
   const { data, isError, error, isLoading } = useGuestBlogBySlug({
     slug: params.slug,
   });
+
+  const { mutate: incrementView } = useIncrementBlogView();
+
+  const lastSlug = useRef<string | null>(null);
+
+  useEffect(() => {
+    if (params.slug && params.slug !== lastSlug.current && data) {
+      lastSlug.current = params.slug;
+      incrementView(params.slug);
+    }
+  }, [params.slug, incrementView, data]);
 
   if (isError && error) {
     toast.error("Gagal memuat data", {
@@ -27,7 +42,14 @@ export default function Page() {
   return (
     <LoadingState data={!isLoading} loadingFallback={<PostDetailSkeleton />}>
       {data?.data && (
-        <div className="space-y-4 pt-9 pb-10 lg:pt-24 mx-auto w-full max-w-6xl px-6 lg:px-8 xl:px-0">
+        <div className="flex flex-col space-y-4 pt-9 pb-10 lg:pt-24 mx-auto w-full max-w-6xl px-6 lg:px-8 xl:px-0">
+          <Link
+            href="/blogs"
+            className="inline-flex justify-end items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-4 font-mono"
+          >
+            <ArrowLeft className="size-4" />
+            Back to blogs
+          </Link>
           {/* Project content */}
           <article className="space-y-4 font-mono">
             {/* Technologies */}
@@ -86,7 +108,7 @@ export default function Page() {
               {/* Views */}
               <p className="flex text-xs items-center gap-2 mr-auto">
                 <Icons.Eye className="size-4" />
-                <span>{data.data.viewCount} views</span>
+                <span>{data.data.viewCount ?? "--"} views</span>
               </p>
 
               {/* Demo link */}

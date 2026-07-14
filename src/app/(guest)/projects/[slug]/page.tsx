@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useGuestProjectBySlug } from "@/hooks/react-query/guest/projects/use-query";
 import { useIncrementProjectView } from "@/hooks/react-query/guest/projects/use-mutation";
-import { FolderOpen } from "lucide-react";
+import { ArrowLeft, FolderOpen } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useRef } from "react";
@@ -64,7 +64,8 @@ export default function Page() {
               href="/projects"
               className="inline-flex justify-end items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-4 font-mono"
             >
-              &larr; Back to projects
+              <ArrowLeft className="size-4" />
+              Back to projects
             </Link>
 
             {/* Project content */}

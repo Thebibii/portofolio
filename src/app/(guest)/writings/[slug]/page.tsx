@@ -6,9 +6,13 @@ import ProfileImage from "../../../../../public/profile.png";
 import { useGuestWritingBySlug } from "@/hooks/react-query/guest/writings/use-query";
 import { formatCreatedUpdated } from "@/hooks/use-formatted-date";
 import Image from "next/image";
+import Link from "next/link";
 import { useParams, notFound } from "next/navigation";
 import { toast } from "sonner";
 import LoadingState from "@/components/reusable/state/loading-state";
+import { ArrowLeft } from "lucide-react";
+import { useIncrementWritingView } from "@/hooks/react-query/guest/writings/use-mutation";
+import { useEffect, useRef } from "react";
 import { PostDetailSkeleton } from "@/components/reusable/skeleton/post-detail-skeleton";
 import { DisplayPlate } from "@/components/reusable/display-plate";
 
@@ -17,6 +21,17 @@ export default function Page() {
   const { data, isError, error, isLoading } = useGuestWritingBySlug({
     slug: params.slug,
   });
+
+  const { mutate: incrementView } = useIncrementWritingView();
+
+  const lastSlug = useRef<string | null>(null);
+
+  useEffect(() => {
+    if (params.slug && params.slug !== lastSlug.current && data) {
+      lastSlug.current = params.slug;
+      incrementView(params.slug);
+    }
+  }, [params.slug, incrementView, data]);
 
   // Langsung redirect jika 404
   if (isError && error && (error as any)?.status === 404) {
@@ -34,7 +49,14 @@ export default function Page() {
   return (
     <LoadingState data={!isLoading} loadingFallback={<PostDetailSkeleton />}>
       {data?.data && (
-        <div className="space-y-4 pt-9 pb-10 lg:pt-24 mx-auto w-full max-w-6xl px-6 lg:px-8 xl:px-0">
+        <div className="flex flex-col space-y-4 pt-9 pb-10 lg:pt-24 mx-auto w-full max-w-6xl px-6 lg:px-8 xl:px-0">
+          <Link
+            href="/writings"
+            className="inline-flex justify-end items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-4 font-mono"
+          >
+            <ArrowLeft className="size-4" />
+            Back to writings
+          </Link>
           {/* Project content */}
           <article className="space-y-4 font-mono">
             {/* Technologies */}
@@ -94,7 +116,7 @@ export default function Page() {
               {/* Views */}
               <p className="flex text-xs items-center gap-2 mr-auto">
                 <Icons.Eye className="size-4" />
-                <span>{data.data.viewCount} views</span>
+                <span>{data.data.viewCount ?? "--"} views</span>
               </p>
 
               {/* Demo link */}
