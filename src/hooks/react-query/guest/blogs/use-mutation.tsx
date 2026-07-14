@@ -26,3 +26,32 @@ export const useIncrementBlogView = () => {
     },
   });
 };
+
+export const useToggleBlogLike = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationKey: ["guest.toggle.blog.like"],
+    mutationFn: async (slug: string) => {
+      const res = await fetch(`${baseURL}/guest/blogs/${slug}/like`, {
+        method: "PATCH",
+      });
+      if (!res.ok) throw new Error("Failed to toggle like");
+      return res.json();
+    },
+    onSuccess: (result, slug) => {
+      if (result?.likeCount !== undefined) {
+        queryClient.setQueryData(["get.guest.blogs", slug], (old: any) => {
+          if (!old?.data) return old;
+          return {
+            ...old,
+            data: {
+              ...old.data,
+              _count: { likes: result.likeCount },
+            },
+          };
+        });
+      }
+    },
+  });
+};

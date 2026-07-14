@@ -9,9 +9,15 @@ export async function GET(
   try {
     const { slug } = await params;
 
+    const ip =
+      request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
+      request.headers.get("x-real-ip") ??
+      "127.0.0.1";
+
     const data = await prisma.post.findUnique({
       where: { slug, type: PostType.WRITING },
       select: {
+        id: true,
         slug: true,
         excerpt: true,
         coverImage: true,
@@ -21,6 +27,7 @@ export async function GET(
         readingTime: true,
         content: true,
         createdAt: true,
+        _count: { select: { likes: true } },
         tags: {
           select: {
             tag: {
@@ -41,7 +48,13 @@ export async function GET(
       );
     }
 
-    return NextResponse.json({ data });
+    const likedByMe = !!(await prisma.like.findUnique({
+      where: { ipAddress_postId: { ipAddress: ip, postId: data.id } },
+      select: { id: true },
+    }));
+
+    const { id, ...rest } = data;
+    return NextResponse.json({ data: { ...rest, likedByMe } });
   } catch (error) {
     console.error("Error fetching blog:", error);
     return NextResponse.json(

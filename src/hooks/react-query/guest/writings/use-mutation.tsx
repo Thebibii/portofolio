@@ -26,3 +26,32 @@ export const useIncrementWritingView = () => {
     },
   });
 };
+
+export const useToggleWritingLike = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationKey: ["guest.toggle.writing.like"],
+    mutationFn: async (slug: string) => {
+      const res = await fetch(`${baseURL}/guest/writings/${slug}/like`, {
+        method: "PATCH",
+      });
+      if (!res.ok) throw new Error("Failed to toggle like");
+      return res.json();
+    },
+    onSuccess: (result, slug) => {
+      if (result?.likeCount !== undefined) {
+        queryClient.setQueryData(["get.guest.writings", slug], (old: any) => {
+          if (!old?.data) return old;
+          return {
+            ...old,
+            data: {
+              ...old.data,
+              _count: { likes: result.likeCount },
+            },
+          };
+        });
+      }
+    },
+  });
+};

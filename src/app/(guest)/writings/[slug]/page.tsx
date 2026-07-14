@@ -11,8 +11,17 @@ import { useParams, notFound } from "next/navigation";
 import { toast } from "sonner";
 import LoadingState from "@/components/reusable/state/loading-state";
 import { ArrowLeft } from "lucide-react";
-import { useIncrementWritingView } from "@/hooks/react-query/guest/writings/use-mutation";
+import {
+  useIncrementWritingView,
+  useToggleWritingLike,
+} from "@/hooks/react-query/guest/writings/use-mutation";
 import { useEffect, useRef } from "react";
+import LikeButton from "@/components/reusable/like-button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { PostDetailSkeleton } from "@/components/reusable/skeleton/post-detail-skeleton";
 import { DisplayPlate } from "@/components/reusable/display-plate";
 
@@ -23,6 +32,7 @@ export default function Page() {
   });
 
   const { mutate: incrementView } = useIncrementWritingView();
+  const { mutate: toggleLike } = useToggleWritingLike();
 
   const lastSlug = useRef<string | null>(null);
 
@@ -128,14 +138,24 @@ export default function Page() {
                 <span>{data.data.readingTime} min read</span>
               </p>
 
-              {/* Repository link */}
-              <p
-                className="flex text-xs items-center gap-2"
-                aria-label="Link to project repository"
-              >
-                <Icons.Heart className="size-4" />
-                <span>Likes</span>
-              </p>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      document
+                        .getElementById("like-button")
+                        ?.scrollIntoView({ behavior: "smooth" })
+                    }
+                    className="flex text-xs items-center gap-2"
+                    aria-label="Scroll to like button"
+                  >
+                    <Icons.Heart className="size-4" />
+                    <span>{data.data._count?.likes ?? 0} Likes</span>
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent>Click to show love</TooltipContent>
+              </Tooltip>
             </div>
 
             <Separator orientation="horizontal" />
@@ -143,6 +163,13 @@ export default function Page() {
 
           {/* Long description */}
           <DisplayPlate value={data.data.content} />
+
+          <LikeButton
+            slug={params.slug}
+            initialCount={data.data._count?.likes ?? 0}
+            initialLiked={data.data.likedByMe}
+            onLike={toggleLike}
+          />
         </div>
       )}
     </LoadingState>
