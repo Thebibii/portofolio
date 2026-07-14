@@ -17,10 +17,7 @@ export async function GET(
     const data = omitId(project);
 
     if (!data) {
-      return NextResponse.json(
-        { error: "Project tidak ditemukan" },
-        { status: 404 }
-      );
+      return NextResponse.json({ data: null });
     }
 
     return NextResponse.json({ data });

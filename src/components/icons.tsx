@@ -3,6 +3,7 @@ import {
   Calendar,
   Check,
   ChevronDown,
+  ChevronLeft,
   Clock,
   Edit,
   ExternalLink,
@@ -50,5 +51,6 @@ export const Icons = {
   Heart: (props: IconProps) => <Heart {...props} />,
   Loader: (props: IconProps) => <Loader {...props} />,
   ChevronDown: (props: IconProps) => <ChevronDown {...props} />,
+  ChevronLeft: (props: IconProps) => <ChevronLeft {...props} />,
   Check: (props: IconProps) => <Check {...props} />,
 };

@@ -16,7 +16,7 @@ export const useGetGuestProjects = () => {
 
 export const useGuestProjectBySlug = ({ slug }: { slug: string }) => {
   return useQuery({
-    queryKey: ["get.guest.blogs", slug],
+    queryKey: ["get.guest.projects", slug],
     queryFn: async () => {
       const res = await fetch(`${baseURL}/guest/projects/${slug}`);
 
