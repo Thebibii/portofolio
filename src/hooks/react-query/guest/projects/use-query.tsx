@@ -1,11 +1,15 @@
 import { baseURL } from "@/lib/api";
 import { useQuery } from "@tanstack/react-query";
 
-export const useGetGuestProjects = () => {
+export const useGetGuestProjects = (featured?: boolean) => {
   return useQuery({
-    queryKey: ["get.guest.projects"],
+    queryKey:
+      featured !== undefined
+        ? ["get.guest.projects", "filtered", featured]
+        : ["get.guest.projects"],
     queryFn: async () => {
-      const res = await fetch(`${baseURL}/guest/projects`);
+      const params = featured !== undefined ? `?featured=${featured}` : "";
+      const res = await fetch(`${baseURL}/guest/projects${params}`);
 
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);

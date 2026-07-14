@@ -13,7 +13,7 @@ import { useIncrementProjectView } from "@/hooks/react-query/guest/projects/use-
 import { FolderOpen } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { toast } from "sonner";
 
 export default function Page() {
@@ -24,9 +24,14 @@ export default function Page() {
 
   const { mutate: incrementView } = useIncrementProjectView();
 
+  const lastSlug = useRef<string | null>(null);
+
   useEffect(() => {
-    if (params.slug) incrementView(params.slug);
-  }, [params.slug, incrementView]);
+    if (params.slug && params.slug !== lastSlug.current && data) {
+      lastSlug.current = params.slug;
+      incrementView(params.slug);
+    }
+  }, [params.slug, incrementView, data]);
   if (isError && error) {
     toast.error("Gagal memuat data", {
       description: error.message,

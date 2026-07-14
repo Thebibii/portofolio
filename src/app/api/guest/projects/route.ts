@@ -1,10 +1,18 @@
 import { omitId } from "@/lib/helper";
 import prisma from "@/lib/prisma";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    const searchParams = request.nextUrl.searchParams;
+    const featuredParam = searchParams.get("featured");
+
+    const where = featuredParam !== null
+      ? { featured: featuredParam === "true" }
+      : {};
+
     const projects = await prisma.project.findMany({
+      where,
       orderBy: { createdAt: "desc" },
     });
     const data = omitId(projects);

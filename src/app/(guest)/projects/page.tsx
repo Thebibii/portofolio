@@ -4,20 +4,34 @@ import ProjectCardSkeleton from "@/components/reusable/skeleton/project-card-ske
 import LoadingState from "@/components/reusable/state/loading-state";
 import EmptyState from "@/components/reusable/state/empty-state";
 import { useGetGuestProjects } from "@/hooks/react-query/guest/projects/use-query";
-import { Project } from "@prisma/client";
 import { toast } from "sonner";
 import { Rocket, Archive } from "lucide-react";
 
 export default function Page() {
-  const { data, isLoading, isError, error } = useGetGuestProjects();
+  const {
+    data: mainData,
+    isLoading: mainLoading,
+    isError: mainError,
+    error: mainErrorObj,
+  } = useGetGuestProjects(true);
 
-  const main = data?.data?.filter((item: Project) => item.featured === true);
+  const {
+    data: otherData,
+    isLoading: otherLoading,
+    isError: otherError,
+    error: otherErrorObj,
+  } = useGetGuestProjects(false);
 
-  const other = data?.data?.filter((item: Project) => item.featured === false);
-  if (isError && error) {
-    toast.error("Gagal memuat data", {
-      description: error.message,
-      id: "projects-error", // Prevent duplicate toasts
+  if (mainError && mainErrorObj) {
+    toast.error("Gagal memuat featured projects", {
+      description: mainErrorObj.message,
+      id: "main-projects-error",
+    });
+  }
+  if (otherError && otherErrorObj) {
+    toast.error("Gagal memuat other projects", {
+      description: otherErrorObj.message,
+      id: "other-projects-error",
     });
   }
   return (
@@ -31,11 +45,11 @@ export default function Page() {
         </header>
         <div className="grid w-full grid-cols-1 gap-12 lg:grid-cols-2">
           <LoadingState
-            data={!isLoading && !isError}
+            data={!mainLoading && !mainError}
             loadingFallback={<ProjectCardSkeleton />}
           >
             <EmptyState
-              data={main}
+              data={mainData?.data}
               emptyFallback={
                 <div className="flex flex-col items-center justify-center py-16 text-center col-span-full">
                   <Rocket className="h-12 w-12 text-muted-foreground/40 mb-3" />
@@ -46,7 +60,7 @@ export default function Page() {
                 </div>
               }
             >
-              <ProjectCard data={main} />
+              <ProjectCard data={mainData?.data} />
             </EmptyState>
           </LoadingState>
         </div>
@@ -60,11 +74,11 @@ export default function Page() {
         </header>
         <div className="grid w-full grid-cols-1 gap-12 lg:grid-cols-2">
           <LoadingState
-            data={!isLoading && !isError}
+            data={!otherLoading && !otherError}
             loadingFallback={<ProjectCardSkeleton />}
           >
             <EmptyState
-              data={other}
+              data={otherData?.data}
               emptyFallback={
                 <div className="flex flex-col items-center justify-center py-16 text-center col-span-full">
                   <Archive className="h-12 w-12 text-muted-foreground/40 mb-3" />
@@ -75,7 +89,7 @@ export default function Page() {
                 </div>
               }
             >
-              <ProjectCard data={other} />
+              <ProjectCard data={otherData?.data} />
             </EmptyState>
           </LoadingState>
         </div>
