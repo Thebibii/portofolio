@@ -1,10 +1,19 @@
 "use client";
 
+import { List } from "lucide-react";
+import Link from "next/link";
 import { PlateView, usePlateViewEditor } from "platejs/react";
 import { BaseEditorKit } from "./editor-base-kit";
-import { getHeadingList, headingItemVariants } from "./ui/toc-node-static";
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetTitle,
+  SheetTrigger,
+} from "./ui/sheet";
 import { Button } from "./ui/button";
-import Link from "next/link";
+import { getHeadingList, headingItemVariants } from "./ui/toc-node-static";
 
 export function InteractiveViewer({ value }: any) {
   const editor = usePlateViewEditor({
@@ -22,12 +31,12 @@ export function InteractiveViewer({ value }: any) {
   }
 
   return (
-    <section className="lg:grid lg:grid-cols-[minmax(0,1fr)_250px] lg:gap-10">
-      <PlateView editor={editor} />
-      <aside>
-        <div className="sticky top-36">
-          <div className="max-h-[calc(100vh-9rem-113px)] overflow-auto border mt-4 border-muted-foreground px-6 rounded-xl py-5 hidden lg:block">
-            <div className="flex flex-col space-y-2 text-sm">
+    <>
+      <section className="lg:grid lg:grid-cols-[minmax(0,1fr)_250px] lg:gap-10">
+        <PlateView editor={editor} />
+        <aside>
+          <div className="sticky top-36">
+            <div className="max-h-[calc(100vh-9rem-113px)] overflow-auto border mt-4 border-muted-foreground px-6 rounded-xl py-5 hidden lg:block">
               <div className="flex flex-col space-y-2 text-sm">
                 {headingList.length > 0 ? (
                   headingList.map((item) => (
@@ -53,8 +62,46 @@ export function InteractiveViewer({ value }: any) {
               </div>
             </div>
           </div>
-        </div>
-      </aside>
-    </section>
+        </aside>
+      </section>
+
+      {headingList.length > 0 && (
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button
+              className="fixed bottom-6 right-6 z-40 gap-2 rounded-md bg-background/50 border border-muted-foreground/50 text-foreground shadow-lg backdrop-blur-sm lg:hidden"
+              aria-label="Open table of contents"
+            >
+              <List className="size-3" />
+              <span className="text-xs font-medium">Table of Contents</span>
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="bottom" className="px-6 py-4 pb-8 outline-none">
+            <SheetTitle className="px-1 pt-2">Table of Contents</SheetTitle>
+            <SheetDescription className="sr-only">
+              Navigate to different sections of this page
+            </SheetDescription>
+            <div className="flex flex-col">
+              {headingList.map((item) => (
+                <SheetClose key={item.title} asChild>
+                  <Button
+                    variant="ghost"
+                    className={headingItemVariants({
+                      depth: item.depth as 1 | 2 | 3,
+                      style: "clean",
+                      className:
+                        "hover:bg-transparent no-underline hover:underline text-muted-foreground justify-start py-1.5 text-sm",
+                    })}
+                    asChild
+                  >
+                    <Link href={`#${slugify(item.title)}`}>{item.title}</Link>
+                  </Button>
+                </SheetClose>
+              ))}
+            </div>
+          </SheetContent>
+        </Sheet>
+      )}
+    </>
   );
 }
