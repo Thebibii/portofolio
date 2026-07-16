@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 import { ReactQueryClientProvider } from "@/provider/react-query";
 import ProgressProvider from "@/provider/proggres-bar";
@@ -74,6 +75,7 @@ export default function RootLayout({
           </ReactQueryClientProvider>
         </Providers>
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
