@@ -1,180 +1,101 @@
-"use client";
-import { Icons } from "@/components/icons";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import ProfileImage from "../../../../../public/profile.png";
-import { useGuestWritingBySlug } from "@/hooks/react-query/guest/writings/use-query";
-import { formatCreatedUpdated } from "@/hooks/use-formatted-date";
-import Image from "next/image";
-import Link from "next/link";
-import { useParams, notFound } from "next/navigation";
-import { toast } from "sonner";
-import LoadingState from "@/components/reusable/state/loading-state";
-import { ArrowLeft } from "lucide-react";
-import {
-  useIncrementWritingView,
-  useToggleWritingLike,
-} from "@/hooks/react-query/guest/writings/use-mutation";
-import { useEffect, useRef } from "react";
-import LikeButton from "@/components/reusable/like-button";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { PostDetailSkeleton } from "@/components/reusable/skeleton/post-detail-skeleton";
-import GiscusComments from "@/components/reusable/giscus-comments";
-import { DisplayPlate } from "@/components/reusable/display-plate";
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { headers } from "next/headers";
+import prisma from "@/lib/prisma";
+import JsonLd from "@/components/seo/json-ld";
+import { articleSchema } from "@/components/seo/schemas/article";
+import WritingDetailClient from "./_components/writing-detail-client";
 
-export default function Page() {
-  const params = useParams<{ slug: string }>();
-  const { data, isError, error, isLoading } = useGuestWritingBySlug({
-    slug: params.slug,
+type Props = {
+  params: Promise<{ slug: string }>;
+};
+
+const baseUrl = "https://thebibie.vercel.app";
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
+  const writing = await prisma.post.findFirst({
+    where: { slug, type: "WRITING" },
+    select: { title: true, excerpt: true, coverImage: true },
   });
 
-  const { mutate: incrementView } = useIncrementWritingView();
-  const { mutate: toggleLike } = useToggleWritingLike();
+  if (!writing) return { title: "Writing Not Found" };
 
-  const lastSlug = useRef<string | null>(null);
+  return {
+    title: writing.title,
+    description: writing.excerpt ?? undefined,
+    openGraph: {
+      title: writing.title,
+      description: writing.excerpt ?? undefined,
+      url: `${baseUrl}/writings/${slug}`,
+      type: "article",
+      images: writing.coverImage
+        ? [{ url: writing.coverImage }]
+        : [{ url: "/profile.png", width: 512, height: 512, alt: "The Bibi" }],
+    },
+    twitter: {
+      title: writing.title,
+      description: writing.excerpt ?? undefined,
+      images: writing.coverImage ? [writing.coverImage] : ["/profile.png"],
+    },
+  };
+}
 
-  useEffect(() => {
-    if (params.slug && params.slug !== lastSlug.current && data) {
-      lastSlug.current = params.slug;
-      incrementView(params.slug);
-    }
-  }, [params.slug, incrementView, data]);
+export default async function WritingDetailPage({ params }: Props) {
+  const { slug } = await params;
 
-  // Langsung redirect jika 404
-  if (isError && error && (error as any)?.status === 404) {
-    notFound();
-  }
+  const writing = await prisma.post.findUnique({
+    where: { slug, type: "WRITING" },
+    include: {
+      tags: {
+        select: { tag: { select: { name: true, slug: true } } },
+      },
+      _count: { select: { likes: true } },
+    },
+  });
 
-  // Tampilkan toast untuk error selain 404
-  if (isError && error && (error as any)?.status !== 404) {
-    toast.error("Gagal memuat data", {
-      description: error.message,
-      id: "writing-error",
-    });
-  }
+  if (!writing) notFound();
+
+  const headerList = await headers();
+  const ip =
+    headerList.get("x-forwarded-for")?.split(",")[0]?.trim() ??
+    headerList.get("x-real-ip") ??
+    "127.0.0.1";
+
+  const likedByMe = !!(await prisma.like.findUnique({
+    where: { ipAddress_postId: { ipAddress: ip, postId: writing.id } },
+    select: { id: true },
+  }));
+
+  const serialized = {
+    slug: writing.slug,
+    title: writing.title,
+    excerpt: writing.excerpt,
+    content: writing.content,
+    coverImage: writing.coverImage,
+    viewCount: writing.viewCount,
+    readingTime: writing.readingTime,
+    tags: writing.tags,
+    createdAt: writing.createdAt.toISOString(),
+    updatedAt: writing.updatedAt.toISOString(),
+    likedByMe,
+    _count: { likes: writing._count.likes },
+  };
 
   return (
-    <LoadingState data={!isLoading} loadingFallback={<PostDetailSkeleton />}>
-      {data?.data && (
-        <div className="flex flex-col space-y-4 pt-9 pb-10 lg:pt-24 mx-auto w-full max-w-6xl px-6 lg:px-8 xl:px-0">
-          <Link
-            href="/writings"
-            className="inline-flex justify-end items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-4 font-mono"
-          >
-            <ArrowLeft className="size-4" />
-            Back to writings
-          </Link>
-          {/* Project content */}
-          <article className="space-y-4 font-mono">
-            {/* Technologies */}
-            <div className="flex space-x-2" aria-label="Technologies used">
-              {data.data.tags?.map(({ tag }: { tag: any }) => (
-                <Badge variant={"outline"} key={tag.slug}>
-                  {tag?.name}
-                </Badge>
-              ))}
-            </div>
-            <div className="space-y-2">
-              <h1 className="text-4xl font-bold">{data.data.title}</h1>
-              {/* Short description */}
-              <p>{data.data.excerpt}</p>
-            </div>
-            <div className="flex gap-3 items-center mt-10">
-              <div className="size-10 rounded-full overflow-hidden">
-                <figure className="isolate z-[1] overflow-hidden select-none pointer-events-none object-cover">
-                  <div
-                    className="jsx-496024066 img-blur"
-                    style={{
-                      position: "relative",
-                      height: 0,
-                      paddingTop: "100%",
-                      cursor: "default",
-                    }}
-                  >
-                    <div className="jsx-496024066 absolute left-0 top-0">
-                      <Image
-                        alt="Habibie"
-                        title="Habibie"
-                        loading="lazy"
-                        width={350}
-                        height={350}
-                        decoding="async"
-                        src={ProfileImage}
-                      />
-                    </div>
-                  </div>
-                </figure>
-              </div>
-              <div>
-                <h4 className="text-sm">Habibie Bayezid Wildan</h4>
-                <p className="text-xs mt-0.5 text-neutral-600">
-                  {formatCreatedUpdated(data.data.createdAt)}
-                </p>
-              </div>
-            </div>
-
-            <Separator orientation="horizontal" />
-
-            {/* Views and links */}
-            <div
-              className="flex items-center gap-5 flex-wrap"
-              aria-label="Project stats and links"
-            >
-              {/* Views */}
-              <p className="flex text-xs items-center gap-2 mr-auto">
-                <Icons.Eye className="size-4" />
-                <span>{data.data.viewCount ?? "--"} views</span>
-              </p>
-
-              {/* Demo link */}
-              <p
-                className="flex text-xs items-center gap-2"
-                aria-label="Link to project demo"
-              >
-                <Icons.BookOpen className="size-4" />
-                <span>{data.data.readingTime} min read</span>
-              </p>
-
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <button
-                    type="button"
-                    onClick={() =>
-                      document
-                        .getElementById("like-button")
-                        ?.scrollIntoView({ behavior: "smooth" })
-                    }
-                    className="flex text-xs items-center gap-2"
-                    aria-label="Scroll to like button"
-                  >
-                    <Icons.Heart className="size-4" />
-                    <span>{data.data._count?.likes ?? 0} Likes</span>
-                  </button>
-                </TooltipTrigger>
-                <TooltipContent>Click to show love</TooltipContent>
-              </Tooltip>
-            </div>
-
-            <Separator orientation="horizontal" />
-          </article>
-
-          {/* Long description */}
-          <DisplayPlate value={data.data.content} />
-
-          <LikeButton
-            slug={params.slug}
-            initialCount={data.data._count?.likes ?? 0}
-            initialLiked={data.data.likedByMe}
-            onLike={toggleLike}
-          />
-
-          <GiscusComments />
-        </div>
-      )}
-    </LoadingState>
+    <>
+      <JsonLd
+        schema={articleSchema({
+          headline: writing.title,
+          description: writing.excerpt ?? undefined,
+          image: writing.coverImage ?? `${baseUrl}/profile.png`,
+          datePublished: writing.createdAt.toISOString(),
+          dateModified: writing.updatedAt.toISOString(),
+          url: `${baseUrl}/writings/${writing.slug}`,
+          authorName: "Habibie Bayezid Wildan",
+        })}
+      />
+      <WritingDetailClient post={serialized} slug={slug} />
+    </>
   );
 }
