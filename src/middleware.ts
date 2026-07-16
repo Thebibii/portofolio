@@ -19,12 +19,12 @@ export async function middleware(request: NextRequest) {
 
   // Cek jika route adalah public
   const isPublicRoute = publicRoutes.some((route) =>
-    pathname.startsWith(route)
+    pathname.startsWith(route),
   );
 
   // Cek jika route adalah protected
   const isProtectedRoute = protectedRoutes.some((route) =>
-    pathname.startsWith(route)
+    pathname.startsWith(route),
   );
 
   // Jika user belum login dan mencoba akses protected route
@@ -36,12 +36,12 @@ export async function middleware(request: NextRequest) {
 
   // Jika user sudah login dan mencoba akses login page
   if (pathname === "/signin" && token) {
-    return NextResponse.redirect(new URL("/dashboard", request.url));
+    return NextResponse.redirect(new URL("/admin/dashboard", request.url));
   }
 
   // Jika user sudah login dan mencoba akses login page
   if (pathname === "/register" && token) {
-    return NextResponse.redirect(new URL("/dashboard", request.url));
+    return NextResponse.redirect(new URL("/admin/dashboard", request.url));
   }
 
   return NextResponse.next();
