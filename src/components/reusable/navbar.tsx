@@ -4,8 +4,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
@@ -15,6 +13,13 @@ import { NavList } from "@/lib/constant";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
 import Image from "next/image";
+import {
+  ChevronDown,
+  FolderKanban,
+  FileText,
+  User,
+  MessageSquare,
+} from "lucide-react";
 import { useState, useEffect } from "react";
 
 export default function Navbar() {
@@ -29,6 +34,45 @@ export default function Navbar() {
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, [moreOpen]);
+
+  const mobileItems = [
+    {
+      name: "Projects",
+      href: "/projects",
+      icon: FolderKanban,
+      description: "Showcase of my work",
+    },
+    {
+      name: "Writings",
+      href: "/writings",
+      icon: FileText,
+      description: "Thoughts and ideas",
+    },
+    {
+      name: "Blogs",
+      href: "/blogs",
+      icon: Icons.BookOpen,
+      description: "In-depth articles",
+    },
+    {
+      name: "About",
+      href: "/about",
+      icon: User,
+      description: "Learn about me",
+    },
+    {
+      name: "Guest Book",
+      href: "/guestbook",
+      icon: MessageSquare,
+      description: "Leave a message or say hello",
+    },
+    {
+      name: "Statistics",
+      href: "/statistics",
+      icon: Icons.ChartNoAxesCombined,
+      description: "Site analytics and insights",
+    },
+  ];
 
   const moreItems = [
     {
@@ -48,7 +92,7 @@ export default function Navbar() {
   return (
     <header className="w-full font-mono">
       <div className="@container">
-        <nav className="flex items-center justify-between p-6 lg:px-12">
+        <nav className="flex items-center justify-between p-6 md:px-12">
           <Link href="/">
             <div className="group flex items-center space-x-4">
               <div className="size-10 rounded-full overflow-hidden">
@@ -78,7 +122,7 @@ export default function Navbar() {
               <h2 className="text-lg font-semibold">The Bibi</h2>
             </div>
           </Link>
-          <ul className="hidden lg:flex lg:space-x-12">
+          <ul className="hidden md:flex md:space-x-6 lg:space-x-12">
             {NavList.map((item, _) => {
               const isActive =
                 pathname === item.href || pathname.startsWith(`${item.href}/`);
@@ -132,32 +176,33 @@ export default function Navbar() {
             </li>
           </ul>
           <DropdownMenu modal={false} open={isOpen} onOpenChange={setIsOpen}>
-            <DropdownMenuTrigger asChild className="lg:hidden">
-              <Button variant="outline" size={"icon"}>
-                <Icons.Menu />
+            <DropdownMenuTrigger asChild className="md:hidden">
+              <Button variant="outline" className="gap-2">
+                <span>Menu</span>
+                <ChevronDown className="size-4" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-fit font-mono" align="end">
-              <DropdownMenuGroup>
-                {NavList.map((item, _) => (
-                  <DropdownMenuItem
-                    key={_ + 1}
-                    className="capitalize justify-end"
+              <div className="grid gap-2 p-3">
+                {mobileItems.map((item) => (
+                  <Link
+                    key={item.href}
+                    href={item.href}
                     onClick={() => setIsOpen(false)}
+                    className="flex items-center gap-3 rounded-lg border p-3 transition-colors hover:bg-muted"
                   >
-                    <Link href={item.href}>{item.name}</Link>
-                  </DropdownMenuItem>
+                    <div className="flex size-8 shrink-0 items-center justify-center rounded-md bg-muted">
+                      <item.icon className="size-4" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium">{item.name}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {item.description}
+                      </p>
+                    </div>
+                  </Link>
                 ))}
-                <DropdownMenuItem
-                  className="capitalize justify-end"
-                  onClick={() => {
-                    setIsOpen(false);
-                    setMoreOpen(true);
-                  }}
-                >
-                  <span>More</span>
-                </DropdownMenuItem>
-              </DropdownMenuGroup>
+              </div>
             </DropdownMenuContent>
           </DropdownMenu>
         </nav>
