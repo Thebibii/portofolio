@@ -2,6 +2,7 @@
 
 import { Icons } from "@/components/icons";
 import { DisplayPlate } from "@/components/reusable/display-plate";
+import GiscusComments from "@/components/reusable/giscus-comments";
 import ProjectDetailsSkeleton from "@/components/reusable/skeleton/project-detail-skeleton";
 import EmptyState from "@/components/reusable/state/empty-state";
 import LoadingState from "@/components/reusable/state/loading-state";
@@ -133,6 +134,8 @@ export default function Page() {
 
             {/* Long description */}
             <DisplayPlate value={data?.data?.longDescription} />
+
+            <GiscusComments />
           </div>
         </EmptyState>
       )}

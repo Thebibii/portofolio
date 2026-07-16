@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/tooltip";
 import { useEffect, useRef } from "react";
 import { DisplayPlate } from "@/components/reusable/display-plate";
+import GiscusComments from "@/components/reusable/giscus-comments";
 import { PostDetailSkeleton } from "@/components/reusable/skeleton/post-detail-skeleton";
 
 export default function Page() {
@@ -165,6 +166,8 @@ export default function Page() {
             initialLiked={data.data.likedByMe}
             onLike={toggleLike}
           />
+
+          <GiscusComments />
         </div>
       )}
     </LoadingState>
