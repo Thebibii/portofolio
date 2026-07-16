@@ -1,144 +1,67 @@
-"use client";
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import prisma from "@/lib/prisma";
+import JsonLd from "@/components/seo/json-ld";
+import { softwareApplicationSchema } from "@/components/seo/schemas/software-application";
+import ProjectDetailClient from "./_components/project-detail-client";
 
-import { Icons } from "@/components/icons";
-import { DisplayPlate } from "@/components/reusable/display-plate";
-import GiscusComments from "@/components/reusable/giscus-comments";
-import ProjectDetailsSkeleton from "@/components/reusable/skeleton/project-detail-skeleton";
-import EmptyState from "@/components/reusable/state/empty-state";
-import LoadingState from "@/components/reusable/state/loading-state";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import { useGuestProjectBySlug } from "@/hooks/react-query/guest/projects/use-query";
-import { useIncrementProjectView } from "@/hooks/react-query/guest/projects/use-mutation";
-import { ArrowLeft, FolderOpen } from "lucide-react";
-import Link from "next/link";
-import { useParams } from "next/navigation";
-import { useEffect, useRef } from "react";
-import { toast } from "sonner";
+type Props = {
+  params: Promise<{ slug: string }>;
+};
 
-export default function Page() {
-  const params = useParams<{ slug: string }>();
-  const { data, isError, error, isLoading } = useGuestProjectBySlug({
-    slug: params.slug,
-  });
+const baseUrl = "https://thebibie.vercel.app";
 
-  const { mutate: incrementView } = useIncrementProjectView();
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
+  const project = await prisma.project.findFirst({ where: { slug } });
 
-  const lastSlug = useRef<string | null>(null);
+  if (!project) return { title: "Project Not Found" };
 
-  useEffect(() => {
-    if (params.slug && params.slug !== lastSlug.current && data) {
-      lastSlug.current = params.slug;
-      incrementView(params.slug);
-    }
-  }, [params.slug, incrementView, data]);
-  if (isError && error) {
-    toast.error("Gagal memuat data", {
-      description: error.message,
-      id: "project-error",
-    });
-  }
+  return {
+    title: project.title,
+    description: project.description ?? undefined,
+    openGraph: {
+      title: project.title,
+      description: project.description ?? undefined,
+      url: `${baseUrl}/projects/${slug}`,
+      images: project.image
+        ? [{ url: project.image }]
+        : [{ url: "/profile.png", width: 512, height: 512, alt: "The Bibi" }],
+    },
+    twitter: {
+      title: project.title,
+      description: project.description ?? undefined,
+      images: project.image ? [project.image] : ["/profile.png"],
+    },
+  };
+}
+
+export default async function ProjectDetailPage({ params }: Props) {
+  const { slug } = await params;
+  const project = await prisma.project.findFirst({ where: { slug } });
+
+  if (!project) notFound();
+
+  const serialized = {
+    ...project,
+    startDate: project.startDate?.toISOString() ?? null,
+    endDate: project.endDate?.toISOString() ?? null,
+    updatedAt: project.updatedAt.toISOString(),
+  };
+
   return (
-    <LoadingState
-      data={!isLoading}
-      loadingFallback={<ProjectDetailsSkeleton />}
-    >
-      {!isError && (
-        <EmptyState
-          data={data?.data ? [data.data] : undefined}
-          emptyFallback={
-            <div className="flex flex-col items-center justify-center py-32 text-center font-mono">
-              <FolderOpen className="h-16 w-16 text-muted-foreground/40 mb-4" />
-              <h3 className="text-lg font-semibold">Project not found</h3>
-              <p className="text-sm text-muted-foreground mt-1 mb-6">
-                The project you&apos;re looking for doesn&apos;t exist.
-              </p>
-              <Button asChild>
-                <Link href="/projects">&larr; Back to projects</Link>
-              </Button>
-            </div>
-          }
-        >
-          <div className="flex flex-col space-y-4 pt-9 pb-10 lg:pt-24 mx-auto w-full max-w-6xl px-6 lg:px-8 xl:px-0">
-            <Link
-              href="/projects"
-              className="inline-flex justify-end items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-4 font-mono"
-            >
-              <ArrowLeft className="size-4" />
-              Back to projects
-            </Link>
-
-            {/* Project content */}
-            <article className="space-y-4 font-mono">
-              <h1 className="text-4xl font-bold">{data?.data?.title}</h1>
-
-              {/* Technologies */}
-              <div className="flex gap-2" aria-label="Technologies used">
-                {data?.data?.technologies.map((item: any) => (
-                  <Badge
-                    variant={"secondary"}
-                    className="bg-gray-200/60"
-                    key={item}
-                  >
-                    {item}
-                  </Badge>
-                ))}
-              </div>
-
-              {/* Short description */}
-              <p>{data?.data?.description}</p>
-
-              <Separator orientation="horizontal" />
-
-              {/* Views and links */}
-              <div
-                className="flex items-center gap-5 flex-wrap"
-                aria-label="Project stats and links"
-              >
-                {/* Views */}
-                <p className="flex text-xs items-center gap-2 mr-auto">
-                  <Icons.Eye className="size-4" />
-                  <span>{data?.data?.views ?? "--"} views</span>
-                </p>
-
-                {/* Demo link */}
-                {data?.data?.demoUrl && (
-                  <Link
-                    href={data?.data?.demoUrl}
-                    target="_blank"
-                    className="flex text-xs items-center gap-2 hover:underline"
-                    aria-label="Link to project demo"
-                  >
-                    <Icons.Link className="size-4" />
-                    <span>Link demo</span>
-                  </Link>
-                )}
-
-                {/* Repository link */}
-                {data?.data?.sourceUrl && (
-                  <Link
-                    href={data?.data?.sourceUrl}
-                    target="_blank"
-                    className="flex text-xs items-center gap-2 hover:underline"
-                    aria-label="Link to project repository"
-                  >
-                    <Icons.Github className="size-4" />
-                    <span>Repository</span>
-                  </Link>
-                )}
-              </div>
-
-              <Separator orientation="horizontal" />
-            </article>
-
-            {/* Long description */}
-            <DisplayPlate value={data?.data?.longDescription} />
-
-            <GiscusComments />
-          </div>
-        </EmptyState>
-      )}
-    </LoadingState>
+    <>
+      <JsonLd
+        schema={softwareApplicationSchema({
+          name: project.title,
+          description: project.description ?? undefined,
+          url: `${baseUrl}/projects/${project.slug}`,
+          image: project.image ?? `${baseUrl}/profile.png`,
+          operatingSystem: "Web",
+          applicationCategory: "WebApplication",
+        })}
+      />
+      <ProjectDetailClient project={serialized} slug={slug} />
+    </>
   );
 }
