@@ -1,11 +1,15 @@
 import type { Metadata } from "next";
 import WritingsClient from "./_components/writings-client";
+import { getWritingsData } from "@/lib/server/get-writings-data";
 
 const baseUrl = "https://thebibie.vercel.app";
 
 export const metadata: Metadata = {
   title: "Writings",
   description: "A story of growth and discovery — writings about ideas, thoughts, and experiences.",
+  alternates: {
+    canonical: `${baseUrl}/writings`,
+  },
   openGraph: {
     title: "Writings | The Bibi",
     description: "A story of growth and discovery — writings about ideas, thoughts, and experiences.",
@@ -19,6 +23,13 @@ export const metadata: Metadata = {
   },
 };
 
-export default function WritingsPage() {
-  return <WritingsClient />;
+export default async function WritingsPage() {
+  const { writings, meta, categories, tags } = await getWritingsData();
+  return (
+    <WritingsClient
+      initialWritings={{ data: writings, meta }}
+      initialCategories={{ success: true, data: categories }}
+      initialTags={{ success: true, data: tags }}
+    />
+  );
 }

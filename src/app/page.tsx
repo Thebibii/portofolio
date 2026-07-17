@@ -2,17 +2,21 @@ import type { Metadata } from "next";
 import JsonLd from "@/components/seo/json-ld";
 import { personSchema, websiteSchema } from "@/components/seo/schemas";
 import HomeClient from "@/components/home/home-client";
+import { getHomeData } from "@/lib/server/get-home-data";
 
 const baseUrl = "https://thebibie.vercel.app";
 
 export const metadata: Metadata = {
-  title: "The Bibi — Portfolio",
+  title: "Home",
   description:
-    "Personal portfolio showcasing projects, blogs, and writings by The Bibi",
+    "Personal portfolio of Habibie Bayezid Wildan (The Bibi), showcasing projects, blogs, and writings",
+  alternates: {
+    canonical: baseUrl,
+  },
   openGraph: {
-    title: "The Bibi — Portfolio",
+    title: "Home | The Bibi",
     description:
-      "Personal portfolio showcasing projects, blogs, and writings by The Bibi",
+      "Personal portfolio of Habibie Bayezid Wildan (The Bibi), showcasing projects, blogs, and writings",
     url: baseUrl,
     images: [
       {
@@ -25,16 +29,18 @@ export const metadata: Metadata = {
   },
 };
 
-export default function HomePage() {
+export default async function HomePage() {
+  const { projects, blogs } = await getHomeData();
+
   return (
     <>
       <JsonLd
         schema={personSchema({
-          name: "Bibi",
+          name: "Habibie Bayezid Wildan",
           url: baseUrl,
           image: `${baseUrl}/profile.png`,
           jobTitle: "Developer",
-          description: "Personal portfolio showcasing projects, blogs, and writings",
+          description: "Personal portfolio of Habibie Bayezid Wildan (The Bibi), showcasing projects, blogs, and writings",
           sameAs: [],
         })}
       />
@@ -46,7 +52,7 @@ export default function HomePage() {
           searchUrl: `${baseUrl}/search?q={search_term_string}`,
         })}
       />
-      <HomeClient />
+      <HomeClient projects={projects} blogs={blogs} />
     </>
   );
 }

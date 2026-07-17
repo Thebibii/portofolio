@@ -3,21 +3,15 @@ import { AnimatedGridPattern } from "@/components/magicui/animated-grid-pattern"
 import FeaturedSection from "@/components/reusable/home/featured-section";
 import Footer from "@/components/reusable/home/footer";
 import Navbar from "@/components/reusable/navbar";
-import { useGetDataHome } from "@/hooks/react-query/guest/use-query";
 import { cn } from "@/lib/utils";
 import { Fragment } from "react";
-import { toast } from "sonner";
 
-export default function HomeClient() {
-  const { data, isLoading, isError, error } = useGetDataHome();
+type Props = {
+  projects: any[];
+  blogs: any[];
+};
 
-  if (isError && error) {
-    toast.error("Gagal memuat data", {
-      description: error.message,
-      id: "home-error",
-    });
-  }
-
+export default function HomeClient({ projects, blogs }: Props) {
   return (
     <Fragment>
       <AnimatedGridPattern
@@ -32,8 +26,8 @@ export default function HomeClient() {
       <Navbar />
       <main className="">
         <FeaturedSection
-          data={data?.data}
-          isLoadingError={!isLoading && !isError}
+          data={{ projects, blogs }}
+          isLoadingError={true}
         />
       </main>
       <Footer />

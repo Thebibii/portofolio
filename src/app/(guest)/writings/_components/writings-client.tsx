@@ -22,7 +22,25 @@ import { Label } from "@/components/ui/label";
 import SortPopover from "@/components/reusable/guest/sort-popover";
 import { BlogsCardSkeleton } from "@/components/reusable/skeleton/blogs-card-skeleton";
 
-function WritingsContent() {
+type InitialData = {
+  data: any[];
+  meta: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+    hasNextPage: boolean;
+    hasPrevPage: boolean;
+  };
+};
+
+type Props = {
+  initialWritings?: InitialData;
+  initialCategories?: any;
+  initialTags?: any;
+};
+
+function WritingsContent({ initialWritings, initialCategories, initialTags }: Props) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -52,11 +70,11 @@ function WritingsContent() {
     limit: 5,
     sortBy,
     sortOrder,
-  });
+  }, initialWritings);
 
   const { data: category, isLoading: isLoadingCategory } =
-    useGuestCategory("writing");
-  const { data: tags, isLoading: isLoadingTags } = useGuestTags("writing");
+    useGuestCategory("writing", initialCategories);
+  const { data: tags, isLoading: isLoadingTags } = useGuestTags("writing", initialTags);
 
   useEffect(() => {
     const urlSearch = searchParams.get("search") || "";
@@ -410,10 +428,14 @@ function WritingsPageFallback() {
   return <BlogsSkeleton />;
 }
 
-export default function WritingsClient() {
+export default function WritingsClient({ initialWritings, initialCategories, initialTags }: Props) {
   return (
     <Suspense fallback={<WritingsPageFallback />}>
-      <WritingsContent />
+      <WritingsContent
+        initialWritings={initialWritings}
+        initialCategories={initialCategories}
+        initialTags={initialTags}
+      />
     </Suspense>
   );
 }

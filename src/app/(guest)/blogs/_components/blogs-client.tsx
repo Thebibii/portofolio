@@ -29,7 +29,25 @@ import {
 import { Check, ChevronDown } from "lucide-react";
 import SortPopover from "@/components/reusable/guest/sort-popover";
 
-function BlogsContent() {
+type InitialData = {
+  data: any[];
+  meta: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+    hasNextPage: boolean;
+    hasPrevPage: boolean;
+  };
+};
+
+type Props = {
+  initialBlogs?: InitialData;
+  initialCategories?: any;
+  initialTags?: any;
+};
+
+function BlogsContent({ initialBlogs, initialCategories, initialTags }: Props) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -59,12 +77,12 @@ function BlogsContent() {
     limit: 5,
     sortBy,
     sortOrder,
-  });
+  }, initialBlogs);
 
   const { data: category, isLoading: isLoadingCategory } =
-    useGuestCategory("blog");
+    useGuestCategory("blog", initialCategories);
 
-  const { data: tags, isLoading: isLoadingTags } = useGuestTags("blog");
+  const { data: tags, isLoading: isLoadingTags } = useGuestTags("blog", initialTags);
 
   useEffect(() => {
     const urlSearch = searchParams.get("search") || "";
@@ -421,10 +439,14 @@ function BlogsPageFallback() {
   return <BlogsSkeleton />;
 }
 
-export default function BlogsClient() {
+export default function BlogsClient({ initialBlogs, initialCategories, initialTags }: Props) {
   return (
     <Suspense fallback={<BlogsPageFallback />}>
-      <BlogsContent />
+      <BlogsContent
+        initialBlogs={initialBlogs}
+        initialCategories={initialCategories}
+        initialTags={initialTags}
+      />
     </Suspense>
   );
 }

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import ProjectsClient from "./_components/projects-client";
+import { getProjectsData } from "@/lib/server/get-projects-data";
 
 const baseUrl = "https://thebibie.vercel.app";
 
@@ -7,6 +8,9 @@ export const metadata: Metadata = {
   title: "Projects",
   description:
     "Explore my portfolio projects — featured builds, side projects, and experiments.",
+  alternates: {
+    canonical: `${baseUrl}/projects`,
+  },
   openGraph: {
     title: "Projects | The Bibi",
     description:
@@ -29,6 +33,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default function ProjectsPage() {
-  return <ProjectsClient />;
+export default async function ProjectsPage() {
+  const { featured, other } = await getProjectsData();
+  return <ProjectsClient featured={featured} other={other} />;
 }
