@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { headers } from "next/headers";
 import prisma from "@/lib/prisma";
 import JsonLd from "@/components/seo/json-ld";
 import { articleSchema } from "@/components/seo/schemas/article";
@@ -11,6 +10,16 @@ type Props = {
 };
 
 const baseUrl = "https://thebibie.vercel.app";
+
+export const revalidate = 3600;
+
+export async function generateStaticParams() {
+  const posts = await prisma.post.findMany({
+    where: { type: "BLOG" },
+    select: { slug: true },
+  });
+  return posts.map((post) => ({ slug: post.slug }));
+}
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
@@ -24,6 +33,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: blog.title,
     description: blog.excerpt ?? undefined,
+    alternates: {
+      canonical: `${baseUrl}/blogs/${slug}`,
+    },
     openGraph: {
       title: blog.title,
       description: blog.excerpt ?? undefined,
@@ -56,17 +68,6 @@ export default async function BlogDetailPage({ params }: Props) {
 
   if (!blog) notFound();
 
-  const headerList = await headers();
-  const ip =
-    headerList.get("x-forwarded-for")?.split(",")[0]?.trim() ??
-    headerList.get("x-real-ip") ??
-    "127.0.0.1";
-
-  const likedByMe = !!(await prisma.like.findUnique({
-    where: { ipAddress_postId: { ipAddress: ip, postId: blog.id } },
-    select: { id: true },
-  }));
-
   const serialized = {
     slug: blog.slug,
     title: blog.title,
@@ -78,7 +79,7 @@ export default async function BlogDetailPage({ params }: Props) {
     tags: blog.tags,
     createdAt: blog.createdAt.toISOString(),
     updatedAt: blog.updatedAt.toISOString(),
-    likedByMe,
+    likedByMe: false,
     _count: { likes: blog._count.likes },
   };
 

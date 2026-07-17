@@ -11,6 +11,15 @@ type Props = {
 
 const baseUrl = "https://thebibie.vercel.app";
 
+export const revalidate = 3600;
+
+export async function generateStaticParams() {
+  const projects = await prisma.project.findMany({
+    select: { slug: true },
+  });
+  return projects.map((p) => ({ slug: p.slug }));
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const project = await prisma.project.findFirst({ where: { slug } });
@@ -20,6 +29,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: project.title,
     description: project.description ?? undefined,
+    alternates: {
+      canonical: `${baseUrl}/projects/${slug}`,
+    },
     openGraph: {
       title: project.title,
       description: project.description ?? undefined,
