@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useIncrementProjectView } from "@/hooks/react-query/guest/projects/use-mutation";
+import { useGuestProjectBySlug } from "@/hooks/react-query/guest/projects/use-query";
 import { ArrowLeft, FolderOpen } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef } from "react";
@@ -36,6 +37,12 @@ type Props = {
 
 export default function ProjectDetailClient({ project, slug }: Props) {
   const { mutate: incrementView } = useIncrementProjectView();
+
+  const { data: projectResponse } = useGuestProjectBySlug(
+    { slug },
+    { data: project }
+  );
+  const projectData = projectResponse?.data ?? project;
 
   const lastSlug = useRef<string | null>(null);
 
@@ -81,7 +88,7 @@ export default function ProjectDetailClient({ project, slug }: Props) {
         >
           <p className="flex text-xs items-center gap-2 mr-auto">
             <Icons.Eye className="size-4" />
-            <span>{project.views ?? "--"} views</span>
+            <span>{projectData.views ?? "--"} views</span>
           </p>
 
           {project.demoUrl && (

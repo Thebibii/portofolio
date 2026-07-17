@@ -53,7 +53,10 @@ export const useWritingLikeStatus = (slug: string) => {
   });
 };
 
-export const useGuestWritingBySlug = ({ slug }: { slug: string }) => {
+export const useGuestWritingBySlug = (
+  { slug }: { slug: string },
+  initialData?: any
+) => {
   return useQuery({
     queryKey: ["get.guest.writings", slug],
     queryFn: async () => {
@@ -62,7 +65,6 @@ export const useGuestWritingBySlug = ({ slug }: { slug: string }) => {
       const data = await res.json();
 
       if (!res.ok) {
-        // Lempar error dengan status code
         const error: any = new Error(
           data.message || "Failed to fetch writings"
         );
@@ -72,8 +74,9 @@ export const useGuestWritingBySlug = ({ slug }: { slug: string }) => {
 
       return data;
     },
+    initialData,
+    staleTime: 5 * 60 * 1000,
     retry: (failureCount, error: any) => {
-      // Jangan retry jika 404
       if (error?.status === 404) return false;
       return failureCount < 3;
     },

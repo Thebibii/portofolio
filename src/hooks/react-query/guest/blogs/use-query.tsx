@@ -53,7 +53,10 @@ export const useBlogLikeStatus = (slug: string) => {
   });
 };
 
-export const useGuestBlogBySlug = ({ slug }: { slug: string }) => {
+export const useGuestBlogBySlug = (
+  { slug }: { slug: string },
+  initialData?: any
+) => {
   return useQuery({
     queryKey: ["get.guest.blogs", slug],
     queryFn: async () => {
@@ -63,5 +66,7 @@ export const useGuestBlogBySlug = ({ slug }: { slug: string }) => {
       if (!res.ok) throw new Error("Failed to fetch blogs");
       return data;
     },
+    initialData,
+    staleTime: 5 * 60 * 1000,
   });
 };

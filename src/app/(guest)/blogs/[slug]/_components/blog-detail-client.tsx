@@ -11,7 +11,10 @@ import {
   useIncrementBlogView,
   useToggleBlogLike,
 } from "@/hooks/react-query/guest/blogs/use-mutation";
-import { useBlogLikeStatus } from "@/hooks/react-query/guest/blogs/use-query";
+import {
+  useBlogLikeStatus,
+  useGuestBlogBySlug,
+} from "@/hooks/react-query/guest/blogs/use-query";
 import LikeButton from "@/components/reusable/like-button";
 import {
   Tooltip,
@@ -49,6 +52,9 @@ type Props = {
 export default function BlogDetailClient({ post, slug }: Props) {
   const { mutate: incrementView } = useIncrementBlogView();
   const { mutate: toggleLike } = useToggleBlogLike();
+
+  const { data: blogResponse } = useGuestBlogBySlug({ slug }, { data: post });
+  const blogData = blogResponse?.data ?? post;
 
   const { data: likeStatus } = useBlogLikeStatus(slug);
 
@@ -123,7 +129,7 @@ export default function BlogDetailClient({ post, slug }: Props) {
         >
           <p className="flex text-xs items-center gap-2 mr-auto">
             <Icons.Eye className="size-4" />
-            <span>{post.viewCount ?? "--"} views</span>
+            <span>{blogData.viewCount ?? "--"} views</span>
           </p>
 
           <p
@@ -131,7 +137,7 @@ export default function BlogDetailClient({ post, slug }: Props) {
             aria-label="Link to project demo"
           >
             <Icons.BookOpen className="size-4" />
-            <span>{post.readingTime} min read</span>
+            <span>{blogData.readingTime} min read</span>
           </p>
 
           <Tooltip>
@@ -147,7 +153,7 @@ export default function BlogDetailClient({ post, slug }: Props) {
                 aria-label="Scroll to like button"
               >
                 <Icons.Heart className="size-4" />
-                <span>{post._count?.likes ?? 0} Likes</span>
+                <span>{blogData._count?.likes ?? 0} Likes</span>
               </button>
             </TooltipTrigger>
             <TooltipContent>Click to show love</TooltipContent>

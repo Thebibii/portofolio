@@ -18,7 +18,10 @@ export const useGetGuestProjects = (featured?: boolean) => {
   });
 };
 
-export const useGuestProjectBySlug = ({ slug }: { slug: string }) => {
+export const useGuestProjectBySlug = (
+  { slug }: { slug: string },
+  initialData?: any
+) => {
   return useQuery({
     queryKey: ["get.guest.projects", slug],
     queryFn: async () => {
@@ -28,5 +31,7 @@ export const useGuestProjectBySlug = ({ slug }: { slug: string }) => {
       if (!res.ok) throw new Error(data.error);
       return data;
     },
+    initialData,
+    staleTime: 5 * 60 * 1000,
   });
 };

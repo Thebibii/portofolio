@@ -1,31 +1,33 @@
-import { omitId } from "@/lib/helper";
 import prisma from "@/lib/prisma";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 export async function GET(
-  request: NextRequest,
+  _req: Request,
   { params }: { params: Promise<{ slug: string }> }
 ) {
   try {
     const { slug } = await params;
 
     const project = await prisma.project.findFirst({
-      where: {
-        slug,
-      },
+      where: { slug },
     });
-    const data = omitId(project);
 
-    if (!data) {
-      return NextResponse.json({ data: null });
+    if (!project) {
+      return NextResponse.json({ error: "Project not found" }, { status: 404 });
     }
 
-    return NextResponse.json({ data });
+    return NextResponse.json({
+      success: true,
+      data: {
+        ...project,
+        startDate: project.startDate?.toISOString() ?? null,
+        endDate: project.endDate?.toISOString() ?? null,
+        updatedAt: project.updatedAt.toISOString(),
+      },
+    });
   } catch (error) {
-    console.error("Error fetching project:", error);
-    return NextResponse.json(
-      { error: "Terjadi kesalahan pada server" },
-      { status: 500 }
-    );
+    const message =
+      error instanceof Error ? error.message : "Terjadi kesalahan";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

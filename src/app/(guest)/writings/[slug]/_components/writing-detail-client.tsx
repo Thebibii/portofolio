@@ -11,7 +11,10 @@ import {
   useIncrementWritingView,
   useToggleWritingLike,
 } from "@/hooks/react-query/guest/writings/use-mutation";
-import { useWritingLikeStatus } from "@/hooks/react-query/guest/writings/use-query";
+import {
+  useWritingLikeStatus,
+  useGuestWritingBySlug,
+} from "@/hooks/react-query/guest/writings/use-query";
 import { useEffect, useRef } from "react";
 import LikeButton from "@/components/reusable/like-button";
 import {
@@ -49,6 +52,12 @@ type Props = {
 export default function WritingDetailClient({ post, slug }: Props) {
   const { mutate: incrementView } = useIncrementWritingView();
   const { mutate: toggleLike } = useToggleWritingLike();
+
+  const { data: writingResponse } = useGuestWritingBySlug(
+    { slug },
+    { data: post }
+  );
+  const writingData = writingResponse?.data ?? post;
 
   const { data: likeStatus } = useWritingLikeStatus(slug);
 
@@ -124,7 +133,7 @@ export default function WritingDetailClient({ post, slug }: Props) {
         >
           <p className="flex text-xs items-center gap-2 mr-auto">
             <Icons.Eye className="size-4" />
-            <span>{post.viewCount ?? "--"} views</span>
+            <span>{writingData.viewCount ?? "--"} views</span>
           </p>
 
           <p
@@ -132,7 +141,7 @@ export default function WritingDetailClient({ post, slug }: Props) {
             aria-label="Link to project demo"
           >
             <Icons.BookOpen className="size-4" />
-            <span>{post.readingTime} min read</span>
+            <span>{writingData.readingTime} min read</span>
           </p>
 
           <Tooltip>
@@ -148,7 +157,7 @@ export default function WritingDetailClient({ post, slug }: Props) {
                 aria-label="Scroll to like button"
               >
                 <Icons.Heart className="size-4" />
-                <span>{post._count?.likes ?? 0} Likes</span>
+                <span>{writingData._count?.likes ?? 0} Likes</span>
               </button>
             </TooltipTrigger>
             <TooltipContent>Click to show love</TooltipContent>
