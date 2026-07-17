@@ -2,6 +2,7 @@ import { authOptions } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { PostStatus, PostType } from "@/types/blogs";
 import z from "zod";
 
@@ -112,6 +113,10 @@ export async function PUT(
       },
     });
 
+    revalidatePath('/');
+    revalidatePath('/blogs');
+    revalidatePath(`/blogs/${slug}`);
+
     return NextResponse.json(
       { data, success: true, message: "Blog berhasil diupdate" },
       { status: 200 }
@@ -159,6 +164,9 @@ export async function DELETE(
     where: { slug },
     select: { id: true },
   });
+
+  revalidatePath('/');
+  revalidatePath('/blogs');
 
   return NextResponse.json(
     { data, message: "Data deleted successfully" },

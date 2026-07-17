@@ -6,6 +6,8 @@ import { getHomeData } from "@/lib/server/get-home-data";
 
 const baseUrl = "https://thebibie.vercel.app";
 
+export const revalidate = 3600;
+
 export const metadata: Metadata = {
   title: "Home",
   description:

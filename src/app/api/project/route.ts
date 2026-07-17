@@ -4,6 +4,7 @@ import prisma from "@/lib/prisma";
 import { ProjectFormData, ProjectStatus } from "@/types/projects";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import z from "zod";
 
 const projectSchema = z.object({
@@ -68,6 +69,9 @@ export async function POST(req: NextRequest) {
         slug: generateSlug(body.title),
       },
     });
+
+    revalidatePath('/');
+    revalidatePath('/projects');
 
     return NextResponse.json(
       { data, success: true, message: "Project berhasil ditambahkan" },

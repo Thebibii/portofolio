@@ -3,6 +3,7 @@ import prisma from "@/lib/prisma";
 import { PostStatus, PostType } from "@/types/blogs";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import z from "zod";
 
 const postSchema = z.object({
@@ -86,6 +87,9 @@ export async function POST(req: NextRequest) {
         },
       },
     });
+
+    revalidatePath('/');
+    revalidatePath('/blogs');
 
     return NextResponse.json(
       { data, success: true, message: "Post berhasil ditambahkan" },

@@ -4,6 +4,8 @@ import { getProjectsData } from "@/lib/server/get-projects-data";
 
 const baseUrl = "https://thebibie.vercel.app";
 
+export const revalidate = 3600;
+
 export const metadata: Metadata = {
   title: "Projects",
   description:

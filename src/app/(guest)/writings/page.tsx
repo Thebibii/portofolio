@@ -4,6 +4,8 @@ import { getWritingsData } from "@/lib/server/get-writings-data";
 
 const baseUrl = "https://thebibie.vercel.app";
 
+export const revalidate = 3600;
+
 export const metadata: Metadata = {
   title: "Writings",
   description: "A story of growth and discovery — writings about ideas, thoughts, and experiences.",

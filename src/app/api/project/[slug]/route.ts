@@ -1,6 +1,7 @@
 import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import prisma from "@/lib/prisma";
 import z from "zod";
 import { ProjectStatus } from "@prisma/client";
@@ -96,11 +97,14 @@ export async function DELETE(
       select: { id: true },
     });
 
-    return NextResponse.json(
-      { data, message: "Data deleted successfully" },
-      { status: 200 }
-    );
-  } catch (error: any) {
+  revalidatePath('/');
+  revalidatePath('/projects');
+
+  return NextResponse.json(
+    { data, message: "Data deleted successfully" },
+    { status: 200 }
+  );
+} catch (error: any) {
     // mapping error Prisma jadi pesan user-friendly
     if (error.code === "P2025") {
       return NextResponse.json({ message: "Data not found" }, { status: 404 });
@@ -153,6 +157,12 @@ export async function PUT(
         slug: generateSlug(body.title),
       },
     });
+
+    revalidatePath('/');
+    revalidatePath('/projects');
+    if (existingProject?.slug) {
+      revalidatePath(`/projects/${existingProject.slug}`);
+    }
 
     return NextResponse.json(
       { data, success: true, message: "Project berhasil diperbarui" },
