@@ -167,6 +167,7 @@ export async function DELETE(
 
   revalidatePath('/');
   revalidatePath('/writings');
+  revalidatePath(`/writings/${slug}`);
 
   return NextResponse.json(
     { data, message: "Data deleted successfully" },

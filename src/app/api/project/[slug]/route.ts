@@ -92,6 +92,11 @@ export async function DELETE(
       return NextResponse.json({ message: "ID is required" }, { status: 400 });
     }
 
+    const project = await prisma.project.findUnique({
+      where: { id: slug },
+      select: { slug: true },
+    });
+
     const data = await prisma.project.delete({
       where: { id: slug },
       select: { id: true },
@@ -99,6 +104,7 @@ export async function DELETE(
 
   revalidatePath('/');
   revalidatePath('/projects');
+  if (project?.slug) revalidatePath(`/projects/${project.slug}`);
 
   return NextResponse.json(
     { data, message: "Data deleted successfully" },
