@@ -86,7 +86,7 @@ export default function BlogDetailClient({ post, slug }: Props) {
         Back to blogs
       </Link>
       <article className="space-y-4 font-mono">
-        <div className="flex space-x-2" aria-label="Technologies used">
+        <div className="flex flex-wrap gap-2" aria-label="Technologies used">
           {post.tags?.map(({ tag }: PostTag) => (
             <Badge variant="outline" key={tag.slug}>
               {tag?.name}

@@ -75,7 +75,7 @@ export default function ProjectDetailClient({ project, slug }: Props) {
       <article className="space-y-4 font-mono">
         <h1 className="text-4xl font-bold">{project.title}</h1>
 
-        <div className="flex gap-2" aria-label="Technologies used">
+        <div className="flex flex-wrap gap-2" aria-label="Technologies used">
           {project.technologies.map((item: string) => (
             <Badge
               variant="secondary"

@@ -44,7 +44,7 @@ export default function BlogsCard({
                     height={225}
                     placeholder="blur"
                     blurDataURL={`data:image/svg+xml;base64,${toBase64(
-                      shimmer(400, 225)
+                      shimmer(400, 225),
                     )}`}
                   />
                 ) : (
@@ -58,7 +58,7 @@ export default function BlogsCard({
               <CardHeader className="space-y-1">
                 <CardTitle className="text-lg space-y-2">
                   {(item?.category || item?.tags.length > 0) && (
-                    <div className="flex space-x-2 justify-between">
+                    <div className="flex flex-wrap items-start justify-between gap-2">
                       {item?.category && (
                         <Badge
                           className={
@@ -74,7 +74,7 @@ export default function BlogsCard({
                         </Badge>
                       )}
                       {item?.tags?.length > 0 && (
-                        <div className="flex space-x-2 ">
+                        <div className="flex flex-wrap gap-2">
                           {item?.tags?.map(({ tag }: { tag: any }) => (
                             <Badge
                               variant={
