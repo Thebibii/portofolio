@@ -1,7 +1,7 @@
 import { baseURL } from "@/lib/api";
 import { useQuery } from "@tanstack/react-query";
 
-export const useGuestTags = (type: string) => {
+export const useGuestTags = (type: string, initialData?: any) => {
   return useQuery({
     queryKey: ["get.guest.tags", type],
     queryFn: async () => {
@@ -11,6 +11,7 @@ export const useGuestTags = (type: string) => {
       if (!res.ok) throw new Error("Failed to fetch tags");
       return data;
     },
+    initialData,
     refetchOnWindowFocus: false,
   });
 };
