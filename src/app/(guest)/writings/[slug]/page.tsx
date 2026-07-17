@@ -96,7 +96,7 @@ export default async function WritingDetailPage({ params }: Props) {
           authorName: "Habibie Bayezid Wildan",
         })}
       />
-      <WritingDetailClient post={serialized} slug={slug} />
+      <WritingDetailClient key={slug} post={serialized} slug={slug} />
     </>
   );
 }

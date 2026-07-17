@@ -96,7 +96,7 @@ export default async function BlogDetailPage({ params }: Props) {
           authorName: "Habibie Bayezid Wildan",
         })}
       />
-      <BlogDetailClient post={serialized} slug={slug} />
+      <BlogDetailClient key={slug} post={serialized} slug={slug} />
     </>
   );
 }

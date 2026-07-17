@@ -73,7 +73,7 @@ export default async function ProjectDetailPage({ params }: Props) {
           applicationCategory: "WebApplication",
         })}
       />
-      <ProjectDetailClient project={serialized} slug={slug} />
+      <ProjectDetailClient key={slug} project={serialized} slug={slug} />
     </>
   );
 }
