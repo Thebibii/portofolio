@@ -24,10 +24,10 @@ export const metadata: Metadata = {
     default: "The Bibi — Portfolio",
     template: "%s | The Bibi",
   },
-  description: "Personal portfolio showcasing projects, blogs, and writings",
+  description: "Personal portfolio of Habibie Bayezid Wildan (The Bibi), showcasing projects, blogs, and writings",
   openGraph: {
     title: "The Bibi — Portfolio",
-    description: "Personal portfolio showcasing projects, blogs, and writings",
+    description: "Personal portfolio of Habibie Bayezid Wildan (The Bibi), showcasing projects, blogs, and writings",
     url: "https://thebibie.vercel.app",
     siteName: "The Bibi",
     locale: "en_US",
@@ -44,7 +44,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "The Bibi — Portfolio",
-    description: "Personal portfolio showcasing projects, blogs, and writings",
+    description: "Personal portfolio of Habibie Bayezid Wildan (The Bibi), showcasing projects, blogs, and writings",
     images: ["/profile.png"],
   },
   robots: {
