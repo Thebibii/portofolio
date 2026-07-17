@@ -11,6 +11,7 @@ import {
   useIncrementBlogView,
   useToggleBlogLike,
 } from "@/hooks/react-query/guest/blogs/use-mutation";
+import { useBlogLikeStatus } from "@/hooks/react-query/guest/blogs/use-query";
 import LikeButton from "@/components/reusable/like-button";
 import {
   Tooltip,
@@ -48,6 +49,8 @@ type Props = {
 export default function BlogDetailClient({ post, slug }: Props) {
   const { mutate: incrementView } = useIncrementBlogView();
   const { mutate: toggleLike } = useToggleBlogLike();
+
+  const { data: likeStatus } = useBlogLikeStatus(slug);
 
   const lastSlug = useRef<string | null>(null);
 
@@ -158,9 +161,10 @@ export default function BlogDetailClient({ post, slug }: Props) {
       </div>
 
       <LikeButton
+        key={likeStatus ? `${slug}-${likeStatus.liked}` : slug}
         slug={slug}
-        initialCount={post._count?.likes ?? 0}
-        initialLiked={post.likedByMe}
+        initialCount={likeStatus?.count ?? post._count?.likes ?? 0}
+        initialLiked={likeStatus?.liked ?? false}
         onLike={toggleLike}
       />
 

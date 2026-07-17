@@ -11,6 +11,7 @@ import {
   useIncrementWritingView,
   useToggleWritingLike,
 } from "@/hooks/react-query/guest/writings/use-mutation";
+import { useWritingLikeStatus } from "@/hooks/react-query/guest/writings/use-query";
 import { useEffect, useRef } from "react";
 import LikeButton from "@/components/reusable/like-button";
 import {
@@ -48,6 +49,8 @@ type Props = {
 export default function WritingDetailClient({ post, slug }: Props) {
   const { mutate: incrementView } = useIncrementWritingView();
   const { mutate: toggleLike } = useToggleWritingLike();
+
+  const { data: likeStatus } = useWritingLikeStatus(slug);
 
   const lastSlug = useRef<string | null>(null);
 
@@ -158,9 +161,10 @@ export default function WritingDetailClient({ post, slug }: Props) {
       <DisplayPlate value={post.content} />
 
       <LikeButton
+        key={likeStatus ? `${slug}-${likeStatus.liked}` : slug}
         slug={slug}
-        initialCount={post._count?.likes ?? 0}
-        initialLiked={post.likedByMe}
+        initialCount={likeStatus?.count ?? post._count?.likes ?? 0}
+        initialLiked={likeStatus?.liked ?? false}
         onLike={toggleLike}
       />
 

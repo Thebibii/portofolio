@@ -11,7 +11,7 @@ interface WritingFilters {
   sortOrder?: "asc" | "desc";
 }
 
-export const useGetGuestWritings = (filters?: WritingFilters) => {
+export const useGetGuestWritings = (filters?: WritingFilters, initialData?: any) => {
   return useQuery({
     queryKey: ["get.guest.writings", filters],
     queryFn: async () => {
@@ -19,7 +19,7 @@ export const useGetGuestWritings = (filters?: WritingFilters) => {
 
       if (filters?.search) params.append("search", filters.search);
       if (filters?.tag) params.append("tag", filters.tag);
-      if (filters?.category) params.append("category", filters.category); // Add this line
+      if (filters?.category) params.append("category", filters.category);
       if (filters?.limit) params.append("limit", filters.limit.toString());
       if (filters?.page) params.append("page", filters.page.toString());
       if (filters?.sortBy) params.append("sortBy", filters.sortBy);
@@ -36,7 +36,20 @@ export const useGetGuestWritings = (filters?: WritingFilters) => {
       if (!res.ok) throw new Error("Failed to fetch writings");
       return data;
     },
+    initialData,
     refetchOnWindowFocus: false,
+  });
+};
+
+export const useWritingLikeStatus = (slug: string) => {
+  return useQuery({
+    queryKey: ["get.guest.writings.liked", slug],
+    queryFn: async () => {
+      const res = await fetch(`${baseURL}/guest/writings/${slug}/like`);
+      if (!res.ok) throw new Error("Failed to fetch like status");
+      return res.json();
+    },
+    retry: false,
   });
 };
 
