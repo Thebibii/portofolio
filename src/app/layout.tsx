@@ -51,6 +51,9 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
+  other: {
+    "google-site-verification": "7bPi6mrRc1Q3pmubF-rmZAIAjlNLG0FloBR3CXCIUYQ",
+  },
   icons: {
     icon: "/favicon.ico",
     shortcut: "/favicon.ico",
