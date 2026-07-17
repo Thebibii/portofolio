@@ -15,7 +15,7 @@ import {
   useWritingLikeStatus,
   useGuestWritingBySlug,
 } from "@/hooks/react-query/guest/writings/use-query";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import LikeButton from "@/components/reusable/like-button";
 import {
   Tooltip,
@@ -50,7 +50,7 @@ type Props = {
 };
 
 export default function WritingDetailClient({ post, slug }: Props) {
-  const { mutate: incrementView } = useIncrementWritingView();
+  const { mutateAsync: incrementView } = useIncrementWritingView();
   const { mutate: toggleLike } = useToggleWritingLike();
 
   const { data: writingResponse } = useGuestWritingBySlug(
@@ -63,19 +63,20 @@ export default function WritingDetailClient({ post, slug }: Props) {
 
   const { data: likeStatus } = useWritingLikeStatus(slug);
 
-  const lastSlug = useRef<string | null>(null);
-
   useEffect(() => {
-    if (slug && slug !== lastSlug.current) {
-      lastSlug.current = slug;
-      incrementView(slug, {
-        onSuccess: (result) => {
-          if (result?.success) {
-            setLiveViewCount(result.data.viewCount);
-          }
-        },
+    let cancelled = false;
+
+    if (slug) {
+      incrementView(slug).then((result) => {
+        if (!cancelled && result?.success) {
+          setLiveViewCount(result.data.viewCount);
+        }
       });
     }
+
+    return () => {
+      cancelled = true;
+    };
   }, [slug, incrementView]);
 
   return (

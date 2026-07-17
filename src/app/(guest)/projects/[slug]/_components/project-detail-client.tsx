@@ -10,7 +10,7 @@ import { useIncrementProjectView } from "@/hooks/react-query/guest/projects/use-
 import { useGuestProjectBySlug } from "@/hooks/react-query/guest/projects/use-query";
 import { ArrowLeft, FolderOpen } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 type ProjectData = {
   title: string;
@@ -36,7 +36,7 @@ type Props = {
 };
 
 export default function ProjectDetailClient({ project, slug }: Props) {
-  const { mutate: incrementView } = useIncrementProjectView();
+  const { mutateAsync: incrementView } = useIncrementProjectView();
 
   const { data: projectResponse } = useGuestProjectBySlug(
     { slug },
@@ -46,19 +46,20 @@ export default function ProjectDetailClient({ project, slug }: Props) {
 
   const [liveViews, setLiveViews] = useState<number | null>(null);
 
-  const lastSlug = useRef<string | null>(null);
-
   useEffect(() => {
-    if (slug && slug !== lastSlug.current) {
-      lastSlug.current = slug;
-      incrementView(slug, {
-        onSuccess: (result) => {
-          if (result?.success) {
-            setLiveViews(result.data.views);
-          }
-        },
+    let cancelled = false;
+
+    if (slug) {
+      incrementView(slug).then((result) => {
+        if (!cancelled && result?.success) {
+          setLiveViews(result.data.views);
+        }
       });
     }
+
+    return () => {
+      cancelled = true;
+    };
   }, [slug, incrementView]);
 
   return (

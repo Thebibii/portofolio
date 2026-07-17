@@ -21,7 +21,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { DisplayPlate } from "@/components/reusable/display-plate";
 import GiscusComments from "@/components/reusable/giscus-comments";
 
@@ -50,7 +50,7 @@ type Props = {
 };
 
 export default function BlogDetailClient({ post, slug }: Props) {
-  const { mutate: incrementView } = useIncrementBlogView();
+  const { mutateAsync: incrementView } = useIncrementBlogView();
   const { mutate: toggleLike } = useToggleBlogLike();
 
   const { data: blogResponse } = useGuestBlogBySlug({ slug }, { data: post });
@@ -60,19 +60,20 @@ export default function BlogDetailClient({ post, slug }: Props) {
 
   const { data: likeStatus } = useBlogLikeStatus(slug);
 
-  const lastSlug = useRef<string | null>(null);
-
   useEffect(() => {
-    if (slug && slug !== lastSlug.current) {
-      lastSlug.current = slug;
-      incrementView(slug, {
-        onSuccess: (result) => {
-          if (result?.success) {
-            setLiveViewCount(result.data.viewCount);
-          }
-        },
+    let cancelled = false;
+
+    if (slug) {
+      incrementView(slug).then((result) => {
+        if (!cancelled && result?.success) {
+          setLiveViewCount(result.data.viewCount);
+        }
       });
     }
+
+    return () => {
+      cancelled = true;
+    };
   }, [slug, incrementView]);
 
   return (
