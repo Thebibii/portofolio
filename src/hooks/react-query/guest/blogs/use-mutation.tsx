@@ -40,7 +40,12 @@ export const useToggleBlogLike = () => {
       return res.json();
     },
     onSuccess: (result, slug) => {
-      queryClient.invalidateQueries({ queryKey: ["get.guest.blogs.liked", slug] });
+      if (result?.liked !== undefined) {
+        queryClient.setQueryData(["get.guest.blogs.liked", slug], {
+          liked: result.liked,
+          likeCount: result.likeCount,
+        });
+      }
       if (result?.likeCount !== undefined) {
         queryClient.setQueryData(["get.guest.blogs", slug], (old: any) => {
           if (!old?.data) return old;

@@ -178,7 +178,7 @@ export default function BlogDetailClient({ post, slug }: Props) {
       <LikeButton
         key={likeStatus ? `${slug}-${likeStatus.liked}` : slug}
         slug={slug}
-        initialCount={likeStatus?.count ?? post._count?.likes ?? 0}
+        initialCount={likeStatus?.likeCount ?? blogData._count?.likes ?? 0}
         initialLiked={likeStatus?.liked ?? false}
         onLike={toggleLike}
       />

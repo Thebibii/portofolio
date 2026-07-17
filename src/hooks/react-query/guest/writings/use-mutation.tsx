@@ -40,7 +40,12 @@ export const useToggleWritingLike = () => {
       return res.json();
     },
     onSuccess: (result, slug) => {
-      queryClient.invalidateQueries({ queryKey: ["get.guest.writings.liked", slug] });
+      if (result?.liked !== undefined) {
+        queryClient.setQueryData(["get.guest.writings.liked", slug], {
+          liked: result.liked,
+          likeCount: result.likeCount,
+        });
+      }
       if (result?.likeCount !== undefined) {
         queryClient.setQueryData(["get.guest.writings", slug], (old: any) => {
           if (!old?.data) return old;
