@@ -1,12 +1,8 @@
 import { defineConfig, globalIgnores } from "eslint/config";
-import { FlatCompat } from "@eslint/eslintrc";
-
-const compat = new FlatCompat({
-  baseDirectory: import.meta.dirname,
-});
+import nextVitals from "eslint-config-next/core-web-vitals";
 
 const eslintConfig = defineConfig([
-  ...compat.config({ extends: ["next/core-web-vitals"] }),
+  ...nextVitals,
   {
     rules: {
       "react/no-unescaped-entities": "off",
@@ -15,7 +11,9 @@ const eslintConfig = defineConfig([
       "react-hooks/exhaustive-deps": "off",
     },
   },
+  // Override default ignores of eslint-config-next.
   globalIgnores([
+    // Default ignores of eslint-config-next:
     ".next/**",
     "out/**",
     "build/**",
