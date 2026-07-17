@@ -21,7 +21,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { DisplayPlate } from "@/components/reusable/display-plate";
 import GiscusComments from "@/components/reusable/giscus-comments";
 
@@ -56,6 +56,8 @@ export default function BlogDetailClient({ post, slug }: Props) {
   const { data: blogResponse } = useGuestBlogBySlug({ slug }, { data: post });
   const blogData = blogResponse?.data ?? post;
 
+  const [liveViewCount, setLiveViewCount] = useState<number | null>(null);
+
   const { data: likeStatus } = useBlogLikeStatus(slug);
 
   const lastSlug = useRef<string | null>(null);
@@ -63,7 +65,13 @@ export default function BlogDetailClient({ post, slug }: Props) {
   useEffect(() => {
     if (slug && slug !== lastSlug.current) {
       lastSlug.current = slug;
-      incrementView(slug);
+      incrementView(slug, {
+        onSuccess: (result) => {
+          if (result?.success) {
+            setLiveViewCount(result.data.viewCount);
+          }
+        },
+      });
     }
   }, [slug, incrementView]);
 
@@ -129,7 +137,7 @@ export default function BlogDetailClient({ post, slug }: Props) {
         >
           <p className="flex text-xs items-center gap-2 mr-auto">
             <Icons.Eye className="size-4" />
-            <span>{blogData.viewCount ?? "--"} views</span>
+            <span>{liveViewCount ?? "--"} views</span>
           </p>
 
           <p

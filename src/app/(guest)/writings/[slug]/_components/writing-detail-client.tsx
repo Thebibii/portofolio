@@ -15,7 +15,7 @@ import {
   useWritingLikeStatus,
   useGuestWritingBySlug,
 } from "@/hooks/react-query/guest/writings/use-query";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import LikeButton from "@/components/reusable/like-button";
 import {
   Tooltip,
@@ -59,6 +59,8 @@ export default function WritingDetailClient({ post, slug }: Props) {
   );
   const writingData = writingResponse?.data ?? post;
 
+  const [liveViewCount, setLiveViewCount] = useState<number | null>(null);
+
   const { data: likeStatus } = useWritingLikeStatus(slug);
 
   const lastSlug = useRef<string | null>(null);
@@ -66,7 +68,13 @@ export default function WritingDetailClient({ post, slug }: Props) {
   useEffect(() => {
     if (slug && slug !== lastSlug.current) {
       lastSlug.current = slug;
-      incrementView(slug);
+      incrementView(slug, {
+        onSuccess: (result) => {
+          if (result?.success) {
+            setLiveViewCount(result.data.viewCount);
+          }
+        },
+      });
     }
   }, [slug, incrementView]);
 
@@ -133,7 +141,7 @@ export default function WritingDetailClient({ post, slug }: Props) {
         >
           <p className="flex text-xs items-center gap-2 mr-auto">
             <Icons.Eye className="size-4" />
-            <span>{writingData.viewCount ?? "--"} views</span>
+            <span>{liveViewCount ?? "--"} views</span>
           </p>
 
           <p
