@@ -1,5 +1,6 @@
 import prisma from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 
 export async function PATCH(
   _req: NextRequest,
@@ -25,6 +26,8 @@ export async function PATCH(
       data: { viewCount: { increment: 1 } },
       select: { viewCount: true },
     });
+
+    revalidatePath("/");
 
     return NextResponse.json({ success: true, data: updated });
   } catch (error) {
