@@ -1,3 +1,4 @@
+"use client";
 import ProjectCard from "./project-card";
 import Link from "next/link";
 import BlogsCard from "./blogs-card";
@@ -7,6 +8,7 @@ import { BlogsCardSkeleton } from "../skeleton/blogs-card-skeleton";
 import ProjectCardSkeleton from "../skeleton/project-card-skeleton";
 import { CardTitle } from "@/components/ui/card";
 import { Rocket, BookOpen } from "lucide-react";
+import { useFeaturedBlogs } from "@/hooks/react-query/guest/featured/use-query";
 
 export default function FeaturedSection({
   data,
@@ -15,6 +17,9 @@ export default function FeaturedSection({
   data: any;
   isLoadingError: boolean;
 }) {
+  const { data: featuredBlogs } = useFeaturedBlogs(data?.blogs);
+  const displayBlogs = featuredBlogs ?? data?.blogs;
+
   return (
     <div className="mx-auto w-full max-w-6xl px-4 xl:px-0 font-mono">
       <section className="space-y-6 pt-9 pb-10 lg:pt-12 w-full">
@@ -70,7 +75,7 @@ export default function FeaturedSection({
             loadingFallback={<BlogsCardSkeleton />}
           >
             <EmptyState
-              data={data?.blogs}
+              data={displayBlogs}
               emptyFallback={
                 <div className="flex flex-col items-center justify-center py-16 text-center col-span-full">
                   <BookOpen className="h-12 w-12 text-muted-foreground/40 mb-3" />
@@ -81,7 +86,7 @@ export default function FeaturedSection({
                 </div>
               }
             >
-              <BlogsCard to="blogs" data={data?.blogs} />
+              <BlogsCard to="blogs" data={displayBlogs} />
             </EmptyState>
           </LoadingState>
         </div>

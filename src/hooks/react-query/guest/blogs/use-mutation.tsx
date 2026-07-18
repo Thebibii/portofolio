@@ -22,6 +22,18 @@ export const useIncrementBlogView = () => {
             data: { ...old.data, viewCount: result.data.viewCount },
           };
         });
+
+        queryClient.setQueryData(
+          ["get.guest.featured.blogs"],
+          (old: any) => {
+            if (!old) return old;
+            return old.map((blog: any) =>
+              blog.slug === slug
+                ? { ...blog, viewCount: result.data.viewCount }
+                : blog
+            );
+          }
+        );
       }
     },
   });
