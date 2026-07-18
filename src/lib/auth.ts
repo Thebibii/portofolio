@@ -1,6 +1,5 @@
 import { NextAuthOptions } from "next-auth";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import GithubProvider from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { UserRole } from "@prisma/client";
@@ -9,10 +8,6 @@ import prisma from "./prisma";
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
-    GithubProvider({
-      clientId: process.env.GITHUB_CLIENT_ID!,
-      clientSecret: process.env.GITHUB_CLIENT_SECRET!,
-    }),
     CredentialsProvider({
       name: "credentials",
       credentials: {
@@ -32,13 +27,47 @@ export const authOptions: NextAuthOptions = {
           return null;
         }
 
+        // Cek lockout
+        if (user.lockoutUntil && user.lockoutUntil > new Date()) {
+          const remaining = Math.ceil(
+            (user.lockoutUntil.getTime() - Date.now()) / 60000
+          );
+          throw new Error(`LOCKOUT:${remaining}`);
+        }
+
         const isPasswordValid = await bcrypt.compare(
           credentials.password,
           user.password
         );
 
         if (!isPasswordValid) {
+          const newAttempts = user.failedLoginAttempts + 1;
+          if (newAttempts >= 5) {
+            await prisma.user.update({
+              where: { id: user.id },
+              data: {
+                failedLoginAttempts: newAttempts,
+                lockoutUntil: new Date(Date.now() + 15 * 60 * 1000),
+              },
+            });
+          } else {
+            await prisma.user.update({
+              where: { id: user.id },
+              data: { failedLoginAttempts: newAttempts },
+            });
+          }
           return null;
+        }
+
+        // Reset counter setelah login berhasil
+        if (user.failedLoginAttempts > 0 || user.lockoutUntil) {
+          await prisma.user.update({
+            where: { id: user.id },
+            data: {
+              failedLoginAttempts: 0,
+              lockoutUntil: null,
+            },
+          });
         }
 
         return {
@@ -55,7 +84,7 @@ export const authOptions: NextAuthOptions = {
     maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   jwt: {
-    secret: process.env.JWT_SECRET || process.env.NEXTAUTH_SECRET,
+    secret: process.env.NEXTAUTH_SECRET,
     maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   callbacks: {

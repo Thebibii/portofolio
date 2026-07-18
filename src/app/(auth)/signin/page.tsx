@@ -2,9 +2,8 @@
 "use client";
 
 import { useState } from "react";
-import { signIn, getSession } from "next-auth/react";
+import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -12,13 +11,11 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Icons } from "@/components/icons";
-import { Separator } from "@/components/ui/separator";
 
 export default function SignInPage() {
   const [email, setEmail] = useState("");
@@ -40,7 +37,12 @@ export default function SignInPage() {
       });
 
       if (result?.error) {
-        setError("Invalid credentials");
+        if (result.error.startsWith("LOCKOUT:")) {
+          const minutes = result.error.split(":")[1];
+          setError(`Account temporarily locked. Try again in ${minutes} minute(s).`);
+        } else {
+          setError("Invalid credentials");
+        }
       } else {
         router.push("/admin/dashboard"); // Redirect ke dashboard atau halaman utama
         router.refresh();
@@ -52,16 +54,12 @@ export default function SignInPage() {
     }
   };
 
-  const handleGithubSignIn = () => {
-    signIn("github", { callbackUrl: "/dashboard" });
-  };
-
   return (
     <div className="container font-mono relative h-screen flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
       <div className="relative hidden h-full flex-col bg-muted p-10 text-white lg:flex dark:border-r">
         <div className="absolute inset-0 bg-zinc-900" />
         <div className="relative z-20 flex items-center text-lg font-medium">
-          <Icons.Github className="mr-2 h-6 w-6" />
+          <Icons.Home className="mr-2 h-6 w-6" />
           Your App Name
         </div>
         <div className="relative z-20 mt-auto">
@@ -100,26 +98,6 @@ export default function SignInPage() {
                 </Alert>
               )}
 
-              <Button
-                variant="outline"
-                onClick={handleGithubSignIn}
-                className="w-full"
-              >
-                <Icons.Github className="mr-2 h-4 w-4" />
-                Continue with GitHub
-              </Button>
-
-              <div className="relative">
-                <div className="absolute inset-0 flex items-center">
-                  <Separator className="w-full" />
-                </div>
-                <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-background px-2 text-muted-foreground">
-                    Or continue with
-                  </span>
-                </div>
-              </div>
-
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="email">Email</Label>
@@ -150,17 +128,6 @@ export default function SignInPage() {
                 </Button>
               </form>
             </CardContent>
-            <CardFooter>
-              <p className="px-8 text-center text-sm text-muted-foreground">
-                Don&apos;t have an account?{" "}
-                <Link
-                  href="/register"
-                  className="underline underline-offset-4 hover:text-primary"
-                >
-                  Sign up
-                </Link>
-              </p>
-            </CardFooter>
           </Card>
         </div>
       </div>

@@ -1,4 +1,5 @@
 import {
+  AlertTriangle,
   BookOpen,
   Calendar,
   ChartNoAxesCombined,
@@ -29,6 +30,7 @@ import {
 
 type IconProps = React.HTMLAttributes<SVGElement>;
 export const Icons = {
+  AlertTriangle: (props: IconProps) => <AlertTriangle {...props} />,
   Menu: (props: IconProps) => <Menu {...props} />,
   Home: (props: IconProps) => <Home {...props} />,
   Github: (props: IconProps) => <Github {...props} />,

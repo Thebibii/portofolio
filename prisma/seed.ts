@@ -7,19 +7,19 @@ async function main() {
     {
       name: "Admin User",
       email: "admin@example.com",
-      password: await bcrypt.hash("admin123", 10),
+      password: await bcrypt.hash("admin123", 12),
       role: "ADMIN",
     },
     {
       name: "John Doe",
       email: "john@example.com",
-      password: await bcrypt.hash("password123", 10),
+      password: await bcrypt.hash("password123", 12),
       role: "USER",
     },
     {
       name: "Jane Smith",
       email: "jane@example.com",
-      password: await bcrypt.hash("password456", 10),
+      password: await bcrypt.hash("password456", 12),
       role: "USER",
     },
   ];

@@ -13,7 +13,7 @@ npx tsc --noEmit  # type-check cepat tanpa build penuh
 ```
 
 ## Required env vars
-Create `.env` with `DATABASE_URL`, `DIRECT_URL`, `NEXTAUTH_SECRET`, `JWT_SECRET`, `NEXT_PUBLIC_API_URL`, `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET`, Supabase storage creds, UploadThing tokens.
+Create `.env` with `DATABASE_URL`, `DIRECT_URL`, `NEXTAUTH_SECRET`, `NEXT_PUBLIC_API_URL`, Supabase storage creds, UploadThing tokens.
 
 ## Architecture
 - **Next.js 15 App Router** with Turbopack dev server

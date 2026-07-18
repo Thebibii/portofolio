@@ -15,7 +15,7 @@ export async function middleware(request: NextRequest) {
   const protectedRoutes = ["/dashboard", "/profile", "/admin"];
 
   // Public routes yang tidak perlu authentication
-  const publicRoutes = ["/signin", "/register", "/", "/api/auth"];
+  const publicRoutes = ["/signin", "/", "/api/auth"];
 
   // Cek jika route adalah public
   const isPublicRoute = publicRoutes.some((route) =>
@@ -36,11 +36,6 @@ export async function middleware(request: NextRequest) {
 
   // Jika user sudah login dan mencoba akses login page
   if (pathname === "/signin" && token) {
-    return NextResponse.redirect(new URL("/admin/dashboard", request.url));
-  }
-
-  // Jika user sudah login dan mencoba akses login page
-  if (pathname === "/register" && token) {
     return NextResponse.redirect(new URL("/admin/dashboard", request.url));
   }
 
