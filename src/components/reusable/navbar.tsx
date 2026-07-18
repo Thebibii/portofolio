@@ -179,7 +179,10 @@ export default function Navbar() {
           </ul>
           <DropdownMenu modal={false} open={isOpen} onOpenChange={setIsOpen}>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="md:hidden fixed top-6 right-6 z-50 gap-2">
+              <Button
+                variant="outline"
+                className="md:hidden fixed top-6 right-6 z-50 gap-2 bg-background/50 border border-muted-foreground/50 backdrop-blur-sm"
+              >
                 <span>Menu</span>
                 <AnimatePresence mode="wait">
                   {isOpen ? (
