@@ -13,8 +13,10 @@ import { NavList } from "@/lib/constant";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
 import Image from "next/image";
+import { AnimatePresence, motion } from "motion/react";
 import {
   ChevronDown,
+  ChevronUp,
   FolderKanban,
   FileText,
   User,
@@ -176,10 +178,32 @@ export default function Navbar() {
             </li>
           </ul>
           <DropdownMenu modal={false} open={isOpen} onOpenChange={setIsOpen}>
-            <DropdownMenuTrigger asChild className="md:hidden">
-              <Button variant="outline" className="gap-2">
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="md:hidden fixed top-6 right-6 z-50 gap-2">
                 <span>Menu</span>
-                <ChevronDown className="size-4" />
+                <AnimatePresence mode="wait">
+                  {isOpen ? (
+                    <motion.div
+                      key="up"
+                      initial={{ opacity: 0, rotate: -90, scale: 0.5 }}
+                      animate={{ opacity: 1, rotate: 0, scale: 1 }}
+                      exit={{ opacity: 0, rotate: 90, scale: 0.5 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <ChevronUp className="size-4" />
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      key="down"
+                      initial={{ opacity: 0, rotate: 90, scale: 0.5 }}
+                      animate={{ opacity: 1, rotate: 0, scale: 1 }}
+                      exit={{ opacity: 0, rotate: -90, scale: 0.5 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <ChevronDown className="size-4" />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-fit font-mono" align="end">
