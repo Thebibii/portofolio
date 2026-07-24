@@ -25,6 +25,7 @@ export const metadata: Metadata = {
     template: "%s | The Bibi",
   },
   description: "Personal portfolio of Habibie Bayezid Wildan (The Bibi), showcasing projects, blogs, and writings",
+  applicationName: "The Bibi",
   openGraph: {
     title: "The Bibi — Portfolio",
     description: "Personal portfolio of Habibie Bayezid Wildan (The Bibi), showcasing projects, blogs, and writings",
