@@ -23,8 +23,8 @@ export const metadata: Metadata = {
     images: [
       {
         url: "/profile.png",
-        width: 512,
-        height: 512,
+        width: 1080,
+        height: 1440,
         alt: "The Bibi",
       },
     ],

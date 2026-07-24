@@ -38,7 +38,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       url: `${baseUrl}/projects/${slug}`,
       images: project.image
         ? [{ url: project.image }]
-        : [{ url: "/profile.png", width: 512, height: 512, alt: "The Bibi" }],
+        : [{ url: "/profile.png", width: 1080, height: 1440, alt: "The Bibi" }],
     },
     twitter: {
       title: project.title,

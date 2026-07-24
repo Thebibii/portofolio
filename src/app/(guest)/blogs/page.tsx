@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     title: "Blogs | The Bibi",
     description: "A story of growth and discovery — blog posts about development, tech, and life.",
     url: `${baseUrl}/blogs`,
-    images: [{ url: "/profile.png", width: 512, height: 512, alt: "The Bibi" }],
+    images: [{ url: "/profile.png", width: 1080, height: 1440, alt: "The Bibi" }],
   },
   twitter: {
     title: "Blogs | The Bibi",

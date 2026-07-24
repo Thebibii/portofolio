@@ -43,7 +43,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       type: "article",
       images: writing.coverImage
         ? [{ url: writing.coverImage }]
-        : [{ url: "/profile.png", width: 512, height: 512, alt: "The Bibi" }],
+        : [{ url: "/profile.png", width: 1080, height: 1440, alt: "The Bibi" }],
     },
     twitter: {
       title: writing.title,

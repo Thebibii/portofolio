@@ -35,8 +35,8 @@ export const metadata: Metadata = {
     images: [
       {
         url: "/profile.png",
-        width: 512,
-        height: 512,
+        width: 1080,
+        height: 1440,
         alt: "The Bibi",
       },
     ],
@@ -57,7 +57,7 @@ export const metadata: Metadata = {
   icons: {
     icon: "/favicon.ico",
     shortcut: "/favicon.ico",
-    apple: "/profile.png",
+    apple: "/apple-touch-icon.png",
   },
 };
 
