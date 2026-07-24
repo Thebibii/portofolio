@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import prisma from "@/lib/prisma";
 import JsonLd from "@/components/seo/json-ld";
-import { softwareApplicationSchema } from "@/components/seo/schemas/software-application";
+import { softwareApplicationSchema, breadcrumbSchema } from "@/components/seo/schemas";
 import ProjectDetailClient from "./_components/project-detail-client";
 
 type Props = {
@@ -63,6 +63,15 @@ export default async function ProjectDetailPage({ params }: Props) {
 
   return (
     <>
+      <JsonLd
+        schema={breadcrumbSchema({
+          items: [
+            { name: "Home", url: baseUrl },
+            { name: "Projects", url: `${baseUrl}/projects` },
+            { name: project.title, url: `${baseUrl}/projects/${project.slug}` },
+          ],
+        })}
+      />
       <JsonLd
         schema={softwareApplicationSchema({
           name: project.title,

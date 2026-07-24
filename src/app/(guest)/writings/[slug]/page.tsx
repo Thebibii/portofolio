@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import prisma from "@/lib/prisma";
 import JsonLd from "@/components/seo/json-ld";
-import { articleSchema } from "@/components/seo/schemas/article";
+import { articleSchema, breadcrumbSchema } from "@/components/seo/schemas";
 import WritingDetailClient from "./_components/writing-detail-client";
 
 type Props = {
@@ -85,6 +85,15 @@ export default async function WritingDetailPage({ params }: Props) {
 
   return (
     <>
+      <JsonLd
+        schema={breadcrumbSchema({
+          items: [
+            { name: "Home", url: baseUrl },
+            { name: "Writings", url: `${baseUrl}/writings` },
+            { name: writing.title, url: `${baseUrl}/writings/${writing.slug}` },
+          ],
+        })}
+      />
       <JsonLd
         schema={articleSchema({
           headline: writing.title,
