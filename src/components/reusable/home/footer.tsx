@@ -20,8 +20,8 @@ export default function Footer() {
         <div>
           <h2 className="text-lg">Habibie Bayezid Wildan</h2>
           <p className="mt-3 text-muted-foreground">
-            Help you rebuild and redefine fundamental concepts through mental
-            models.
+            Membantu Anda membangun ulang dan mendefinisikan ulang konsep fundamental
+            melalui model mental.
           </p>
           <div className="flex gap-3 mt-6">
             {SocialMediaList.map((item, index) => (
@@ -45,8 +45,8 @@ export default function Footer() {
         <div className="@container">
           <div className="@sm:grid-cols-3 grid-cols-2 grid gap-4 gap-y-10">
             {/* General Links */}
-            <nav aria-label="General links">
-              <p className="text-sm font-semibold">General</p>
+            <nav aria-label="Tautan umum">
+              <p className="text-sm font-semibold">Umum</p>
               <ul className="mt-4 space-y-3 text-sm">
                 {NavList.map((item, index) => (
                   <li key={index} className="capitalize">
@@ -62,8 +62,8 @@ export default function Footer() {
             </nav>
 
             {/* The Website Links */}
-            <nav aria-label="The Website links">
-              <p className="text-sm font-semibold">The Website</p>
+            <nav aria-label="Tautan situs">
+              <p className="text-sm font-semibold">Situs</p>
               <ul className="mt-4 space-y-3 text-sm">
                 <li>
                   <Link
@@ -78,7 +78,7 @@ export default function Footer() {
                     href="/uses"
                     className="text-muted-foreground hover:text-primary  transition-colors"
                   >
-                    Uses
+                    Perlengkapan
                   </Link>
                 </li>
                 <li>
@@ -86,7 +86,7 @@ export default function Footer() {
                     href="/attribution"
                     className="text-muted-foreground hover:text-primary  transition-colors"
                   >
-                    Attribution
+                    Atribusi
                   </Link>
                 </li>
                 <li>
@@ -94,7 +94,7 @@ export default function Footer() {
                     href="/guestbook"
                     className="text-muted-foreground hover:text-primary  transition-colors"
                   >
-                    Guest Book
+                    Buku Tamu
                   </Link>
                 </li>
               </ul>

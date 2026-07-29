@@ -39,55 +39,55 @@ export default function Navbar() {
 
   const mobileItems = [
     {
-      name: "Projects",
+      name: "Projek",
       href: "/projects",
       icon: FolderKanban,
-      description: "Showcase of my work",
+      description: "Kumpulan karya saya",
     },
     {
-      name: "Writings",
+      name: "Tulisan",
       href: "/writings",
       icon: FileText,
-      description: "Thoughts and ideas",
+      description: "Pikiran dan ide",
     },
     {
-      name: "Blogs",
+      name: "Blog",
       href: "/blogs",
       icon: Icons.BookOpen,
-      description: "In-depth articles",
+      description: "Artikel mendalam",
     },
     {
-      name: "About",
+      name: "Tentang",
       href: "/about",
       icon: User,
-      description: "Learn about me",
+      description: "Kenali saya",
     },
     {
-      name: "Guest Book",
+      name: "Buku Tamu",
       href: "/guestbook",
       icon: MessageSquare,
-      description: "Leave a message or say hello",
+      description: "Tinggalkan pesan atau sapa",
     },
     {
-      name: "Statistics",
+      name: "Statistik",
       href: "/statistics",
       icon: Icons.ChartNoAxesCombined,
-      description: "Site analytics and insights",
+      description: "Analitik dan wawasan situs",
     },
   ];
 
   const moreItems = [
     {
-      name: "Guest Book",
+      name: "Buku Tamu",
       href: "/guestbook",
       icon: Icons.BookOpen,
-      description: "Leave a message or say hello",
+      description: "Tinggalkan pesan atau sapa",
     },
     {
-      name: "Statistics",
+      name: "Statistik",
       href: "/statistics",
       icon: Icons.ChartNoAxesCombined,
-      description: "Site analytics and insights",
+      description: "Analitik dan wawasan situs",
     },
   ];
 
@@ -146,7 +146,7 @@ export default function Navbar() {
             <li className="transition-colors capitalize hover:underline transition-all">
               <Popover open={moreOpen} onOpenChange={setMoreOpen}>
                 <PopoverTrigger asChild>
-                  <button>More</button>
+                  <button>Lainnya</button>
                 </PopoverTrigger>
                 <PopoverContent
                   align="end"
