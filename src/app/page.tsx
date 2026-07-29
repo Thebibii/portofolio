@@ -9,16 +9,16 @@ const baseUrl = "https://thebibie.vercel.app";
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
-  title: "Home",
+  title: "Beranda",
   description:
-    "Personal portfolio of Habibie Bayezid Wildan (The Bibi), showcasing projects, blogs, and writings",
+    "Portofolio pribadi Habibie Bayezid Wildan (The Bibi), menampilkan projek, blog, dan tulisan",
   alternates: {
     canonical: baseUrl,
   },
   openGraph: {
-    title: "Home | The Bibi",
+    title: "Beranda | The Bibi",
     description:
-      "Personal portfolio of Habibie Bayezid Wildan (The Bibi), showcasing projects, blogs, and writings",
+      "Portofolio pribadi Habibie Bayezid Wildan (The Bibi), menampilkan projek, blog, dan tulisan",
     url: baseUrl,
     images: [
       {
@@ -42,7 +42,7 @@ export default async function HomePage() {
           url: baseUrl,
           image: `${baseUrl}/profile.png`,
           jobTitle: "Developer",
-          description: "Personal portfolio of Habibie Bayezid Wildan (The Bibi), showcasing projects, blogs, and writings",
+          description: "Portofolio pribadi Habibie Bayezid Wildan (The Bibi), menampilkan projek, blog, dan tulisan",
           sameAs: [],
         })}
       />
@@ -50,7 +50,7 @@ export default async function HomePage() {
         schema={websiteSchema({
           name: "The Bibi",
           url: baseUrl,
-          description: "Personal portfolio showcasing projects, blogs, and writings",
+          description: "Portofolio pribadi menampilkan projek, blog, dan tulisan",
           searchUrl: `${baseUrl}/search?q={search_term_string}`,
         })}
       />

@@ -15,7 +15,7 @@ export default function GiscusComments() {
         emitMetadata="0"
         inputPosition="top"
         theme="light"
-        lang="en"
+        lang="id"
         loading="lazy"
       />
     </div>

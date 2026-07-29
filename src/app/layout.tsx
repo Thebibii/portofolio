@@ -24,14 +24,14 @@ export const metadata: Metadata = {
     default: "The Bibi — Portfolio",
     template: "%s | The Bibi",
   },
-  description: "Personal portfolio of Habibie Bayezid Wildan (The Bibi), showcasing projects, blogs, and writings",
+  description: "Portofolio pribadi Habibie Bayezid Wildan (The Bibi), menampilkan projek, blog, dan tulisan",
   applicationName: "The Bibi",
   openGraph: {
     title: "The Bibi — Portfolio",
-    description: "Personal portfolio of Habibie Bayezid Wildan (The Bibi), showcasing projects, blogs, and writings",
+    description: "Portofolio pribadi Habibie Bayezid Wildan (The Bibi), menampilkan projek, blog, dan tulisan",
     url: "https://thebibie.vercel.app",
     siteName: "The Bibi",
-    locale: "en_US",
+    locale: "id_ID",
     type: "website",
     images: [
       {
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "The Bibi — Portfolio",
-    description: "Personal portfolio of Habibie Bayezid Wildan (The Bibi), showcasing projects, blogs, and writings",
+    description: "Portofolio pribadi Habibie Bayezid Wildan (The Bibi), menampilkan projek, blog, dan tulisan",
     images: ["/profile.png"],
   },
   robots: {
@@ -68,7 +68,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="id">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >

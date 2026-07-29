@@ -21,10 +21,10 @@ export default function NotFound() {
           <div className="flex items-center justify-center flex-col space-y-4">
             <h1 className="text-4xl font-bold ">404</h1>
             <p className="text-primary font-semibold text-3xl text-wrap text-center">
-              Looks like you've taken a wrong turn.
+              Sepertinya kamu tersesat.
             </p>
             <Link href={"/"} className="hover:underline">
-              Back to Home
+              Kembali ke Beranda
             </Link>
           </div>
         </main>

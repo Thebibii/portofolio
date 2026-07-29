@@ -2,19 +2,19 @@ import { Icons } from "@/components/icons";
 
 export const NavList = [
   {
-    name: "projects",
+    name: "projek",
     href: "/projects",
   },
   {
-    name: "writings",
+    name: "tulisan",
     href: "/writings",
   },
   {
-    name: "blogs",
+    name: "blog",
     href: "/blogs",
   },
   {
-    name: "about",
+    name: "tentang",
     href: "/about",
   },
 ];
