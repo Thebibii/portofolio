@@ -7,16 +7,16 @@ const baseUrl = "https://thebibie.vercel.app";
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
-  title: "Projects",
+  title: "Projek",
   description:
-    "Explore my portfolio projects — featured builds, side projects, and experiments.",
+    "Jelajahi projek portofolio saya — build unggulan, projek sampingan, dan eksperimen.",
   alternates: {
     canonical: `${baseUrl}/projects`,
   },
   openGraph: {
-    title: "Projects | The Bibi",
+    title: "Projek | The Bibi",
     description:
-      "Explore my portfolio projects — featured builds, side projects, and experiments.",
+      "Jelajahi projek portofolio saya — build unggulan, projek sampingan, dan eksperimen.",
     url: `${baseUrl}/projects`,
     images: [
       {
@@ -28,9 +28,9 @@ export const metadata: Metadata = {
     ],
   },
   twitter: {
-    title: "Projects | The Bibi",
+    title: "Projek | The Bibi",
     description:
-      "Explore my portfolio projects — featured builds, side projects, and experiments.",
+      "Jelajahi projek portofolio saya — build unggulan, projek sampingan, dan eksperimen.",
     images: ["/profile.png"],
   },
 };

@@ -7,20 +7,20 @@ const baseUrl = "https://thebibie.vercel.app";
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
-  title: "Blogs",
-  description: "A story of growth and discovery — blog posts about development, tech, and life.",
+  title: "Blog",
+  description: "Cerita tentang pertumbuhan dan penemuan — tulisan blog tentang pengembangan, teknologi, dan kehidupan.",
   alternates: {
     canonical: `${baseUrl}/blogs`,
   },
   openGraph: {
-    title: "Blogs | The Bibi",
-    description: "A story of growth and discovery — blog posts about development, tech, and life.",
+    title: "Blog | The Bibi",
+    description: "Cerita tentang pertumbuhan dan penemuan — tulisan blog tentang pengembangan, teknologi, dan kehidupan.",
     url: `${baseUrl}/blogs`,
     images: [{ url: "/profile.png", width: 1080, height: 1440, alt: "The Bibi" }],
   },
   twitter: {
-    title: "Blogs | The Bibi",
-    description: "A story of growth and discovery — blog posts about development, tech, and life.",
+    title: "Blog | The Bibi",
+    description: "Cerita tentang pertumbuhan dan penemuan — tulisan blog tentang pengembangan, teknologi, dan kehidupan.",
     images: ["/profile.png"],
   },
 };

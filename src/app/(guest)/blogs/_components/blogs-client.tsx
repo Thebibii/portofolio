@@ -248,7 +248,7 @@ function BlogsContent({ initialBlogs, initialCategories, initialTags }: Props) {
 
   if (error) {
     return (
-      <div className="text-center py-12 text-red-500">Error loading blogs</div>
+      <div className="text-center py-12 text-red-500">Gagal memuat blog</div>
     );
   }
 
@@ -256,9 +256,9 @@ function BlogsContent({ initialBlogs, initialCategories, initialTags }: Props) {
     <div className="space-y-12 font-mono pt-9 pb-12 lg:pt-24 mx-auto w-full max-w-6xl px-6 lg:px-8 xl:px-0">
       <div className="flex flex-col space-y-8 items-center max-w-3xl mx-auto w-full justify-center">
         <div className="space-y-4 items-center justify-center flex flex-col">
-          <header className="text-5xl h1">Blogs</header>
+          <header className="text-5xl h1">Blog</header>
           <p className="transition-colors bg-gradient-to-r from-gray-500/80 via-black to-gray-500/80 bg-clip-text text-transparent">
-            A story of growth and discovery
+            Cerita tentang pertumbuhan dan penemuan
           </p>
         </div>
         <LoadingState
@@ -390,7 +390,7 @@ function BlogsContent({ initialBlogs, initialCategories, initialTags }: Props) {
                   onClick={() => handlePageChange(currentPage - 1)}
                   disabled={!data.meta.hasPrevPage}
                 >
-                  Previous
+                  Sebelumnya
                 </Button>
 
                 {Array.from(
@@ -412,7 +412,7 @@ function BlogsContent({ initialBlogs, initialCategories, initialTags }: Props) {
                   onClick={() => handlePageChange(currentPage + 1)}
                   disabled={!data.meta.hasNextPage}
                 >
-                  Next
+                  Selanjutnya
                 </Button>
               </div>
             )}
@@ -425,7 +425,7 @@ function BlogsContent({ initialBlogs, initialCategories, initialTags }: Props) {
                 Coba ubah kata kunci pencarian atau filter
               </p>
               <Button variant="outline" onClick={clearFilters} className="mt-4">
-                Reset Filter
+                Atur Ulang Filter
               </Button>
             </div>
           </div>

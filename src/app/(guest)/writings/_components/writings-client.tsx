@@ -242,7 +242,7 @@ function WritingsContent({ initialWritings, initialCategories, initialTags }: Pr
 
   if (error) {
     return (
-      <div className="text-center py-12 text-red-500">Error loading blogs</div>
+      <div className="text-center py-12 text-red-500">Gagal memuat tulisan</div>
     );
   }
 
@@ -250,9 +250,9 @@ function WritingsContent({ initialWritings, initialCategories, initialTags }: Pr
     <div className="space-y-12 font-mono pt-9 pb-12 lg:pt-24 mx-auto w-full max-w-6xl px-6 lg:px-8 xl:px-0">
       <div className="flex flex-col space-y-8 items-center max-w-3xl mx-auto w-full justify-center">
         <div className="space-y-4 items-center justify-center flex flex-col">
-          <header className="h1 text-5xl">Writings</header>
+          <header className="h1 text-5xl">Tulisan</header>
           <p className="transition-colors bg-gradient-to-r from-gray-500/80 via-black to-gray-500/80 bg-clip-text text-transparent">
-            A story of growth and discovery
+            Cerita tentang pertumbuhan dan penemuan
           </p>
         </div>
         <LoadingState
@@ -379,7 +379,7 @@ function WritingsContent({ initialWritings, initialCategories, initialTags }: Pr
                   onClick={() => handlePageChange(currentPage - 1)}
                   disabled={!data.meta.hasPrevPage}
                 >
-                  Previous
+                  Sebelumnya
                 </Button>
 
                 {Array.from(
@@ -401,7 +401,7 @@ function WritingsContent({ initialWritings, initialCategories, initialTags }: Pr
                   onClick={() => handlePageChange(currentPage + 1)}
                   disabled={!data.meta.hasNextPage}
                 >
-                  Next
+                  Selanjutnya
                 </Button>
               </div>
             )}
@@ -414,7 +414,7 @@ function WritingsContent({ initialWritings, initialCategories, initialTags }: Pr
                 Coba ubah kata kunci pencarian atau filter
               </p>
               <Button variant="outline" onClick={clearFilters} className="mt-4">
-                Reset Filter
+                Atur Ulang Filter
               </Button>
             </div>
           </div>
