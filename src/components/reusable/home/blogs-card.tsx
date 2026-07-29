@@ -48,7 +48,7 @@ export default function BlogsCard({
                     )}`}
                   />
                 ) : (
-                  <span className="text-gray-500 font-bold">400 x 225</span>
+                  <span className="text-gray-500 font-bold">Tidak ada gambar</span>
                 )}
               </div>
             </div>
@@ -107,11 +107,11 @@ export default function BlogsCard({
                   <div className="flex flex-row space-x-4 mr-auto">
                     <p className="flex items-center space-x-2 text-xs">
                       <Icons.Clock className="size-3" />
-                      <span>{item?.readingTime} min read</span>
+                      <span>{item?.readingTime} menit baca</span>
                     </p>
                     <p className="flex items-center space-x-2 text-xs">
                       <Icons.Eye className="size-3" />
-                      <span>{item?.viewCount} views</span>
+                      <span>{item?.viewCount} dilihat</span>
                     </p>
                   </div>
                   <div className="w-full sm:w-fit mt-4 sm:mt-0">

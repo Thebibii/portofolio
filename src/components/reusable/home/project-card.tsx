@@ -31,7 +31,7 @@ export default function ProjectCard({ data }: { data: any }) {
                   )}`}
                 />
               ) : (
-                <span className="text-gray-500 font-bold">400 x 225</span>
+                <span className="text-gray-500 font-bold">Tidak ada gambar</span>
               )}
             </div>
             <CardTitle className="text-lg">{item?.title}</CardTitle>
@@ -61,7 +61,7 @@ export default function ProjectCard({ data }: { data: any }) {
                 >
                   <Link target="_blank" href={item.demoUrl} className="text-sm">
                     <Icons.ExternalLink className="size-4" />
-                    Link Demo
+                    Demo
                   </Link>
                 </Button>
               )}
@@ -78,13 +78,13 @@ export default function ProjectCard({ data }: { data: any }) {
                     className="text-sm"
                   >
                     <Icons.Github />
-                    Repository
+                    Repositori
                   </Link>
                 </Button>
               )}
             </div>
             <Button asChild className="bg-primary/90 w-full sm:w-fit">
-              <Link href={`/projects/${item.slug}`}>View detail</Link>
+              <Link href={`/projects/${item.slug}`}>Lihat detail</Link>
             </Button>
           </CardFooter>
         </Card>

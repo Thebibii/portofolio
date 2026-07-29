@@ -17,9 +17,9 @@ export default function ProjectCardSkeleton() {
         </div>
 
         {/* Teks masih ada tapi bisa dikasih skeleton kecil sebagai highlight */}
-        <CardTitle className="text-lg">Loading Title...</CardTitle>
+        <CardTitle className="text-lg">Memuat judul...</CardTitle>
         <CardDescription className="space-y-2">
-          <p>Loading description...</p>
+          <p>Memuat deskripsi...</p>
           <div className="flex flex-wrap space-x-2">
             <Skeleton className="h-5 w-14 rounded-full" />
             <Skeleton className="h-5 w-14 rounded-full" />

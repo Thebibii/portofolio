@@ -25,11 +25,11 @@ export default function FeaturedSection({
       <section className="space-y-6 pt-9 pb-10 lg:pt-12 w-full">
         <header className="space-y-4">
           <h1 className="h1">
-            Featured{" "}
-            <span className="underline-offset-1 underline">Projects</span>
+            Projek{" "}
+            <span className="underline-offset-1 underline">Unggulan</span>
           </h1>
           <p className="text-neutral-500 italic">
-            Core projects with ongoing attention and long-term goals.
+            Projek unggulan dengan perhatian penuh dan tujuan jangka panjang.
           </p>
         </header>
         <div className="grid w-full grid-cols-1 gap-12 lg:grid-cols-2">
@@ -42,9 +42,9 @@ export default function FeaturedSection({
               emptyFallback={
                 <div className="flex flex-col items-center justify-center py-16 text-center col-span-full">
                   <Rocket className="h-12 w-12 text-muted-foreground/40 mb-3" />
-                  <h3 className="font-semibold">No featured projects</h3>
+                  <h3 className="font-semibold">Belum ada projek unggulan</h3>
                   <p className="text-sm text-muted-foreground mt-1">
-                    Check back later.
+                    Nanti lagi ya.
                   </p>
                 </div>
               }
@@ -57,16 +57,16 @@ export default function FeaturedSection({
           href="/projects"
           className="text-lg text-destructive self-end items-end justify-end inline-flex w-full mt-6"
         >
-          View all projects
+          Lihat semua projek
         </Link>
       </section>
       <section className="lg:py-24 py-10 space-y-6">
         <header className="space-y-4">
           <h1 className="font-bold tracking-tight font-mono text-4xl sm:text-5xl">
-            Featured <span className="underline-offset-1 underline">Posts</span>
+            Blog             <span className="underline-offset-1 underline">Unggulan</span>
           </h1>
           <p className="text-neutral-500 italic ">
-            Core projects with ongoing attention and long-term goals.
+            Artikel dan ide mendalam yang layak dibaca.
           </p>
         </header>
         <div className="grid w-full grid-cols-1 gap-6">
@@ -79,9 +79,9 @@ export default function FeaturedSection({
               emptyFallback={
                 <div className="flex flex-col items-center justify-center py-16 text-center col-span-full">
                   <BookOpen className="h-12 w-12 text-muted-foreground/40 mb-3" />
-                  <h3 className="font-semibold">No featured posts</h3>
+                  <h3 className="font-semibold">Belum ada blog unggulan</h3>
                   <p className="text-sm text-muted-foreground mt-1">
-                    Check back later.
+                    Nanti lagi ya.
                   </p>
                 </div>
               }
@@ -94,7 +94,7 @@ export default function FeaturedSection({
           href="/blogs"
           className="text-lg text-destructive self-end items-end justify-end inline-flex w-full mt-6"
         >
-          View all blogs
+          Lihat semua blog
         </Link>
       </section>
     </div>

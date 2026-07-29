@@ -56,7 +56,7 @@ export function InteractiveViewer({ value }: any) {
                   ))
                 ) : (
                   <div className="text-gray-500 text-sm">
-                    Create a heading to display the table of contents.
+                    Buat judul bagian untuk menampilkan daftar isi.
                   </div>
                 )}
               </div>
@@ -70,16 +70,16 @@ export function InteractiveViewer({ value }: any) {
           <SheetTrigger asChild>
             <Button
               className="fixed bottom-6 right-6 z-40 gap-2 rounded-md bg-background/50 border border-muted-foreground/50 text-foreground shadow-lg backdrop-blur-sm lg:hidden"
-              aria-label="Open table of contents"
+              aria-label="Buka daftar isi"
             >
               <List className="size-3" />
-              <span className="text-xs font-medium">Table of Contents</span>
+              <span className="text-xs font-medium">Daftar Isi</span>
             </Button>
           </SheetTrigger>
           <SheetContent side="bottom" className="px-6 py-4 pb-8 outline-none">
-            <SheetTitle className="px-1 pt-2">Table of Contents</SheetTitle>
+            <SheetTitle className="px-1 pt-2">Daftar Isi</SheetTitle>
             <SheetDescription className="sr-only">
-              Navigate to different sections of this page
+              Navigasi ke bagian berbeda dari halaman ini
             </SheetDescription>
             <div className="flex flex-col">
               {headingList.map((item) => (
