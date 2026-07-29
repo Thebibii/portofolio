@@ -67,7 +67,7 @@ export default function Footer() {
               <ul className="mt-4 space-y-3 text-sm">
                 <li>
                   <Link
-                    href="/bucket-list"
+                    href="#"
                     className="text-muted-foreground hover:text-primary  transition-colors"
                   >
                     Bucket List
@@ -75,7 +75,7 @@ export default function Footer() {
                 </li>
                 <li>
                   <Link
-                    href="/uses"
+                    href="#"
                     className="text-muted-foreground hover:text-primary  transition-colors"
                   >
                     Perlengkapan
@@ -83,7 +83,7 @@ export default function Footer() {
                 </li>
                 <li>
                   <Link
-                    href="/attribution"
+                    href="#"
                     className="text-muted-foreground hover:text-primary  transition-colors"
                   >
                     Atribusi
