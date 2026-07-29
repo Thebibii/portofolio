@@ -191,15 +191,16 @@ model PostTag {
 
 model Like {
   id           String   @id @default(cuid())
-  ipAddress    String   // untuk tracking like tanpa user authentication
-  userAgent    String?  // optional: untuk tracking device/browser
+  visitorId    String?  // unique per device/browser (via cookie)
+  ipAddress    String?  // tetap disimpan untuk analytics
+  userAgent    String?
   createdAt    DateTime @default(now())
 
   // Relations
   postId String
   post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
 
-  @@unique([ipAddress, postId]) // Satu IP hanya bisa like sekali per post
+  @@unique([visitorId, postId]) // Satu visitor hanya bisa like sekali per post
   @@map("likes")
 }
 
