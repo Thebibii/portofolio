@@ -21,14 +21,14 @@ export default function NotFound() {
         {/* Article layout for 404 */}
         <article className="space-y-4 font-mono">
           {/* Empty space for badges alignment */}
-          <div className="flex space-x-2 h-6" aria-label="Empty space">
+          <div className="flex space-x-2 h-6" aria-label="Ruang kosong">
             {/* Intentionally empty to maintain spacing */}
           </div>
 
           <div className="space-y-2">
-            <h1 className="text-4xl font-bold">404 - Writing Not Found</h1>
+            <h1 className="text-4xl font-bold">404 - Tulisan Tidak Ditemukan</h1>
             <p className="text-muted-foreground">
-              The article you're looking for doesn't exist or has been removed.
+              Tulisan yang kamu cari tidak ada atau telah dihapus.
             </p>
           </div>
 
@@ -37,14 +37,14 @@ export default function NotFound() {
           {/* Action links styled like the stats section */}
           <div
             className="flex items-center gap-5 flex-wrap justify-between"
-            aria-label="Navigation options"
+            aria-label="Opsi navigasi"
           >
             <Link
               href="/writings"
               className="flex text-sm items-center gap-2 hover:underline hover:text-primary transition-colors"
             >
               <Icons.BookOpen className="size-4" />
-              <span>Browse All Writings</span>
+              <span>Lihat Semua Tulisan</span>
             </Link>
 
             <Link
@@ -52,7 +52,7 @@ export default function NotFound() {
               className="flex text-sm items-center gap-2 hover:underline hover:text-primary transition-colors"
             >
               <Icons.Home className="size-4" />
-              <span>Back to Home</span>
+              <span>Kembali ke Beranda</span>
             </Link>
           </div>
 
@@ -60,18 +60,18 @@ export default function NotFound() {
 
           {/* Additional helpful content */}
           <div className="space-y-4 py-8">
-            <h2 className="text-xl font-semibold">What you can do:</h2>
+            <h2 className="text-xl font-semibold">Yang bisa kamu lakukan:</h2>
             <ul className="space-y-2 text-muted-foreground">
               <li className="list-disc ml-4">
-                <span>Check the URL for any typos</span>
+                <span>Periksa URL apakah ada typo</span>
               </li>
               <li className="list-disc ml-4">
                 <span>
-                  Browse all available writings to find what you're looking for
+                  Jelajahi semua tulisan yang tersedia
                 </span>
               </li>
               <li className="list-disc ml-4">
-                <span>Return to the homepage and start fresh</span>
+                <span>Kembali ke beranda dan mulai lagi</span>
               </li>
             </ul>
           </div>

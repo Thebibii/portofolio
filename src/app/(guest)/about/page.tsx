@@ -27,9 +27,9 @@ export default function Page() {
     <div className="space-y-12 font-mono pt-9 pb-12 lg:pt-24 mx-auto w-full max-w-6xl px-6 lg:px-8 xl:px-0">
       <div className="flex flex-col space-y-8 items-center  mx-auto w-full justify-center">
         <div className="space-y-4 items-center justify-center flex flex-col">
-          <header className="text-5xl h1">About Me</header>
+          <header className="text-5xl h1">Tentang Saya</header>
           <p className="transition-colors bg-gradient-to-r from-gray-500/80 via-black to-gray-500/80 bg-clip-text text-transparent">
-            A story of growth and discovery
+            Cerita tentang pertumbuhan dan penemuan
           </p>
         </div>
         <div className="flex flex-col gap-16 md:gap-20 mt-16 w-full">
@@ -54,7 +54,7 @@ export default function Page() {
                       />
                     </div>
                   </div>
-                  <h2 className="text-center">Current Activities</h2>
+                  <h2 className="text-center">Aktivitas Saat Ini</h2>
                 </div>
                 {data?.data?.currentActivity?.map((item: any, idx: number) => (
                   <div
@@ -84,7 +84,7 @@ export default function Page() {
                   />
                 </div>
               </div>
-              <h2 className="text-center">Experiences</h2>
+              <h2 className="text-center">Pengalaman</h2>
             </div>
 
             {data?.data?.experiences?.map((e: any, _: any) => (
@@ -111,7 +111,7 @@ export default function Page() {
                   <span>
                     {e.endDate
                       ? formattedDate(e.endDate, "default", "MMM yyyy")
-                      : "PRESENT"}
+                      : "SEKARANG"}
                   </span>
                 </p>
                 <div>

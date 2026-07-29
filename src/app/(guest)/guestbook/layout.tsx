@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Guestbook",
+  title: "Buku Tamu",
   description:
-    "Leave a message — guestbook for visitors to share thoughts, feedback, or just say hello.",
+    "Tinggalkan pesan — buku tamu untuk pengunjung berbagi pemikiran, masukan, atau sekadar menyapa.",
   openGraph: {
-    title: "Guestbook | The Bibi",
+    title: "Buku Tamu | The Bibi",
     description:
-      "Leave a message — guestbook for visitors to share thoughts, feedback, or just say hello.",
+      "Tinggalkan pesan — buku tamu untuk pengunjung berbagi pemikiran, masukan, atau sekadar menyapa.",
   },
   alternates: {
     canonical: "https://thebibie.vercel.app/guestbook",

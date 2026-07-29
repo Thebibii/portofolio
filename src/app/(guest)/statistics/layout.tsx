@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Statistics",
+  title: "Statistik",
   description:
-    "Site statistics and analytics — views, likes, and engagement metrics for blogs, writings, and projects.",
+    "Statistik dan analitik situs — dilihat, disukai, dan metrik keterlibatan untuk blog, tulisan, dan projek.",
   openGraph: {
-    title: "Statistics | The Bibi",
+    title: "Statistik | The Bibi",
     description:
-      "Site statistics and analytics — views, likes, and engagement metrics for blogs, writings, and projects.",
+      "Statistik dan analitik situs — dilihat, disukai, dan metrik keterlibatan untuk blog, tulisan, dan projek.",
   },
   alternates: {
     canonical: "https://thebibie.vercel.app/statistics",

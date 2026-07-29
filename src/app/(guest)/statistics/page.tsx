@@ -22,10 +22,10 @@ export default function StatisticsPage() {
     <div className="space-y-12 font-mono pt-9 pb-12 lg:pt-24 mx-auto w-full max-w-6xl px-6 lg:px-8 xl:px-0">
       <div className="flex flex-col space-y-8 items-center mx-auto w-full justify-center">
         <div className="space-y-4 items-center justify-center flex flex-col">
-          <header className="text-5xl h1">Statistics</header>
+          <header className="text-5xl h1">Statistik</header>
           <p className="transition-colors bg-gradient-to-r from-gray-500/80 via-black to-gray-500/80 bg-clip-text text-transparent">
-            Site analytics, visitor insights, and other interesting numbers
-            about this portfolio.
+            Analitik situs, wawasan pengunjung, dan angka menarik lainnya
+            tentang portofolio ini.
           </p>
         </div>
         <div className="flex flex-col gap-16 md:gap-20 mt-16 w-full">
@@ -48,14 +48,14 @@ export default function StatisticsPage() {
                   </div>
                   <div className="flex items-center gap-2 text-sm">
                     <Eye className="size-4 text-muted-foreground" />
-                    <span className="text-muted-foreground">Views:</span>
+                    <span className="text-muted-foreground">Dilihat:</span>
                     <span className="font-semibold">
                       {(d?.blogs?.totalViews ?? 0).toLocaleString()}
                     </span>
                   </div>
                   <div className="flex items-center gap-2 text-sm">
                     <ThumbsUp className="size-4 text-muted-foreground" />
-                    <span className="text-muted-foreground">Likes:</span>
+                    <span className="text-muted-foreground">Disukai:</span>
                     <span className="font-semibold">
                       {(d?.blogs?.totalLikes ?? 0).toLocaleString()}
                     </span>
@@ -64,7 +64,7 @@ export default function StatisticsPage() {
               </Card>
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-2xl">Writing</CardTitle>
+                  <CardTitle className="text-2xl">Tulisan</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   <div className="flex items-center gap-2 text-sm">
@@ -76,14 +76,14 @@ export default function StatisticsPage() {
                   </div>
                   <div className="flex items-center gap-2 text-sm">
                     <Eye className="size-4 text-muted-foreground" />
-                    <span className="text-muted-foreground">Views:</span>
+                    <span className="text-muted-foreground">Dilihat:</span>
                     <span className="font-semibold">
                       {(d?.writings?.totalViews ?? 0).toLocaleString()}
                     </span>
                   </div>
                   <div className="flex items-center gap-2 text-sm">
                     <ThumbsUp className="size-4 text-muted-foreground" />
-                    <span className="text-muted-foreground">Likes:</span>
+                    <span className="text-muted-foreground">Disukai:</span>
                     <span className="font-semibold">
                       {(d?.writings?.totalLikes ?? 0).toLocaleString()}
                     </span>
@@ -92,7 +92,7 @@ export default function StatisticsPage() {
               </Card>
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-2xl">Project</CardTitle>
+                  <CardTitle className="text-2xl">Projek</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   <div className="flex items-center gap-2 text-sm">
@@ -104,7 +104,7 @@ export default function StatisticsPage() {
                   </div>
                   <div className="flex items-center gap-2 text-sm">
                     <Eye className="size-4 text-muted-foreground" />
-                    <span className="text-muted-foreground">Views:</span>
+                    <span className="text-muted-foreground">Dilihat:</span>
                     <span className="font-semibold">
                       {(d?.projects?.totalViews ?? 0).toLocaleString()}
                     </span>
@@ -114,19 +114,19 @@ export default function StatisticsPage() {
             </div>
 
             <TopTenTable
-              title="Top 10 Blogs"
+              title="Top 10 Blog"
               items={d?.blogs?.top10}
               showLikes
               basePath="/blogs"
             />
             <TopTenTable
-              title="Top 10 Writings"
+              title="Top 10 Tulisan"
               items={d?.writings?.top10}
               showLikes
               basePath="/writings"
             />
             <TopTenTable
-              title="Top 10 Projects"
+              title="Top 10 Projek"
               items={d?.projects?.top10?.map((p: any) => ({
                 slug: p.slug,
                 views: p.views,
@@ -155,7 +155,7 @@ function TopTenTable({
     <div className="space-y-4">
       <h2 className="text-xl font-semibold">{title}</h2>
       {!items || items.length === 0 ? (
-        <p className="text-sm text-muted-foreground">No data available.</p>
+        <p className="text-sm text-muted-foreground">Tidak ada data.</p>
       ) : (
         <div className="overflow-x-auto rounded-lg border">
           <table className="w-full text-sm whitespace-nowrap">
@@ -163,9 +163,9 @@ function TopTenTable({
               <tr className="border-b bg-muted/50">
                 <th className="px-4 py-3 text-left font-medium">#</th>
                 <th className="px-4 py-3 text-left font-medium">Slug</th>
-                <th className="px-4 py-3 text-right font-medium">Views</th>
+                <th className="px-4 py-3 text-right font-medium">Dilihat</th>
                 {showLikes && (
-                  <th className="px-4 py-3 text-right font-medium">Likes</th>
+                  <th className="px-4 py-3 text-right font-medium">Disukai</th>
                 )}
               </tr>
             </thead>
