@@ -6,6 +6,7 @@ export const getHomeData = cache(async () => {
   const [projects, blogs] = await Promise.all([
     prisma.project.findMany({
       take: 2,
+      where: { featured: true },
       orderBy: { createdAt: "desc" },
     }),
     prisma.post.findMany({
