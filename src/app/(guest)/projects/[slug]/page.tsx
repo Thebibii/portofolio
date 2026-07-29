@@ -24,7 +24,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const project = await prisma.project.findFirst({ where: { slug } });
 
-  if (!project) return { title: "Project Not Found" };
+  if (!project) return { title: "Projek Tidak Ditemukan" };
 
   return {
     title: project.title,
@@ -66,8 +66,8 @@ export default async function ProjectDetailPage({ params }: Props) {
       <JsonLd
         schema={breadcrumbSchema({
           items: [
-            { name: "Home", url: baseUrl },
-            { name: "Projects", url: `${baseUrl}/projects` },
+            { name: "Beranda", url: baseUrl },
+            { name: "Projek", url: `${baseUrl}/projects` },
             { name: project.title, url: `${baseUrl}/projects/${project.slug}` },
           ],
         })}

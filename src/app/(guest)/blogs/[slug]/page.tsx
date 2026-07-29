@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     select: { title: true, excerpt: true, coverImage: true },
   });
 
-  if (!blog) return { title: "Blog Not Found" };
+  if (!blog) return { title: "Blog Tidak Ditemukan" };
 
   return {
     title: blog.title,
@@ -88,8 +88,8 @@ export default async function BlogDetailPage({ params }: Props) {
       <JsonLd
         schema={breadcrumbSchema({
           items: [
-            { name: "Home", url: baseUrl },
-            { name: "Blogs", url: `${baseUrl}/blogs` },
+            { name: "Beranda", url: baseUrl },
+            { name: "Blog", url: `${baseUrl}/blogs` },
             { name: blog.title, url: `${baseUrl}/blogs/${blog.slug}` },
           ],
         })}

@@ -69,13 +69,13 @@ export default function ProjectDetailClient({ project, slug }: Props) {
         className="inline-flex justify-end items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-4 font-mono"
       >
         <ArrowLeft className="size-4" />
-        Back to projects
+        Kembali ke projek
       </Link>
 
       <article className="space-y-4 font-mono">
         <h1 className="text-4xl font-bold">{project.title}</h1>
 
-        <div className="flex flex-wrap gap-2" aria-label="Technologies used">
+        <div className="flex flex-wrap gap-2" aria-label="Teknologi yang digunakan">
           {project.technologies.map((item: string) => (
             <Badge
               variant="secondary"
@@ -93,11 +93,11 @@ export default function ProjectDetailClient({ project, slug }: Props) {
 
         <div
           className="flex items-center gap-5 flex-wrap"
-          aria-label="Project stats and links"
+          aria-label="Statistik dan tautan"
         >
           <p className="flex text-xs items-center gap-2 mr-auto">
             <Icons.Eye className="size-4" />
-            <span>{liveViews ?? "--"} views</span>
+            <span>{liveViews ?? "--"} dilihat</span>
           </p>
 
           {project.demoUrl && (
@@ -105,10 +105,10 @@ export default function ProjectDetailClient({ project, slug }: Props) {
               href={project.demoUrl}
               target="_blank"
               className="flex text-xs items-center gap-2 hover:underline"
-              aria-label="Link to project demo"
+              aria-label="Tautan demo projek"
             >
               <Icons.Link className="size-4" />
-              <span>Link demo</span>
+              <span>Demo</span>
             </Link>
           )}
 
@@ -117,10 +117,10 @@ export default function ProjectDetailClient({ project, slug }: Props) {
               href={project.sourceUrl}
               target="_blank"
               className="flex text-xs items-center gap-2 hover:underline"
-              aria-label="Link to project repository"
+              aria-label="Tautan repositori"
             >
               <Icons.Github className="size-4" />
-              <span>Repository</span>
+              <span>Repositori</span>
             </Link>
           )}
         </div>

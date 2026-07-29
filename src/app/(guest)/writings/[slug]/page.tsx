@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     select: { title: true, excerpt: true, coverImage: true },
   });
 
-  if (!writing) return { title: "Writing Not Found" };
+  if (!writing) return { title: "Tulisan Tidak Ditemukan" };
 
   return {
     title: writing.title,
@@ -88,8 +88,8 @@ export default async function WritingDetailPage({ params }: Props) {
       <JsonLd
         schema={breadcrumbSchema({
           items: [
-            { name: "Home", url: baseUrl },
-            { name: "Writings", url: `${baseUrl}/writings` },
+            { name: "Beranda", url: baseUrl },
+            { name: "Tulisan", url: `${baseUrl}/writings` },
             { name: writing.title, url: `${baseUrl}/writings/${writing.slug}` },
           ],
         })}

@@ -83,10 +83,10 @@ export default function BlogDetailClient({ post, slug }: Props) {
         className="inline-flex justify-end items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-4 font-mono"
       >
         <ArrowLeft className="size-4" />
-        Back to blogs
+        Kembali ke blog
       </Link>
       <article className="space-y-4 font-mono">
-        <div className="flex flex-wrap gap-2" aria-label="Technologies used">
+        <div className="flex flex-wrap gap-2" aria-label="Label tag">
           {post.tags?.map(({ tag }: PostTag) => (
             <Badge variant="outline" key={tag.slug}>
               {tag?.name}
@@ -134,19 +134,19 @@ export default function BlogDetailClient({ post, slug }: Props) {
 
         <div
           className="flex items-center gap-5 flex-wrap"
-          aria-label="Project stats and links"
+          aria-label="Statistik dan tautan"
         >
           <p className="flex text-xs items-center gap-2 mr-auto">
             <Icons.Eye className="size-4" />
-            <span>{liveViewCount ?? "--"} views</span>
+            <span>{liveViewCount ?? "--"} dilihat</span>
           </p>
 
           <p
             className="flex text-xs items-center gap-2"
-            aria-label="Link to project demo"
+            aria-label="Waktu baca"
           >
             <Icons.BookOpen className="size-4" />
-            <span>{blogData.readingTime} min read</span>
+            <span>{blogData.readingTime} menit baca</span>
           </p>
 
           <Tooltip>
@@ -159,13 +159,13 @@ export default function BlogDetailClient({ post, slug }: Props) {
                     ?.scrollIntoView({ behavior: "smooth" })
                 }
                 className="flex text-xs items-center gap-2"
-                aria-label="Scroll to like button"
+                aria-label="Gulir ke tombol suka"
               >
                 <Icons.Heart className="size-4" />
-                <span>{blogData._count?.likes ?? 0} Likes</span>
+                <span>{blogData._count?.likes ?? 0} Suka</span>
               </button>
             </TooltipTrigger>
-            <TooltipContent>Click to show love</TooltipContent>
+            <TooltipContent>Klik untuk menyukai</TooltipContent>
           </Tooltip>
         </div>
 
