@@ -307,7 +307,7 @@ function WritingsContent({ initialWritings, initialCategories, initialTags }: Pr
               </Label>
               <Input
                 id="search"
-                placeholder="Cari writing..."
+                placeholder="Cari tulisan..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-10 rounded-full border border-primary"
@@ -332,7 +332,7 @@ function WritingsContent({ initialWritings, initialCategories, initialTags }: Pr
             {data?.meta && (
               <div className="flex items-center justify-between text-sm text-muted-foreground">
                 <span>
-                  Menampilkan {data.data.length} dari {data.meta.total} writing
+                  Menampilkan {data.data.length} dari {data.meta.total} tulisan
                   {data.meta.totalPages > 1 &&
                     ` (Halaman ${data.meta.page} dari ${data.meta.totalPages})`}
                 </span>
@@ -409,7 +409,7 @@ function WritingsContent({ initialWritings, initialCategories, initialTags }: Pr
         ) : (
           <div className="text-center py-12">
             <div className="text-muted-foreground">
-              <p className="text-lg mb-2">Tidak ada writings yang ditemukan</p>
+              <p className="text-lg mb-2">Tidak ada tulisan yang ditemukan</p>
               <p className="text-sm">
                 Coba ubah kata kunci pencarian atau filter
               </p>
