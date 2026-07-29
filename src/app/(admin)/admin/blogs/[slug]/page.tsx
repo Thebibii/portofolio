@@ -76,6 +76,8 @@ export default function Page() {
           tags={tag?.data}
           onSubmit={handleSubmit}
           onCancel={handleCancel}
+          uploadBucket="posts"
+          uploadFolder="blog/description"
         />
       </LoadingState>
     </div>

@@ -18,7 +18,6 @@ import {
   useElement,
   useFocusedLast,
   useReadOnly,
-  useRemoveNodeButton,
   useSelected,
 } from "platejs/react";
 
@@ -31,6 +30,8 @@ import {
 import { Separator } from "@/components/ui/separator";
 
 import { CaptionButton } from "./caption";
+import { deleteImage } from "@/lib/imageUpload";
+import { parseImageUrl } from "@/lib/extract-image-from-content";
 
 const inputVariants = cva(
   "flex h-[28px] w-full rounded-md border-none bg-transparent px-1.5 py-1 text-base placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-transparent md:text-sm"
@@ -68,7 +69,18 @@ export function MediaToolbar({
   }, [open]);
 
   const element = useElement();
-  const { props: buttonProps } = useRemoveNodeButton({ element });
+
+  const handleDelete = React.useCallback(() => {
+    const parsed =
+      typeof element.url === "string"
+        ? parseImageUrl(element.url)
+        : null;
+    if (parsed) {
+      deleteImage(parsed.path, parsed.bucket);
+    }
+    const path = editor.api.findPath(element);
+    editor.tf.removeNodes({ at: path });
+  }, [editor, element]);
 
   return (
     <Popover open={open} modal={false}>
@@ -106,7 +118,7 @@ export function MediaToolbar({
 
             <Separator orientation="vertical" className="mx-1 h-6" />
 
-            <Button size="sm" variant="ghost" {...buttonProps}>
+            <Button size="sm" variant="ghost" onClick={handleDelete}>
               <Trash2Icon />
             </Button>
           </div>

@@ -17,6 +17,7 @@ import { useFilePicker } from "use-file-picker";
 
 import { cn } from "@/lib/utils";
 import { useUploadFile } from "@/hooks/use-upload-file";
+import { useUploadConfig } from "@/lib/upload-config-context";
 
 const CONTENT: Record<
   string,
@@ -55,8 +56,9 @@ export const PlaceholderElement = withHOC(
 
     const { api } = useEditorPlugin(PlaceholderPlugin);
 
+    const { bucket, folder } = useUploadConfig();
     const { isUploading, progress, uploadedFile, uploadFile, uploadingFile } =
-      useUploadFile();
+      useUploadFile({ bucket, folder });
 
     const loading = isUploading && uploadingFile;
 

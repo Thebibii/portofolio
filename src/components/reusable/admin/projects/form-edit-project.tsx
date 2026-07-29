@@ -202,6 +202,8 @@ export default function FormEditProject({
                       {...field}
                       placeholder="Type your project content..."
                       className="h-[300px] overflow-y-auto"
+                      uploadBucket="projects"
+                      uploadFolder="description"
                     />
                   </FormControl>
                   <FormDescription>

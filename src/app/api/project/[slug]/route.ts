@@ -3,6 +3,8 @@ import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import prisma from "@/lib/prisma";
+import { deleteImage, deleteMultipleImages, extractPathFromUrl } from "@/lib/imageUpload";
+import { deleteImagesFromContent } from "@/lib/extract-image-from-content";
 import z from "zod";
 import { ProjectStatus } from "@prisma/client";
 import { generateSlug } from "@/lib/genarate-slug";
@@ -94,8 +96,33 @@ export async function DELETE(
 
     const project = await prisma.project.findUnique({
       where: { id: slug },
-      select: { slug: true },
+      select: {
+        slug: true,
+        longDescription: true,
+        image: true,
+        images: true,
+      },
     });
+
+    if (!project) {
+      return NextResponse.json({ message: "Project not found" }, { status: 404 });
+    }
+
+    if (project.longDescription) {
+      await deleteImagesFromContent(project.longDescription);
+    }
+
+    if (project.image) {
+      const path = extractPathFromUrl(project.image);
+      if (path) await deleteImage(path);
+    }
+
+    if (project.images && project.images.length > 0) {
+      const galleryPaths = project.images
+        .map((url) => extractPathFromUrl(url))
+        .filter(Boolean) as string[];
+      if (galleryPaths.length > 0) await deleteMultipleImages(galleryPaths);
+    }
 
     const data = await prisma.project.delete({
       where: { id: slug },

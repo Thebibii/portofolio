@@ -53,6 +53,8 @@ interface FormCreatePostProps {
   onSubmit: (data: FormCreatePostData) => void;
   onCancel: () => void;
   isLoading?: boolean;
+  uploadBucket?: string;
+  uploadFolder?: string;
 }
 
 export function FormCreatePost({
@@ -62,6 +64,8 @@ export function FormCreatePost({
   onSubmit,
   onCancel,
   isLoading = false,
+  uploadBucket,
+  uploadFolder,
 }: FormCreatePostProps) {
   const [selectedTags, setSelectedTags] = useState<string[]>(
     post?.tags?.map(({ tag }: any) => tag.id) || []
@@ -206,6 +210,8 @@ export function FormCreatePost({
                           {...field}
                           className="h-[400px] overflow-y-auto"
                           placeholder="Write your post content here..."
+                          uploadBucket={uploadBucket}
+                          uploadFolder={uploadFolder}
                         />
                       </FormControl>
                       <FormDescription>

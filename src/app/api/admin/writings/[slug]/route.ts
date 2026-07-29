@@ -4,6 +4,8 @@ import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import { PostStatus, PostType } from "@/types/blogs";
+import { deleteImage, extractPathFromUrl } from "@/lib/imageUpload";
+import { deleteImagesFromContent } from "@/lib/extract-image-from-content";
 import z from "zod";
 
 const postSchema = z.object({
@@ -149,15 +151,27 @@ export async function DELETE(
 
   const { slug } = await params;
 
-  const existingBlog = await prisma.post.findUnique({
+  const existingWriting = await prisma.post.findUnique({
     where: { slug, type: PostType.WRITING },
+    select: { content: true, coverImage: true },
   });
 
-  if (!existingBlog) {
+  if (!existingWriting) {
     return NextResponse.json(
-      { message: `Blog tidak ditemukan` },
+      { message: `Writing tidak ditemukan` },
       { status: 404 }
     );
+  }
+
+  if (existingWriting.content) {
+    await deleteImagesFromContent(existingWriting.content);
+  }
+
+  if (existingWriting.coverImage) {
+    const coverPath = extractPathFromUrl(existingWriting.coverImage);
+    if (coverPath) {
+      await deleteImage(coverPath);
+    }
   }
 
   const data = await prisma.post.delete({

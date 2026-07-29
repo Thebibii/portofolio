@@ -4,6 +4,7 @@ import { Plate, usePlateEditor } from "platejs/react";
 
 import { EditorKit } from "@/components/editor-kit";
 import { Editor, EditorContainer } from "@/components/ui/editor";
+import { UploadConfigProvider } from "@/lib/upload-config-context";
 
 interface PlateEditorProps {
   value?: string;
@@ -11,6 +12,8 @@ interface PlateEditorProps {
   placeholder?: string;
   className?: string;
   disabled?: boolean;
+  uploadBucket?: string;
+  uploadFolder?: string;
 }
 
 function parseEditorValue(value?: string) {
@@ -32,6 +35,8 @@ export function PlateEditor({
   placeholder = "Type...",
   disabled = false,
   className,
+  uploadBucket,
+  uploadFolder,
 }: PlateEditorProps) {
   const editorValue = parseEditorValue(value);
 
@@ -41,21 +46,23 @@ export function PlateEditor({
   });
 
   return (
-    <Plate
-      editor={editor}
-      onChange={({ value: newValue }) => {
-        onChange?.(JSON.stringify(newValue));
-      }}
-    >
-      <div className="relative overflow-x-scroll scrollbar-hide">
-        <EditorContainer className={`border rounded-md ${className}`}>
-          <Editor
-            variant="fullWidth"
-            placeholder={placeholder}
-            disabled={disabled}
-          />
-        </EditorContainer>
-      </div>
-    </Plate>
+    <UploadConfigProvider bucket={uploadBucket} folder={uploadFolder}>
+      <Plate
+        editor={editor}
+        onChange={({ value: newValue }) => {
+          onChange?.(JSON.stringify(newValue));
+        }}
+      >
+        <div className="relative overflow-x-scroll scrollbar-hide">
+          <EditorContainer className={`border rounded-md ${className}`}>
+            <Editor
+              variant="fullWidth"
+              placeholder={placeholder}
+              disabled={disabled}
+            />
+          </EditorContainer>
+        </div>
+      </Plate>
+    </UploadConfigProvider>
   );
 }
