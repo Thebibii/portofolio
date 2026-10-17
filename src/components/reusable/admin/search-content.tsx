@@ -10,12 +10,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Category, Post, PostStatus, Tag } from "@/types/blogs";
-import { useState, useEffect } from "react";
+import { useDebounce } from "@/hooks/use-debounce";
+import { Category, PostStatus, Tag } from "@/types/blogs";
+import { useEffect, useState } from "react";
 
 interface SearchContentProps {
-  data?: Post[];
-  onSearchResults?: (filtered: Post[]) => void;
+  search?: string;
+  status?: string;
+  categoryId?: string;
+  tagId?: string;
+  onSearchChange?: (value: string) => void;
+  onStatusChange?: (value: string) => void;
+  onCategoryChange?: (value: string) => void;
+  onTagChange?: (value: string) => void;
+  onClear?: () => void;
   categories?: Category[];
   tags?: Tag[];
 }
@@ -28,51 +36,57 @@ const statusOptions = [
 ];
 
 export default function SearchContent({
-  data = [],
-  onSearchResults,
+  search = "",
+  status = "",
+  categoryId = "",
+  tagId = "",
+  onSearchChange,
+  onStatusChange,
+  onCategoryChange,
+  onTagChange,
+  onClear,
   categories = [],
   tags = [],
 }: SearchContentProps) {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState("all");
-  const [categoryFilter, setCategoryFilter] = useState("all");
-  const [tagFilter, setTagFilter] = useState("all");
+  const [searchTerm, setSearchTerm] = useState(search);
 
+  const debouncedSearchTerm = useDebounce(searchTerm, 400);
+
+  // Keep the input in sync when the URL search value changes externally
+  // (back/forward navigation, "Clear all").
   useEffect(() => {
-    if (!data.length || !onSearchResults) return;
+    setSearchTerm(search);
+  }, [search]);
 
-    let filtered = data;
-
-    if (searchTerm.trim()) {
-      filtered = filtered.filter((item) =>
-        item.title.toLowerCase().includes(searchTerm.toLowerCase())
-      );
+  // Debounced: only push the keyword up to the URL/query after typing settles.
+  useEffect(() => {
+    if (debouncedSearchTerm !== search) {
+      onSearchChange?.(debouncedSearchTerm);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedSearchTerm]);
 
-    if (statusFilter !== "all") {
-      filtered = filtered.filter((item) => item.status === statusFilter);
-    }
+  const statusValue = status || "all";
+  const categoryValue = categoryId || "all";
+  const tagValue = tagId || "all";
 
-    if (categoryFilter !== "all") {
-      filtered = filtered.filter(
-        (item) => item.category?.id === categoryFilter
-      );
-    }
+  const handleStatusChange = (value: string) => {
+    onStatusChange?.(value === "all" ? "" : value);
+  };
 
-    if (tagFilter !== "all") {
-      filtered = filtered.filter((item) =>
-        item.tags?.some((tag) => tag.id === tagFilter)
-      );
-    }
+  const handleCategoryChange = (value: string) => {
+    onCategoryChange?.(value === "all" ? "" : value);
+  };
 
-    onSearchResults(filtered);
-  }, [searchTerm, statusFilter, categoryFilter, tagFilter, data, onSearchResults]);
+  const handleTagChange = (value: string) => {
+    onTagChange?.(value === "all" ? "" : value);
+  };
 
-  const hasActiveFilters =
-    searchTerm.trim() ||
-    statusFilter !== "all" ||
-    categoryFilter !== "all" ||
-    tagFilter !== "all";
+  const handleClear = () => {
+    onClear?.();
+  };
+
+  const hasActiveFilters = Boolean(search.trim() || status || categoryId || tagId);
 
   return (
     <div className="flex flex-col gap-4">
@@ -88,7 +102,7 @@ export default function SearchContent({
         </div>
 
         <div className="flex flex-wrap gap-2">
-          <Select value={statusFilter} onValueChange={setStatusFilter}>
+          <Select value={statusValue} onValueChange={handleStatusChange}>
             <SelectTrigger className="w-[160px]">
               <Icons.Filter className="h-4 w-4 mr-2" />
               <SelectValue placeholder="Status" />
@@ -102,7 +116,7 @@ export default function SearchContent({
             </SelectContent>
           </Select>
 
-          <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+          <Select value={categoryValue} onValueChange={handleCategoryChange}>
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Category" />
             </SelectTrigger>
@@ -116,7 +130,7 @@ export default function SearchContent({
             </SelectContent>
           </Select>
 
-          <Select value={tagFilter} onValueChange={setTagFilter}>
+          <Select value={tagValue} onValueChange={handleTagChange}>
             <SelectTrigger className="w-[160px]">
               <SelectValue placeholder="Tag" />
             </SelectTrigger>
@@ -135,16 +149,7 @@ export default function SearchContent({
       {hasActiveFilters && (
         <div className="flex items-center gap-2">
           <p className="text-sm text-muted-foreground">Active filters:</p>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => {
-              setSearchTerm("");
-              setStatusFilter("all");
-              setCategoryFilter("all");
-              setTagFilter("all");
-            }}
-          >
+          <Button variant="ghost" size="sm" onClick={handleClear}>
             <Icons.X className="h-4 w-4 mr-1" />
             Clear all
           </Button>

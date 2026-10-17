@@ -33,15 +33,18 @@ import { PlateEditor } from "@/components/plate-editor";
 
 const postSchema = z.object({
   title: z.string().min(1, "Title is required").max(200, "Title too long"),
-  slug: z.string().min(1, "Slug is required"),
-  content: z.string().min(1, "Content is required"),
-  excerpt: z.string().optional(),
-  coverImage: z.string().optional(),
+  slug: z.string().max(120, "Slug too long").optional(),
+  content: z
+    .string()
+    .min(1, "Content is required")
+    .max(100000, "Content too long"),
+  excerpt: z.string().max(500, "Excerpt too long").optional(),
+  coverImage: z.string().max(2048, "Cover image URL too long").optional(),
   status: z.nativeEnum(PostStatus),
   featured: z.boolean(),
   readingTime: z.number().min(1, "Reading time must be at least 1 minute"),
   categoryId: z.string().optional(),
-  tagIds: z.array(z.string()).optional(),
+  tagIds: z.array(z.string()).max(20, "Too many tags").optional(),
 });
 
 type FormCreatePostData = z.infer<typeof postSchema>;
@@ -86,18 +89,6 @@ export function FormCreatePost({
       tagIds: selectedTags,
     },
   });
-
-  // Auto-generate slug from title
-  const watchTitle = form.watch("title");
-  useEffect(() => {
-    if (watchTitle && !post) {
-      const slug = watchTitle
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/(^-|-$)/g, "");
-      form.setValue("slug", slug);
-    }
-  }, [watchTitle, form, post]);
 
   // Auto-calculate reading time from content
   const watchContent = form.watch("content");
@@ -167,19 +158,29 @@ export function FormCreatePost({
                   )}
                 />
 
-                <FormField
-                  control={form.control}
-                  name="slug"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Slug</FormLabel>
-                      <FormControl>
-                        <Input placeholder="post-slug" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                {post && (
+                  <FormField
+                    control={form.control}
+                    name="slug"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Slug</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="post-slug"
+                            {...field}
+                            value={field.value || ""}
+                          />
+                        </FormControl>
+                        <FormDescription>
+                          Biarkan kosong untuk mempertahankan slug saat ini. Slug
+                          akan dinormalisasi di server.
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                )}
 
                 <FormField
                   control={form.control}
