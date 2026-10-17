@@ -22,6 +22,7 @@ export async function GET(req: NextRequest) {
         posts: {
           some: {
             type, // Menggunakan type yang sudah divalidasi dan dinormalisasi
+            status: "PUBLISHED",
           },
         },
       },

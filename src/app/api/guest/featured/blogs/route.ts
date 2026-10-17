@@ -5,7 +5,7 @@ export async function GET() {
   try {
     const blogs = await prisma.post.findMany({
       take: 2,
-      where: { type: "BLOG", featured: true },
+      where: { type: "BLOG", status: "PUBLISHED", featured: true },
       orderBy: { createdAt: "desc" },
       select: {
         title: true,
@@ -27,8 +27,10 @@ export async function GET() {
 
     return NextResponse.json({ success: true, data: blogs });
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "Terjadi kesalahan";
-    return NextResponse.json({ error: message }, { status: 500 });
+    console.error("[guest/featured/blogs] failed:", error);
+    return NextResponse.json(
+      { error: "Terjadi kesalahan pada server" },
+      { status: 500 }
+    );
   }
 }

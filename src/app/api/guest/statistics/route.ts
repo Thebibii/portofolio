@@ -3,58 +3,96 @@ import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
-    const [blogs, writings, projects] = await Promise.all([
-      prisma.post.findMany({
-        where: { type: "BLOG", status: "PUBLISHED" },
-        select: {
-          slug: true,
-          viewCount: true,
-          _count: { select: { likes: true } },
-        },
-        orderBy: { viewCount: "desc" },
+    const postWhere = (type: "BLOG" | "WRITING") =>
+      ({ type, status: "PUBLISHED" as const });
+
+    const [
+      blogsTotals,
+      blogsLikes,
+      blogsTop,
+      writingsTotals,
+      writingsLikes,
+      writingsTop,
+      projectsTotals,
+      projectsTop,
+    ] = await Promise.all([
+      prisma.post.aggregate({
+        where: postWhere("BLOG"),
+        _count: { _all: true },
+        _sum: { viewCount: true },
       }),
+      prisma.like.count({ where: { post: postWhere("BLOG") } }),
       prisma.post.findMany({
-        where: { type: "WRITING", status: "PUBLISHED" },
+        where: postWhere("BLOG"),
+        orderBy: { viewCount: "desc" },
+        take: 10,
         select: {
           slug: true,
           viewCount: true,
           _count: { select: { likes: true } },
         },
+      }),
+      prisma.post.aggregate({
+        where: postWhere("WRITING"),
+        _count: { _all: true },
+        _sum: { viewCount: true },
+      }),
+      prisma.like.count({ where: { post: postWhere("WRITING") } }),
+      prisma.post.findMany({
+        where: postWhere("WRITING"),
         orderBy: { viewCount: "desc" },
+        take: 10,
+        select: {
+          slug: true,
+          viewCount: true,
+          _count: { select: { likes: true } },
+        },
+      }),
+      prisma.project.aggregate({
+        _count: { _all: true },
+        _sum: { views: true },
       }),
       prisma.project.findMany({
-        select: { slug: true, views: true },
         orderBy: { views: "desc" },
+        take: 10,
+        select: { slug: true, views: true },
       }),
     ]);
 
-    const mapPost = (items: typeof blogs) => ({
-      total: items.length,
-      totalViews: items.reduce((sum, item) => sum + item.viewCount, 0),
-      totalLikes: items.reduce((sum, item) => sum + item._count.likes, 0),
-      top10: items.slice(0, 10).map(({ _count, viewCount, slug }) => ({
-        slug,
-        views: viewCount,
-        likes: _count.likes,
-      })),
-    });
-
-    const mapProject = (items: typeof projects) => ({
-      total: items.length,
-      totalViews: items.reduce((sum, item) => sum + item.views, 0),
-      top10: items.slice(0, 10),
-    });
-
     const data = {
-      blogs: mapPost(blogs),
-      writings: mapPost(writings),
-      projects: mapProject(projects),
+      blogs: {
+        total: blogsTotals._count._all,
+        totalViews: blogsTotals._sum.viewCount ?? 0,
+        totalLikes: blogsLikes,
+        top10: blogsTop.map(({ _count, viewCount, slug }) => ({
+          slug,
+          views: viewCount,
+          likes: _count.likes,
+        })),
+      },
+      writings: {
+        total: writingsTotals._count._all,
+        totalViews: writingsTotals._sum.viewCount ?? 0,
+        totalLikes: writingsLikes,
+        top10: writingsTop.map(({ _count, viewCount, slug }) => ({
+          slug,
+          views: viewCount,
+          likes: _count.likes,
+        })),
+      },
+      projects: {
+        total: projectsTotals._count._all,
+        totalViews: projectsTotals._sum.views ?? 0,
+        top10: projectsTop,
+      },
     };
 
     return NextResponse.json({ success: true, data });
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "Terjadi kesalahan";
-    return NextResponse.json({ error: message }, { status: 500 });
+    console.error("[guest/statistics] failed:", error);
+    return NextResponse.json(
+      { error: "Terjadi kesalahan pada server" },
+      { status: 500 }
+    );
   }
 }

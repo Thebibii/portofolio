@@ -22,6 +22,7 @@ export async function GET(req: NextRequest) {
           some: {
             post: {
               type, // Filter berdasarkan post type
+              status: "PUBLISHED",
             },
           },
         },
@@ -43,13 +44,11 @@ export async function GET(req: NextRequest) {
       total: tags.length,
     });
   } catch (error) {
-    console.error("Error fetching tags:", error);
-    const message =
-      error instanceof Error ? error.message : "Terjadi kesalahan";
+    console.error("[guest/tags] failed:", error);
     return NextResponse.json(
       {
         success: false,
-        error: message,
+        error: "Terjadi kesalahan pada server",
         message: "Failed to fetch tags",
       },
       { status: 500 }

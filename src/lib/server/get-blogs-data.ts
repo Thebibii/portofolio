@@ -9,7 +9,7 @@ export const getBlogsData = cache(async () => {
 
   const [blogs, totalCount, categories, tags] = await Promise.all([
     prisma.post.findMany({
-      where: { type: "BLOG" },
+      where: { type: "BLOG", status: "PUBLISHED" },
       orderBy: { createdAt: "desc" },
       skip,
       take: limit,
@@ -32,10 +32,10 @@ export const getBlogsData = cache(async () => {
         },
       },
     }),
-    prisma.post.count({ where: { type: "BLOG" } }),
+    prisma.post.count({ where: { type: "BLOG", status: "PUBLISHED" } }),
     prisma.category.findMany({
       where: {
-        posts: { some: { type: "BLOG" } },
+        posts: { some: { type: "BLOG", status: "PUBLISHED" } },
       },
       select: { name: true, slug: true },
       orderBy: { posts: { _count: "desc" } },
@@ -43,7 +43,7 @@ export const getBlogsData = cache(async () => {
     }),
     prisma.tag.findMany({
       where: {
-        posts: { some: { post: { type: "BLOG" } } },
+        posts: { some: { post: { type: "BLOG", status: "PUBLISHED" } } },
       },
       select: { name: true, slug: true },
       orderBy: { createdAt: "desc" },

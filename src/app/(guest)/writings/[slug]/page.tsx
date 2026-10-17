@@ -13,9 +13,14 @@ const baseUrl = "https://thebibie.vercel.app";
 
 export const revalidate = 3600;
 
+// Hanya 20 post terbaru di-prerender; sisanya dibangun saat diminta.
+export const dynamicParams = true;
+
 export async function generateStaticParams() {
   const posts = await prisma.post.findMany({
-    where: { type: "WRITING" },
+    where: { type: "WRITING", status: "PUBLISHED" },
+    orderBy: { createdAt: "desc" },
+    take: 20,
     select: { slug: true },
   });
   return posts.map((post) => ({ slug: post.slug }));
@@ -24,7 +29,7 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const writing = await prisma.post.findFirst({
-    where: { slug, type: "WRITING" },
+    where: { slug, type: "WRITING", status: "PUBLISHED" },
     select: { title: true, excerpt: true, coverImage: true },
   });
 
@@ -57,7 +62,7 @@ export default async function WritingDetailPage({ params }: Props) {
   const { slug } = await params;
 
   const writing = await prisma.post.findUnique({
-    where: { slug, type: "WRITING" },
+    where: { slug, type: "WRITING", status: "PUBLISHED" },
     include: {
       tags: {
         select: { tag: { select: { name: true, slug: true } } },

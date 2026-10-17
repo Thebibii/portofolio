@@ -9,7 +9,7 @@ export async function GET(
     const { slug } = await params;
 
     const post = await prisma.post.findUnique({
-      where: { slug, type: "BLOG" },
+      where: { slug, type: "BLOG", status: "PUBLISHED" },
       include: {
         tags: {
           select: { tag: { select: { name: true, slug: true } } },
@@ -39,8 +39,10 @@ export async function GET(
       },
     });
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "Terjadi kesalahan";
-    return NextResponse.json({ error: message }, { status: 500 });
+    console.error("[guest/blogs/:slug] failed:", error);
+    return NextResponse.json(
+      { error: "Terjadi kesalahan pada server" },
+      { status: 500 }
+    );
   }
 }

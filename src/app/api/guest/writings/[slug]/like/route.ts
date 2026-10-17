@@ -34,7 +34,7 @@ export async function GET(
     const newVisitorId = visitorId || crypto.randomUUID();
 
     const post = await prisma.post.findFirst({
-      where: { slug, type: "WRITING" },
+      where: { slug, type: "WRITING", status: "PUBLISHED" },
       select: { id: true },
     });
 
@@ -83,7 +83,7 @@ export async function PATCH(
     const newVisitorId = visitorId || crypto.randomUUID();
 
     const post = await prisma.post.findFirst({
-      where: { slug, type: "WRITING" },
+      where: { slug, type: "WRITING", status: "PUBLISHED" },
       select: { id: true },
     });
 

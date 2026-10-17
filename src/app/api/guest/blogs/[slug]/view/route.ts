@@ -10,7 +10,7 @@ export async function PATCH(
     const { slug } = await params;
 
     const post = await prisma.post.findFirst({
-      where: { slug, type: "BLOG" },
+      where: { slug, type: "BLOG", status: "PUBLISHED" },
       select: { id: true, viewCount: true },
     });
 

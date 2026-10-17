@@ -11,7 +11,7 @@ export async function GET() {
     const projects = omitId(resProjects);
     const blogs = await prisma.post.findMany({
       take: 2,
-      where: { type: "BLOG", featured: true },
+      where: { type: "BLOG", status: "PUBLISHED", featured: true },
       orderBy: { createdAt: "desc" },
       select: {
         title: true,

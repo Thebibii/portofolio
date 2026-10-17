@@ -18,6 +18,7 @@ export async function GET(request: NextRequest) {
     // Build where clause
     const whereClause: any = {
       type: "WRITING",
+      status: "PUBLISHED",
     };
 
     // Add search filter
@@ -134,8 +135,10 @@ export async function GET(request: NextRequest) {
       message: "Data berhasil diambil",
     });
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "Terjadi kesalahan";
-    return NextResponse.json({ error: message }, { status: 500 });
+    console.error("[guest/writings] failed:", error);
+    return NextResponse.json(
+      { error: "Terjadi kesalahan pada server" },
+      { status: 500 }
+    );
   }
 }

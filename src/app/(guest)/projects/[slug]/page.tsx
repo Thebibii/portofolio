@@ -13,8 +13,13 @@ const baseUrl = "https://thebibie.vercel.app";
 
 export const revalidate = 3600;
 
+// Hanya 20 project terbaru di-prerender; sisanya dibangun saat diminta.
+export const dynamicParams = true;
+
 export async function generateStaticParams() {
   const projects = await prisma.project.findMany({
+    orderBy: { createdAt: "desc" },
+    take: 20,
     select: { slug: true },
   });
   return projects.map((p) => ({ slug: p.slug }));

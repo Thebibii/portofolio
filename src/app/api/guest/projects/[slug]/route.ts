@@ -26,8 +26,10 @@ export async function GET(
       },
     });
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "Terjadi kesalahan";
-    return NextResponse.json({ error: message }, { status: 500 });
+    console.error("[guest/projects/:slug] failed:", error);
+    return NextResponse.json(
+      { error: "Terjadi kesalahan pada server" },
+      { status: 500 }
+    );
   }
 }
