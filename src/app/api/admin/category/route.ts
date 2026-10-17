@@ -1,7 +1,6 @@
-import { authOptions } from "@/lib/auth";
 import { generateSlug } from "@/lib/genarate-slug";
 import prisma from "@/lib/prisma";
-import { getServerSession } from "next-auth";
+import { requireAdmin } from "@/lib/require-admin";
 import { NextRequest, NextResponse } from "next/server";
 import z from "zod";
 
@@ -12,6 +11,9 @@ const categorySchema = z.object({
 
 export async function GET() {
   try {
+    const { session, response } = await requireAdmin();
+    if (response) return response;
+
     const data = await prisma.category.findMany({
       orderBy: { createdAt: "desc" },
       include: {
@@ -25,21 +27,18 @@ export async function GET() {
 
     return NextResponse.json({ success: true, data });
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "Terjadi kesalahan";
-    return NextResponse.json({ error: message }, { status: 500 });
+    console.error("[admin/category] failed:", error);
+    return NextResponse.json(
+      { error: "Terjadi kesalahan pada server" },
+      { status: 500 }
+    );
   }
 }
 
 export async function POST(req: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
-    if (!session?.user) {
-      return NextResponse.json(
-        { error: "Authentication required" },
-        { status: 401 }
-      );
-    }
+    const { session, response } = await requireAdmin();
+    if (response) return response;
 
     const json = await req.json();
 
@@ -65,8 +64,10 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const message =
-      error instanceof Error ? error.message : "Terjadi kesalahan";
-    return NextResponse.json({ error: message }, { status: 500 });
+    console.error("[admin/category] failed:", error);
+    return NextResponse.json(
+      { error: "Terjadi kesalahan pada server" },
+      { status: 500 }
+    );
   }
 }

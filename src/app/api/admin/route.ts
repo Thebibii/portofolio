@@ -1,8 +1,12 @@
 import prisma from "@/lib/prisma";
+import { requireAdmin } from "@/lib/require-admin";
 import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
+    const { session, response } = await requireAdmin();
+    if (response) return response;
+
     const [projectCount, writingCount, blogCount, totalViews, categoryCount, tagCount, recentProjects, recentPosts] =
       await Promise.all([
         prisma.project.count(),
@@ -37,8 +41,10 @@ export async function GET() {
       recentPosts,
     });
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "Terjadi kesalahan";
-    return NextResponse.json({ error: message }, { status: 500 });
+    console.error("[admin/route] failed:", error);
+    return NextResponse.json(
+      { error: "Terjadi kesalahan pada server" },
+      { status: 500 }
+    );
   }
 }

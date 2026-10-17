@@ -1,8 +1,7 @@
-import { authOptions } from "@/lib/auth";
-import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import prisma from "@/lib/prisma";
+import { requireAdmin } from "@/lib/require-admin";
 import { deleteImage, deleteMultipleImages, extractPathFromUrl } from "@/lib/imageUpload";
 import { deleteImagesFromContent } from "@/lib/extract-image-from-content";
 import z from "zod";
@@ -41,6 +40,9 @@ export async function GET(
   { params }: { params: Promise<{ slug: string }> }
 ) {
   try {
+    const { session, response } = await requireAdmin();
+    if (response) return response;
+
     const { slug } = await params;
 
     let data;
@@ -80,13 +82,8 @@ export async function DELETE(
   { params }: { params: Promise<{ slug: string }> }
 ) {
   try {
-    const session = await getServerSession(authOptions);
-    if (!session?.user) {
-      return NextResponse.json(
-        { error: "Authentication required" },
-        { status: 401 }
-      );
-    }
+    const { session, response } = await requireAdmin();
+    if (response) return response;
 
     const { slug } = await params;
 
@@ -155,13 +152,8 @@ export async function PUT(
   { params }: { params: Promise<{ slug: string }> }
 ) {
   try {
-    const session = await getServerSession(authOptions);
-    if (!session?.user) {
-      return NextResponse.json(
-        { error: "Authentication required" },
-        { status: 401 }
-      );
-    }
+    const { session, response } = await requireAdmin();
+    if (response) return response;
 
     const { slug } = await params;
     const json = await req.json();
@@ -209,8 +201,10 @@ export async function PUT(
       );
     }
 
-    const message =
-      error instanceof Error ? error.message : "Terjadi kesalahan";
-    return NextResponse.json({ error: message }, { status: 500 });
+    console.error("[project/:slug] failed:", error);
+    return NextResponse.json(
+      { error: "Terjadi kesalahan pada server" },
+      { status: 500 }
+    );
   }
 }

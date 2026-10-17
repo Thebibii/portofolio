@@ -54,8 +54,11 @@ model User {
   image               String?
   password            String?   // Tambahkan field ini
   role                UserRole  @default(USER)
+  // DEPRECATED: tidak dipakai lagi (diganti tabel LoginThrottle). Hapus di migrasi terpisah nanti.
   failedLoginAttempts Int       @default(0)
+  // DEPRECATED: tidak dipakai lagi (diganti tabel LoginThrottle). Hapus di migrasi terpisah nanti.
   lockoutUntil        DateTime?
+  tokenVersion        Int       @default(0)
   createdAt           DateTime  @default(now())
   updatedAt           DateTime  @updatedAt
 
@@ -106,6 +109,7 @@ model Post {
   tags       PostTag[]
   likes      Like[]
 
+  @@index([type, createdAt])
   @@map("posts")
 }
 
@@ -221,6 +225,20 @@ model CurrentActivity {
   title     String
   content   String
   createdAt DateTime @default(now())
+}
+
+// Throttle login (DB-based, aman untuk Vercel serverless).
+// key: "ip:<ip>" (lockout keras) atau "email:<email>" (backoff bertambah).
+model LoginThrottle {
+  id          String    @id @default(cuid())
+  key         String    @unique // index pada kolom kunci (via @unique)
+  attempts    Int       @default(0)
+  lockedUntil DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt // diindeks untuk pembersihan oportunistik baris lama
+
+  @@index([updatedAt])
+  @@map("login_throttles")
 }
 
 

@@ -1,8 +1,12 @@
 import prisma from "@/lib/prisma";
+import { requireAdmin } from "@/lib/require-admin";
 import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
+    const { session, response } = await requireAdmin();
+    if (response) return response;
+
     const experiences = await prisma.experience.findMany({
       orderBy: { startDate: "asc" },
     });
@@ -15,8 +19,10 @@ export async function GET() {
       data: { experiences, currentActivities },
     });
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "Terjadi kesalahan";
-    return NextResponse.json({ error: message }, { status: 500 });
+    console.error("[admin/about] failed:", error);
+    return NextResponse.json(
+      { error: "Terjadi kesalahan pada server" },
+      { status: 500 }
+    );
   }
 }
