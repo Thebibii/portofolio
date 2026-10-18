@@ -8,7 +8,9 @@ import { Input } from "@/components/ui/input";
 import { useGuestTags } from "@/hooks/react-query/guest/tags/use-query";
 import { useGuestCategory } from "@/hooks/react-query/guest/category/use-query";
 import { useState, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useDebounce } from "@/hooks/use-debounce";
 import LoadingState from "@/components/reusable/state/loading-state";
 import {
@@ -21,6 +23,15 @@ import { useGetGuestWritings } from "@/hooks/react-query/guest/writings/use-quer
 import { Label } from "@/components/ui/label";
 import SortPopover from "@/components/reusable/guest/sort-popover";
 import { BlogsCardSkeleton } from "@/components/reusable/skeleton/blogs-card-skeleton";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationPrevious,
+  PaginationNext,
+  PaginationEllipsis,
+} from "@/components/ui/pagination";
 
 type InitialData = {
   data: any[];
@@ -40,9 +51,28 @@ type Props = {
   initialTags?: any;
 };
 
+function getPageList(current: number, total: number): (number | "ellipsis")[] {
+  if (total <= 7) {
+    return Array.from({ length: total }, (_, i) => i + 1);
+  }
+
+  const clamped = Math.min(Math.max(1, current), total);
+
+  if (clamped <= 4) {
+    return [1, 2, 3, 4, 5, "ellipsis", total];
+  }
+
+  if (clamped >= total - 3) {
+    return [1, "ellipsis", total - 4, total - 3, total - 2, total - 1, total];
+  }
+
+  return [1, "ellipsis", clamped - 1, clamped, clamped + 1, "ellipsis", total];
+}
+
 function WritingsContent({ initialWritings, initialCategories, initialTags }: Props) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const pathname = usePathname();
 
   const [searchQuery, setSearchQuery] = useState(
     searchParams.get("search") || ""
@@ -154,6 +184,15 @@ function WritingsContent({ initialWritings, initialCategories, initialTags }: Pr
     }
   }, [currentPage, sortBy, sortOrder]);
 
+  useEffect(() => {
+    const total = data?.meta?.totalPages ?? 0;
+    if (total < 1) return;
+    const desired = Number.isFinite(currentPage)
+      ? Math.min(Math.max(1, currentPage), total)
+      : 1;
+    if (desired !== currentPage) setCurrentPage(desired);
+  }, [currentPage, data?.meta?.totalPages]);
+
   const handleTagClick = (tagSlug: string) => {
     const params = new URLSearchParams(searchParams);
 
@@ -194,17 +233,6 @@ function WritingsContent({ initialWritings, initialCategories, initialTags }: Pr
     router.push(window.location.pathname);
   };
 
-  const handlePageChange = (newPage: number) => {
-    setCurrentPage(newPage);
-    const params = new URLSearchParams(searchParams);
-    if (newPage > 1) {
-      params.set("page", newPage.toString());
-    } else {
-      params.delete("page");
-    }
-    router.push(`?${params.toString()}`);
-  };
-
   const handleSortChange = (newSortBy: string) => {
     setSortBy(newSortBy);
     const params = new URLSearchParams(searchParams);
@@ -239,6 +267,26 @@ function WritingsContent({ initialWritings, initialCategories, initialTags }: Pr
   };
 
   const hasActiveFilters = activeTag || activeCategory || searchQuery;
+
+  const totalPages = data?.meta?.totalPages ?? 0;
+  const normalizedPage = Number.isNaN(currentPage) ? 1 : currentPage;
+  const safePage = Math.min(
+    Math.max(1, normalizedPage),
+    Math.max(1, totalPages)
+  );
+  const canPrev = safePage > 1;
+  const canNext = safePage < totalPages;
+
+  const buildPageHref = (pageNum: number) => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (pageNum > 1) {
+      params.set("page", pageNum.toString());
+    } else {
+      params.delete("page");
+    }
+    const queryString = params.toString();
+    return queryString ? `${pathname}?${queryString}` : pathname;
+  };
 
   if (error) {
     return (
@@ -373,37 +421,95 @@ function WritingsContent({ initialWritings, initialCategories, initialTags }: Pr
             <BlogsCard to="writings" data={data.data} />
 
             {data.meta.totalPages > 1 && (
-              <div className="flex justify-center space-x-2 mt-8">
-                <Button
-                  variant="outline"
-                  onClick={() => handlePageChange(currentPage - 1)}
-                  disabled={!data.meta.hasPrevPage}
-                >
-                  Sebelumnya
-                </Button>
+              <Pagination aria-label="Pagination" className="mt-8 font-mono">
+                <PaginationContent className="max-w-full flex-wrap justify-center gap-1.5">
+                  {canPrev ? (
+                    <PaginationItem className="shrink-0">
+                      <PaginationPrevious
+                        asChild
+                        aria-label="Halaman sebelumnya"
+                        className="h-11 min-w-11 gap-1 rounded-full border border-border px-3 sm:pl-3"
+                      >
+                        <Link href={buildPageHref(safePage - 1)}>
+                          <ChevronLeft />
+                          <span className="hidden lg:block">Sebelumnya</span>
+                        </Link>
+                      </PaginationPrevious>
+                    </PaginationItem>
+                  ) : (
+                    <PaginationItem className="shrink-0">
+                      <PaginationPrevious
+                        aria-label="Halaman sebelumnya"
+                        aria-disabled={true}
+                        tabIndex={-1}
+                        className="pointer-events-none h-11 min-w-11 gap-1 rounded-full border border-border px-3 opacity-50 sm:pl-3"
+                      >
+                        <ChevronLeft />
+                        <span className="hidden lg:block">Sebelumnya</span>
+                      </PaginationPrevious>
+                    </PaginationItem>
+                  )}
 
-                {Array.from(
-                  { length: data.meta.totalPages },
-                  (_, i) => i + 1
-                ).map((pageNum) => (
-                  <Button
-                    key={pageNum}
-                    variant={currentPage === pageNum ? "default" : "outline"}
-                    onClick={() => handlePageChange(pageNum)}
-                    className="w-10"
-                  >
-                    {pageNum}
-                  </Button>
-                ))}
+                  <PaginationItem className="shrink-0 sm:hidden">
+                    <span className="whitespace-nowrap px-1 text-sm text-muted-foreground">
+                      Halaman {safePage} dari {totalPages}
+                    </span>
+                  </PaginationItem>
 
-                <Button
-                  variant="outline"
-                  onClick={() => handlePageChange(currentPage + 1)}
-                  disabled={!data.meta.hasNextPage}
-                >
-                  Selanjutnya
-                </Button>
-              </div>
+                  {getPageList(safePage, totalPages).map((item, index) =>
+                    item === "ellipsis" ? (
+                      <PaginationItem
+                        key={`ellipsis-${index}`}
+                        className="hidden shrink-0 sm:flex"
+                      >
+                        <PaginationEllipsis />
+                      </PaginationItem>
+                    ) : (
+                      <PaginationItem key={item} className="hidden shrink-0 sm:flex">
+                        <PaginationLink
+                          href={buildPageHref(item)}
+                          isActive={item === safePage}
+                          aria-label={`Halaman ${item}`}
+                          className={`h-11 w-auto min-w-11 rounded-full border border-border px-3 tabular-nums ${
+                            item === safePage
+                              ? "border-transparent bg-primary text-primary-foreground hover:bg-primary/90 dark:border-transparent dark:bg-primary dark:hover:bg-primary/90"
+                              : ""
+                          }`}
+                        >
+                          {item}
+                        </PaginationLink>
+                      </PaginationItem>
+                    )
+                  )}
+
+                  {canNext ? (
+                    <PaginationItem className="shrink-0">
+                      <PaginationNext
+                        asChild
+                        aria-label="Halaman berikutnya"
+                        className="h-11 min-w-11 gap-1 rounded-full border border-border px-3 sm:pr-3"
+                      >
+                        <Link href={buildPageHref(safePage + 1)}>
+                          <span className="hidden lg:block">Berikutnya</span>
+                          <ChevronRight />
+                        </Link>
+                      </PaginationNext>
+                    </PaginationItem>
+                  ) : (
+                    <PaginationItem className="shrink-0">
+                      <PaginationNext
+                        aria-label="Halaman berikutnya"
+                        aria-disabled={true}
+                        tabIndex={-1}
+                        className="pointer-events-none h-11 min-w-11 gap-1 rounded-full border border-border px-3 opacity-50 sm:pr-3"
+                      >
+                        <span className="hidden lg:block">Berikutnya</span>
+                        <ChevronRight />
+                      </PaginationNext>
+                    </PaginationItem>
+                  )}
+                </PaginationContent>
+              </Pagination>
             )}
           </>
         ) : (
