@@ -26,8 +26,15 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Check, ChevronDown } from "lucide-react";
+import { Check, ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
 import SortPopover from "@/components/reusable/guest/sort-popover";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationEllipsis,
+} from "@/components/ui/pagination";
 
 type InitialData = {
   data: any[];
@@ -46,6 +53,24 @@ type Props = {
   initialCategories?: any;
   initialTags?: any;
 };
+
+function getPageList(current: number, total: number): (number | "ellipsis")[] {
+  if (total <= 7) {
+    return Array.from({ length: total }, (_, i) => i + 1);
+  }
+
+  const clamped = Math.min(Math.max(1, current), total);
+
+  if (clamped <= 4) {
+    return [1, 2, 3, 4, 5, "ellipsis", total];
+  }
+
+  if (clamped >= total - 3) {
+    return [1, "ellipsis", total - 4, total - 3, total - 2, total - 1, total];
+  }
+
+  return [1, "ellipsis", clamped - 1, clamped, clamped + 1, "ellipsis", total];
+}
 
 function BlogsContent({ initialBlogs, initialCategories, initialTags }: Props) {
   const router = useRouter();
@@ -162,6 +187,15 @@ function BlogsContent({ initialBlogs, initialCategories, initialTags }: Props) {
     }
   }, [currentPage, sortBy, sortOrder]);
 
+  useEffect(() => {
+    const total = data?.meta?.totalPages ?? 0;
+    if (total < 1) return;
+    const desired = Number.isFinite(currentPage)
+      ? Math.min(Math.max(1, currentPage), total)
+      : 1;
+    if (desired !== currentPage) setCurrentPage(desired);
+  }, [currentPage, data?.meta?.totalPages]);
+
   const handleTagClick = (tagSlug: string) => {
     const params = new URLSearchParams(searchParams);
 
@@ -245,6 +279,26 @@ function BlogsContent({ initialBlogs, initialCategories, initialTags }: Props) {
   };
 
   const hasActiveFilters = activeTag || activeCategory || searchQuery;
+
+  const totalPages = data?.meta?.totalPages ?? 0;
+  const normalizedPage = Number.isNaN(currentPage) ? 1 : currentPage;
+  const safePage = Math.min(
+    Math.max(1, normalizedPage),
+    Math.max(1, totalPages)
+  );
+  const canPrev = safePage > 1;
+  const canNext = safePage < totalPages;
+
+  const buildPageHref = (pageNum: number) => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (pageNum > 1) {
+      params.set("page", pageNum.toString());
+    } else {
+      params.delete("page");
+    }
+    const queryString = params.toString();
+    return queryString ? `?${queryString}` : "?";
+  };
 
   if (error) {
     return (
@@ -384,37 +438,85 @@ function BlogsContent({ initialBlogs, initialCategories, initialTags }: Props) {
             />
 
             {data.meta.totalPages > 1 && (
-              <div className="flex justify-center space-x-2 mt-8">
-                <Button
-                  variant="outline"
-                  onClick={() => handlePageChange(currentPage - 1)}
-                  disabled={!data.meta.hasPrevPage}
-                >
-                  Sebelumnya
-                </Button>
+              <Pagination aria-label="Pagination" className="mt-8 font-mono">
+                <PaginationContent className="max-w-full flex-wrap gap-1.5">
+                  <PaginationItem>
+                    <PaginationLink
+                      href={canPrev ? buildPageHref(safePage - 1) : undefined}
+                      size="default"
+                      aria-label="Halaman sebelumnya"
+                      aria-disabled={canPrev ? undefined : true}
+                      tabIndex={canPrev ? undefined : -1}
+                      className={`size-11 gap-1 rounded-full border border-border px-2.5 sm:size-9 ${
+                        canPrev ? "" : "pointer-events-none opacity-50"
+                      }`}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        if (canPrev) handlePageChange(safePage - 1);
+                      }}
+                    >
+                      <ChevronLeft />
+                      <span className="hidden sm:block">Sebelumnya</span>
+                    </PaginationLink>
+                  </PaginationItem>
 
-                {Array.from(
-                  { length: data.meta.totalPages },
-                  (_, i) => i + 1
-                ).map((pageNum) => (
-                  <Button
-                    key={pageNum}
-                    variant={currentPage === pageNum ? "default" : "outline"}
-                    onClick={() => handlePageChange(pageNum)}
-                    className="w-10"
-                  >
-                    {pageNum}
-                  </Button>
-                ))}
+                  <PaginationItem className="sm:hidden">
+                    <span className="whitespace-nowrap px-1 text-sm text-muted-foreground">
+                      Halaman {safePage} dari {totalPages}
+                    </span>
+                  </PaginationItem>
 
-                <Button
-                  variant="outline"
-                  onClick={() => handlePageChange(currentPage + 1)}
-                  disabled={!data.meta.hasNextPage}
-                >
-                  Selanjutnya
-                </Button>
-              </div>
+                  {getPageList(safePage, totalPages).map((item, index) =>
+                    item === "ellipsis" ? (
+                      <PaginationItem
+                        key={`ellipsis-${index}`}
+                        className="hidden sm:flex"
+                      >
+                        <PaginationEllipsis />
+                      </PaginationItem>
+                    ) : (
+                      <PaginationItem key={item} className="hidden sm:flex">
+                        <PaginationLink
+                          href={buildPageHref(item)}
+                          isActive={item === safePage}
+                          aria-label={`Halaman ${item}`}
+                          className={`size-11 rounded-full border border-border sm:size-9 ${
+                            item === safePage
+                              ? "border-transparent bg-primary text-primary-foreground hover:bg-primary/90 dark:border-transparent dark:bg-primary dark:hover:bg-primary/90"
+                              : ""
+                          }`}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            handlePageChange(item);
+                          }}
+                        >
+                          {item}
+                        </PaginationLink>
+                      </PaginationItem>
+                    )
+                  )}
+
+                  <PaginationItem>
+                    <PaginationLink
+                      href={canNext ? buildPageHref(safePage + 1) : undefined}
+                      size="default"
+                      aria-label="Halaman berikutnya"
+                      aria-disabled={canNext ? undefined : true}
+                      tabIndex={canNext ? undefined : -1}
+                      className={`size-11 gap-1 rounded-full border border-border px-2.5 sm:size-9 ${
+                        canNext ? "" : "pointer-events-none opacity-50"
+                      }`}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        if (canNext) handlePageChange(safePage + 1);
+                      }}
+                    >
+                      <span className="hidden sm:block">Berikutnya</span>
+                      <ChevronRight />
+                    </PaginationLink>
+                  </PaginationItem>
+                </PaginationContent>
+              </Pagination>
             )}
           </>
         ) : (
