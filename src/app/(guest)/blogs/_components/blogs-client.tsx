@@ -9,7 +9,8 @@ import { useGetGuestBlogs } from "@/hooks/react-query/guest/blogs/use-query";
 import { useGuestTags } from "@/hooks/react-query/guest/tags/use-query";
 import { useGuestCategory } from "@/hooks/react-query/guest/category/use-query";
 import { useState, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
 import { useDebounce } from "@/hooks/use-debounce";
 import LoadingState from "@/components/reusable/state/loading-state";
 import {
@@ -33,6 +34,8 @@ import {
   PaginationContent,
   PaginationItem,
   PaginationLink,
+  PaginationPrevious,
+  PaginationNext,
   PaginationEllipsis,
 } from "@/components/ui/pagination";
 
@@ -75,6 +78,7 @@ function getPageList(current: number, total: number): (number | "ellipsis")[] {
 function BlogsContent({ initialBlogs, initialCategories, initialTags }: Props) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const pathname = usePathname();
 
   const [searchQuery, setSearchQuery] = useState(
     searchParams.get("search") || ""
@@ -234,17 +238,6 @@ function BlogsContent({ initialBlogs, initialCategories, initialTags }: Props) {
     router.push(window.location.pathname);
   };
 
-  const handlePageChange = (newPage: number) => {
-    setCurrentPage(newPage);
-    const params = new URLSearchParams(searchParams);
-    if (newPage > 1) {
-      params.set("page", newPage.toString());
-    } else {
-      params.delete("page");
-    }
-    router.push(`?${params.toString()}`);
-  };
-
   const handleSortChange = (newSortBy: string) => {
     setSortBy(newSortBy);
     const params = new URLSearchParams(searchParams);
@@ -297,7 +290,7 @@ function BlogsContent({ initialBlogs, initialCategories, initialTags }: Props) {
       params.delete("page");
     }
     const queryString = params.toString();
-    return queryString ? `?${queryString}` : "?";
+    return queryString ? `${pathname}?${queryString}` : pathname;
   };
 
   if (error) {
@@ -439,28 +432,35 @@ function BlogsContent({ initialBlogs, initialCategories, initialTags }: Props) {
 
             {data.meta.totalPages > 1 && (
               <Pagination aria-label="Pagination" className="mt-8 font-mono">
-                <PaginationContent className="max-w-full flex-wrap gap-1.5">
-                  <PaginationItem>
-                    <PaginationLink
-                      href={canPrev ? buildPageHref(safePage - 1) : undefined}
-                      size="default"
-                      aria-label="Halaman sebelumnya"
-                      aria-disabled={canPrev ? undefined : true}
-                      tabIndex={canPrev ? undefined : -1}
-                      className={`size-11 gap-1 rounded-full border border-border px-2.5 sm:size-9 ${
-                        canPrev ? "" : "pointer-events-none opacity-50"
-                      }`}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        if (canPrev) handlePageChange(safePage - 1);
-                      }}
-                    >
-                      <ChevronLeft />
-                      <span className="hidden sm:block">Sebelumnya</span>
-                    </PaginationLink>
-                  </PaginationItem>
+                <PaginationContent className="max-w-full flex-wrap justify-center gap-1.5">
+                  {canPrev ? (
+                    <PaginationItem className="shrink-0">
+                      <PaginationPrevious
+                        asChild
+                        aria-label="Halaman sebelumnya"
+                        className="h-11 min-w-11 gap-1 rounded-full border border-border px-3 sm:pl-3"
+                      >
+                        <Link href={buildPageHref(safePage - 1)}>
+                          <ChevronLeft />
+                          <span className="hidden lg:block">Sebelumnya</span>
+                        </Link>
+                      </PaginationPrevious>
+                    </PaginationItem>
+                  ) : (
+                    <PaginationItem className="shrink-0">
+                      <PaginationPrevious
+                        aria-label="Halaman sebelumnya"
+                        aria-disabled={true}
+                        tabIndex={-1}
+                        className="pointer-events-none h-11 min-w-11 gap-1 rounded-full border border-border px-3 opacity-50 sm:pl-3"
+                      >
+                        <ChevronLeft />
+                        <span className="hidden lg:block">Sebelumnya</span>
+                      </PaginationPrevious>
+                    </PaginationItem>
+                  )}
 
-                  <PaginationItem className="sm:hidden">
+                  <PaginationItem className="shrink-0 sm:hidden">
                     <span className="whitespace-nowrap px-1 text-sm text-muted-foreground">
                       Halaman {safePage} dari {totalPages}
                     </span>
@@ -470,25 +470,21 @@ function BlogsContent({ initialBlogs, initialCategories, initialTags }: Props) {
                     item === "ellipsis" ? (
                       <PaginationItem
                         key={`ellipsis-${index}`}
-                        className="hidden sm:flex"
+                        className="hidden shrink-0 sm:flex"
                       >
                         <PaginationEllipsis />
                       </PaginationItem>
                     ) : (
-                      <PaginationItem key={item} className="hidden sm:flex">
+                      <PaginationItem key={item} className="hidden shrink-0 sm:flex">
                         <PaginationLink
                           href={buildPageHref(item)}
                           isActive={item === safePage}
                           aria-label={`Halaman ${item}`}
-                          className={`size-11 rounded-full border border-border sm:size-9 ${
+                          className={`h-11 w-auto min-w-11 rounded-full border border-border px-3 tabular-nums ${
                             item === safePage
                               ? "border-transparent bg-primary text-primary-foreground hover:bg-primary/90 dark:border-transparent dark:bg-primary dark:hover:bg-primary/90"
                               : ""
                           }`}
-                          onClick={(e) => {
-                            e.preventDefault();
-                            handlePageChange(item);
-                          }}
                         >
                           {item}
                         </PaginationLink>
@@ -496,25 +492,32 @@ function BlogsContent({ initialBlogs, initialCategories, initialTags }: Props) {
                     )
                   )}
 
-                  <PaginationItem>
-                    <PaginationLink
-                      href={canNext ? buildPageHref(safePage + 1) : undefined}
-                      size="default"
-                      aria-label="Halaman berikutnya"
-                      aria-disabled={canNext ? undefined : true}
-                      tabIndex={canNext ? undefined : -1}
-                      className={`size-11 gap-1 rounded-full border border-border px-2.5 sm:size-9 ${
-                        canNext ? "" : "pointer-events-none opacity-50"
-                      }`}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        if (canNext) handlePageChange(safePage + 1);
-                      }}
-                    >
-                      <span className="hidden sm:block">Berikutnya</span>
-                      <ChevronRight />
-                    </PaginationLink>
-                  </PaginationItem>
+                  {canNext ? (
+                    <PaginationItem className="shrink-0">
+                      <PaginationNext
+                        asChild
+                        aria-label="Halaman berikutnya"
+                        className="h-11 min-w-11 gap-1 rounded-full border border-border px-3 sm:pr-3"
+                      >
+                        <Link href={buildPageHref(safePage + 1)}>
+                          <span className="hidden lg:block">Berikutnya</span>
+                          <ChevronRight />
+                        </Link>
+                      </PaginationNext>
+                    </PaginationItem>
+                  ) : (
+                    <PaginationItem className="shrink-0">
+                      <PaginationNext
+                        aria-label="Halaman berikutnya"
+                        aria-disabled={true}
+                        tabIndex={-1}
+                        className="pointer-events-none h-11 min-w-11 gap-1 rounded-full border border-border px-3 opacity-50 sm:pr-3"
+                      >
+                        <span className="hidden lg:block">Berikutnya</span>
+                        <ChevronRight />
+                      </PaginationNext>
+                    </PaginationItem>
+                  )}
                 </PaginationContent>
               </Pagination>
             )}

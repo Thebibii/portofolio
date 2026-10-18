@@ -1,4 +1,5 @@
 import * as React from "react"
+import { Slot } from "@radix-ui/react-slot"
 import { cn } from "@/lib/utils"
 import {
   ChevronLeftIcon,
@@ -39,6 +40,7 @@ function PaginationItem({ ...props }: React.ComponentProps<"li">) {
 
 type PaginationLinkProps = {
   isActive?: boolean
+  asChild?: boolean
 } & Pick<React.ComponentProps<typeof Button>, "size"> &
   React.ComponentProps<"a">
 
@@ -46,10 +48,13 @@ function PaginationLink({
   className,
   isActive,
   size = "icon",
+  asChild = false,
   ...props
 }: PaginationLinkProps) {
+  const Comp = asChild ? Slot : "a"
+
   return (
-    <a
+    <Comp
       aria-current={isActive ? "page" : undefined}
       data-slot="pagination-link"
       data-active={isActive}
@@ -65,36 +70,56 @@ function PaginationLink({
   )
 }
 
+type PaginationNavLinkProps = React.ComponentProps<typeof PaginationLink> & {
+  text?: string
+}
+
 function PaginationPrevious({
   className,
+  text = "Previous",
+  asChild,
+  children,
   ...props
-}: React.ComponentProps<typeof PaginationLink>) {
+}: PaginationNavLinkProps) {
   return (
     <PaginationLink
       aria-label="Go to previous page"
       size="default"
+      asChild={asChild}
       className={cn("gap-1 px-2.5 sm:pl-2.5", className)}
       {...props}
     >
-      <ChevronLeftIcon />
-      <span className="hidden sm:block">Previous</span>
+      {children ?? (
+        <>
+          <ChevronLeftIcon />
+          <span className="hidden sm:block">{text}</span>
+        </>
+      )}
     </PaginationLink>
   )
 }
 
 function PaginationNext({
   className,
+  text = "Next",
+  asChild,
+  children,
   ...props
-}: React.ComponentProps<typeof PaginationLink>) {
+}: PaginationNavLinkProps) {
   return (
     <PaginationLink
       aria-label="Go to next page"
       size="default"
+      asChild={asChild}
       className={cn("gap-1 px-2.5 sm:pr-2.5", className)}
       {...props}
     >
-      <span className="hidden sm:block">Next</span>
-      <ChevronRightIcon />
+      {children ?? (
+        <>
+          <span className="hidden sm:block">{text}</span>
+          <ChevronRightIcon />
+        </>
+      )}
     </PaginationLink>
   )
 }
