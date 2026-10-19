@@ -1,7 +1,6 @@
 import { baseURL } from "@/lib/api";
 import { getErrorMessage } from "@/lib/errors";
 import { Post, PostDelete } from "@/types/blogs";
-import { ProjectFormData } from "@/types/projects";
 import { APIResponse } from "@/types/response";
 import { useMutation } from "@tanstack/react-query";
 

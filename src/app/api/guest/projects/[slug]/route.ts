@@ -1,5 +1,6 @@
 import { withRouteHandler } from "@/lib/api-handler";
 import prisma from "@/lib/prisma";
+import { serializeProject } from "@/lib/serialize";
 import { NextResponse } from "next/server";
 
 type Context = { params: Promise<{ slug: string }> };
@@ -19,12 +20,7 @@ export const GET = withRouteHandler<Context>(
 
     return NextResponse.json({
       success: true,
-      data: {
-        ...project,
-        startDate: project.startDate?.toISOString() ?? null,
-        endDate: project.endDate?.toISOString() ?? null,
-        updatedAt: project.updatedAt.toISOString(),
-      },
+      data: serializeProject(project),
     });
   }
 );

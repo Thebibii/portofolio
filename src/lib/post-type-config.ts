@@ -14,6 +14,9 @@ export type PostTypeConfig = {
   labelPlural: string; // "Blogs" | "Writings"
   revalidatePaths: string[]; // ["/", "/blogs"] dst.
   notFoundMessage: string;
+  detailNotFoundMessage: string;
+  adminNotFoundMessage: string;
+  adminUpdateMessage: string;
   logTag: string;
   features: PostFeatureFlags;
 };
@@ -26,6 +29,9 @@ export const POST_TYPE_CONFIG: Record<PostType, PostTypeConfig> = {
     labelPlural: "Blogs",
     revalidatePaths: ["/", "/blogs"],
     notFoundMessage: "Blog tidak ditemukan",
+    detailNotFoundMessage: "Blog not found",
+    adminNotFoundMessage: "Blog tidak ditemukan",
+    adminUpdateMessage: "Blog berhasil diupdate",
     logTag: "blogs",
     features: { like: true, view: true, comments: false, readingTime: true },
   },
@@ -36,6 +42,9 @@ export const POST_TYPE_CONFIG: Record<PostType, PostTypeConfig> = {
     labelPlural: "Writings",
     revalidatePaths: ["/", "/writings"],
     notFoundMessage: "Writing tidak ditemukan",
+    detailNotFoundMessage: "Writing not found",
+    adminNotFoundMessage: "Writings tidak ditemukan",
+    adminUpdateMessage: "Writings berhasil diupdate",
     logTag: "writings",
     features: { like: true, view: true, comments: false, readingTime: true },
   },

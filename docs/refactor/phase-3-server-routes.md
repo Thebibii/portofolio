@@ -10,13 +10,13 @@
 
 | Langkah | Temuan | Catatan |
 |---|---|---|
-| 3.1 | R-008 | `src/lib/prisma-selects.ts` |
-| 3.2 | R-009 | `src/lib/serialize.ts`; **`publishedAt` tidak diubah/ditambah** (K-4) |
-| 3.3 | R-010 | `get-posts-data.ts` + wrapper lama; config-driven |
-| 3.4 | R-001 | factory handler post guest (list, detail, like, view) berbasis `PostTypeConfig`; **verifikasi cookie `visitor_id` masih ter-set**; `revalidatePath` tetap (K-7) |
-| 3.5 | R-001 | factory handler post admin (list, item, featured) |
-| 3.6 | R-007 | taxonomy API helper |
-| 3.7 | R-020 (sebagian) | hapus import mati, duplikasi hapus-project, `console.log`. **Route `/api/guest*` dan 2 hook-nya TIDAK dihapus** (K-3); tambahkan komentar TODO penanda |
+| 3.1 | R-008 | `src/lib/prisma-selects.ts` — selesai 19 Okt 2026 (5/5 lokasi) |
+| 3.2 | R-009 | `src/lib/serialize.ts`; **`publishedAt` tidak diubah/ditambah** (K-4) — selesai 19 Okt 2026 (6/6 lokasi) |
+| 3.3 | R-010 | `get-posts-data.ts` + wrapper lama; config-driven — selesai 19 Okt 2026 |
+| 3.4 | R-001 | factory handler post guest (list, detail, like, view) berbasis `PostTypeConfig`; **verifikasi cookie `visitor_id` masih ter-set**; `revalidatePath` tetap (K-7) — guest selesai 19 Okt 2026 (8 route) |
+| 3.5 | R-001 | factory handler post admin (list, item, featured) — selesai 19 Okt 2026 (6 route) |
+| 3.6 | R-007 | taxonomy API helper — dilewati 19 Okt 2026 (keputusan user) |
+| 3.7 | R-020 (sebagian) | hapus import mati, duplikasi hapus-project, `console.log`. **Route `/api/guest*` dan 2 hook-nya TIDAK dihapus** (K-3); komentar TODO ditambahkan — selesai 19 Okt 2026 (5 import, `delete-project.tsx` dihapus; 3 `console.log` target sudah tidak ada; `showErrorToast` tidak disentuh) |
 | 3.8 | **K-2 (bagian 2)** | Cek duplikat `Project.slug` → bila kosong: tambah `@unique` + `prisma migrate dev` + `generate`; bila ada duplikat: **tunda migrasi** dan laporkan daftar slug |
 
 **Gate:** semua endpoint guest & admin diuji manual (GET list, GET detail, PATCH like dua kali, PATCH view, CRUD post, CRUD category/tag). Untuk K-2: hasil query duplikat dilampirkan di PR.

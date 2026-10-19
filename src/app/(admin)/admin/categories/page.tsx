@@ -37,14 +37,8 @@ import {
   Hash,
 } from "lucide-react";
 import { toast } from "sonner";
-import { useAdminTag } from "@/hooks/react-query/admin/tag/use-query";
 import { formattedDate } from "@/lib/format-date";
 import { TagWithCount } from "@/types/tags";
-import {
-  useCreateTag,
-  useDeleteTag,
-  useUpdateTag,
-} from "@/hooks/react-query/admin/tag/use-mutation";
 import { useQueryClient } from "@tanstack/react-query";
 import {
   AlertDialog,

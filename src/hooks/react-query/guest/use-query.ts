@@ -2,6 +2,7 @@
 import { baseURL } from "@/lib/api";
 import { useQuery } from "@tanstack/react-query";
 
+// TODO(cleanup): kandidat penghapusan — menunggu konfirmasi pemakaian eksternal (K-3)
 export const useGetDataHome = () => {
   return useQuery({
     queryKey: ["get.guest"],

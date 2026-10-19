@@ -5,6 +5,7 @@ import JsonLd from "@/components/seo/json-ld";
 import { softwareApplicationSchema, breadcrumbSchema } from "@/components/seo/schemas";
 import { buildPostMetadata } from "@/lib/seo/metadata";
 import { SITE_URL } from "@/lib/seo/site";
+import { serializeProject } from "@/lib/serialize";
 import ProjectDetailClient from "./_components/project-detail-client";
 
 type Props = {
@@ -45,12 +46,7 @@ export default async function ProjectDetailPage({ params }: Props) {
 
   if (!project) notFound();
 
-  const serialized = {
-    ...project,
-    startDate: project.startDate?.toISOString() ?? null,
-    endDate: project.endDate?.toISOString() ?? null,
-    updatedAt: project.updatedAt.toISOString(),
-  };
+  const serialized = serializeProject(project);
 
   return (
     <>

@@ -5,6 +5,7 @@ import JsonLd from "@/components/seo/json-ld";
 import { articleSchema, breadcrumbSchema } from "@/components/seo/schemas";
 import { buildPostMetadata } from "@/lib/seo/metadata";
 import { SITE_URL } from "@/lib/seo/site";
+import { serializePost } from "@/lib/serialize";
 import WritingDetailClient from "./_components/writing-detail-client";
 
 type Props = {
@@ -59,7 +60,7 @@ export default async function WritingDetailPage({ params }: Props) {
 
   if (!writing) notFound();
 
-  const serialized = {
+  const serialized = serializePost({
     slug: writing.slug,
     title: writing.title,
     excerpt: writing.excerpt,
@@ -68,11 +69,11 @@ export default async function WritingDetailPage({ params }: Props) {
     viewCount: writing.viewCount,
     readingTime: writing.readingTime,
     tags: writing.tags,
-    createdAt: writing.createdAt.toISOString(),
-    updatedAt: writing.updatedAt.toISOString(),
+    createdAt: writing.createdAt,
+    updatedAt: writing.updatedAt,
     likedByMe: false,
     _count: { likes: writing._count.likes },
-  };
+  });
 
   return (
     <>

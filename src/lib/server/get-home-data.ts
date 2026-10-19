@@ -1,5 +1,6 @@
 import "server-only";
 import prisma from "@/lib/prisma";
+import { postCardSelect } from "@/lib/prisma-selects";
 import { cache } from "react";
 
 export const getHomeData = cache(async () => {
@@ -13,22 +14,7 @@ export const getHomeData = cache(async () => {
       take: 2,
       where: { type: "BLOG", status: "PUBLISHED", featured: true },
       orderBy: { createdAt: "desc" },
-      select: {
-        title: true,
-        excerpt: true,
-        viewCount: true,
-        readingTime: true,
-        coverImage: true,
-        slug: true,
-        category: {
-          select: { name: true, slug: true },
-        },
-        tags: {
-          select: {
-            tag: { select: { name: true, slug: true } },
-          },
-        },
-      },
+      select: postCardSelect,
     }),
   ]);
 

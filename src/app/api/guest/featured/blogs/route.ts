@@ -1,5 +1,6 @@
 import { withRouteHandler } from "@/lib/api-handler";
 import prisma from "@/lib/prisma";
+import { postCardSelect } from "@/lib/prisma-selects";
 import { NextResponse } from "next/server";
 
 export const GET = withRouteHandler("guest/featured/blogs", async () => {
@@ -7,22 +8,7 @@ export const GET = withRouteHandler("guest/featured/blogs", async () => {
     take: 2,
     where: { type: "BLOG", status: "PUBLISHED", featured: true },
     orderBy: { createdAt: "desc" },
-    select: {
-      title: true,
-      excerpt: true,
-      viewCount: true,
-      readingTime: true,
-      coverImage: true,
-      slug: true,
-      category: {
-        select: { name: true, slug: true },
-      },
-      tags: {
-        select: {
-          tag: { select: { name: true, slug: true } },
-        },
-      },
-    },
+    select: postCardSelect,
   });
 
   return NextResponse.json({ success: true, data: blogs });

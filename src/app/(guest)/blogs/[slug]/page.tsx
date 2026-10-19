@@ -5,6 +5,7 @@ import JsonLd from "@/components/seo/json-ld";
 import { articleSchema, breadcrumbSchema } from "@/components/seo/schemas";
 import { buildPostMetadata } from "@/lib/seo/metadata";
 import { SITE_URL } from "@/lib/seo/site";
+import { serializePost } from "@/lib/serialize";
 import BlogDetailClient from "./_components/blog-detail-client";
 
 type Props = {
@@ -59,7 +60,7 @@ export default async function BlogDetailPage({ params }: Props) {
 
   if (!blog) notFound();
 
-  const serialized = {
+  const serialized = serializePost({
     slug: blog.slug,
     title: blog.title,
     excerpt: blog.excerpt,
@@ -68,11 +69,11 @@ export default async function BlogDetailPage({ params }: Props) {
     viewCount: blog.viewCount,
     readingTime: blog.readingTime,
     tags: blog.tags,
-    createdAt: blog.createdAt.toISOString(),
-    updatedAt: blog.updatedAt.toISOString(),
+    createdAt: blog.createdAt,
+    updatedAt: blog.updatedAt,
     likedByMe: false,
     _count: { likes: blog._count.likes },
-  };
+  });
 
   return (
     <>

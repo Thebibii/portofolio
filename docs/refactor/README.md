@@ -140,16 +140,16 @@ Fase 0 ──► Fase 1 ──► Fase 2 ──► Fase 3 ──► Fase 4 ─�
 
 ### Reusability
 
-- [ ] R-001 — Route API Blog/Writing identik (4 pasang + featured) — **config-driven** (K-1)
+- [x] R-001 — Route API Blog/Writing identik (4 pasang + featured) — **config-driven** (K-1)
 - [ ] R-002 — Hook React Query Blog/Writing identik — **config-driven** (K-1)
 - [x] R-003 — `postSchema` (5 salinan) & `listQuerySchema` (2 salinan)
 - [x] R-004 — `projectSchema` 4× (schema selesai; gabung form create/edit ditunda)
 - [ ] R-005 — Komponen client Blog/Writing (list 557/547, detail 189/192) — reset page 1 (K-5)
 - [ ] R-006 — Halaman admin blogs/writings identik + judul edit (K-9)
 - [ ] R-007 — CRUD taxonomy Category/Tag (API + hook + halaman)
-- [ ] R-008 — Bentuk `select` post 5×
-- [ ] R-009 — Serialisasi tanggal 6×
-- [ ] R-010 — `getBlogsData` vs `getWritingsData` — config-driven (K-1)
+- [x] R-008 — Bentuk `select` post 5×
+- [x] R-009 — Serialisasi tanggal 6×
+- [x] R-010 — `getBlogsData` vs `getWritingsData` — config-driven (K-1)
 - [ ] R-011 — Utilitas slug (typo nama) + `Project.slug @unique` dengan cek duplikat dulu (K-2)
 - [x] R-012 — Base URL & metadata SEO 13× + `NEXT_PUBLIC_SITE_URL` (K-10)
 - [ ] R-013 — Key React Query literal
@@ -159,7 +159,7 @@ Fase 0 ──► Fase 1 ──► Fase 2 ──► Fase 3 ──► Fase 4 ─�
 - [ ] R-017 — Empty/loading state belum berpreset
 - [ ] R-018 — Format tanggal tersebar
 - [x] R-019 — Duplikasi tipe & `any`
-- [ ] R-020 — Dead code & import tak terpakai (route `/api/guest*` **dikecualikan**, K-3)
+- [x] R-020 — Dead code & import tak terpakai (route `/api/guest*` **dikecualikan**, K-3) — bagian yang diizinkan selesai 19 Okt 2026; route/hook ditunda
 - [x] R-021 — 22 hook `.tsx` tanpa JSX
 - [ ] R-022 — Dua implementasi upload Supabase
 - [x] R-023 — Skeleton tak terpakai & penamaan

@@ -3,10 +3,7 @@ import { FormCreatePost } from "@/components/reusable/admin/blogs/form-create-po
 import { PostFormSkeleton } from "@/components/reusable/skeleton/post-form-skeleton";
 import LoadingState from "@/components/reusable/state/loading-state";
 import { Button } from "@/components/ui/button";
-import {
-  useCreateBlog,
-  useUpdateBlog,
-} from "@/hooks/react-query/admin/blogs/use-mutation";
+import { useUpdateBlog } from "@/hooks/react-query/admin/blogs/use-mutation";
 import { useAdminBlogBySlug } from "@/hooks/react-query/admin/blogs/use-query";
 import { useAdminCategory } from "@/hooks/react-query/admin/category/use-query";
 import { useAdminTag } from "@/hooks/react-query/admin/tag/use-query";
