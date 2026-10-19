@@ -26,7 +26,7 @@ export default function DeleteProject({
     onSuccess: (body) => {
       queryClient.invalidateQueries({ queryKey: ["get.admin.projects"] });
       toast.success("Success", {
-        description: body.message,
+        description: body.message ?? "Success",
       });
     },
     onError(error) {

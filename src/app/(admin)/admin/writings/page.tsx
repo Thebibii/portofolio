@@ -88,7 +88,7 @@ function AdminWritingsContent() {
   const { mutate } = useDeleteWriting({
     onSuccess: (body) => {
       toast.success("Success", {
-        description: body.message,
+        description: body.message ?? "Success",
       });
       queryClient.invalidateQueries({ queryKey: ["get.admin.writings"] });
       // Deleting the last item of a page past the first one: step back so the
@@ -101,7 +101,7 @@ function AdminWritingsContent() {
 
   const { mutate: toggleFeatured } = useToggleFeaturedPost({
     onSuccess: (body) => {
-      toast.success(body.message);
+      toast.success(body.message ?? "Success");
       queryClient.invalidateQueries({ queryKey: ["get.admin.writings"] });
     },
     onError: (error) => {

@@ -1,18 +1,14 @@
 import { baseURL } from "@/lib/api";
 import { getErrorMessage } from "@/lib/errors";
 import { APIResponse } from "@/types/response";
+import type { TagFormData } from "@/types/tags";
 import { useMutation } from "@tanstack/react-query";
-
-export interface TagFormData {
-  name: string;
-  color?: string;
-}
 
 export const useCreateCategory = ({
   onSuccess,
   onError,
 }: {
-  onSuccess: (body: APIResponse) => void;
+  onSuccess: (body: APIResponse<{ name: string }>) => void;
   onError?: (body: any) => void;
 }) => {
   return useMutation({
@@ -51,7 +47,7 @@ export const useUpdateCategory = ({
   onError,
 }: {
   id: string;
-  onSuccess: (body: APIResponse) => void;
+  onSuccess: (body: APIResponse<{ name: string }>) => void;
   onError?: (body: any) => void;
 }) => {
   return useMutation({
@@ -88,7 +84,7 @@ export const useDeleteCategory = ({
   onSuccess,
   onError,
 }: {
-  onSuccess: (body: APIResponse) => void;
+  onSuccess: (body: APIResponse<{ id: string; name: string }>) => void;
   onError?: (body: any) => void;
 }) => {
   return useMutation({

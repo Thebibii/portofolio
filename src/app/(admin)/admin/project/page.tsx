@@ -24,7 +24,7 @@ export default function Page() {
   const { mutate: deleteProject } = useDeleteProject({
     onSuccess: (body) => {
       toast.success("Success", {
-        description: body.message,
+        description: body.message ?? "Success",
       });
       queryClient.invalidateQueries({ queryKey: ["get.admin.projects"] });
     },
@@ -32,7 +32,7 @@ export default function Page() {
 
   const { mutate: toggleFeatured } = useToggleFeaturedProject({
     onSuccess: (body) => {
-      toast.success(body.message);
+      toast.success(body.message ?? "Success");
       queryClient.invalidateQueries({ queryKey: ["get.admin.projects"] });
     },
     onError: (error) => {

@@ -17,7 +17,6 @@ import {
 import { toast } from "sonner";
 import { CurrentActivity } from "@prisma/client";
 import { useQueryClient } from "@tanstack/react-query";
-import { APIResponse } from "@/types/response";
 import LoadingState from "@/components/reusable/state/loading-state";
 import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
@@ -46,15 +45,15 @@ export default function Page() {
   const { mutate } = useUpsertCurrentActivity({
     onSuccess: (body) => {
       toast.success("Success", {
-        description: body.message,
+        description: body.message ?? "Success",
       });
     },
   });
 
   const { mutate: deleted } = useDeleteCurrentActivity({
-    onSuccess: (body: APIResponse) => {
+    onSuccess: (body) => {
       toast.success("Success", {
-        description: body.message,
+        description: body.message ?? "Success",
       });
       queryClient.invalidateQueries({ queryKey: ["get.admin.about"] });
     },

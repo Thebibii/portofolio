@@ -8,7 +8,7 @@ export const useCreateWriting = ({
   onSuccess,
   onError,
 }: {
-  onSuccess: (body: APIResponse) => void;
+  onSuccess: (body: APIResponse<{ title: string }>) => void;
   onError?: (body: any) => void;
 }) => {
   return useMutation({
@@ -45,7 +45,7 @@ export const useDeleteWriting = ({
   onSuccess,
   onError,
 }: {
-  onSuccess: (body: APIResponse) => void;
+  onSuccess: (body: APIResponse<{ id: string }>) => void;
   onError?: (body: any) => void;
 }) => {
   return useMutation({
@@ -84,7 +84,7 @@ export const useUpdateWriting = ({
   onError,
 }: {
   slug: string;
-  onSuccess: (body: APIResponse) => void;
+  onSuccess: (body: APIResponse<{ title: string }>) => void;
   onError?: (body: any) => void;
 }) => {
   return useMutation({

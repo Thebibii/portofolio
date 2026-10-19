@@ -38,7 +38,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { useAdminTag } from "@/hooks/react-query/admin/tag/use-query";
-import { Tag } from "@/types/tags";
+import { TagWithCount } from "@/types/tags";
 import {
   useCreateTag,
   useDeleteTag,
@@ -73,7 +73,7 @@ export default function Page() {
     color: "#3B82F6",
   });
 
-  const filteredTags = data?.data?.filter((tag: Tag) =>
+  const filteredTags = data?.data?.filter((tag: TagWithCount) =>
     tag?.name?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -247,7 +247,7 @@ export default function Page() {
           </CardHeader>
           <CardContent>
             <div className="flex flex-wrap gap-2">
-              {popularTags?.map((tag: Tag) => (
+              {popularTags?.map((tag: TagWithCount) => (
                 <Badge
                   key={tag.id}
                   variant="secondary"
@@ -303,7 +303,7 @@ export default function Page() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredTags?.map((tag: Tag) => (
+                {filteredTags?.map((tag: TagWithCount) => (
                   <TableRow
                     key={tag.id}
                     className="hover:bg-admin-sidebar-active/20"

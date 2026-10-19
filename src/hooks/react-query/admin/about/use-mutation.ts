@@ -1,14 +1,14 @@
 import { baseURL } from "@/lib/api";
 import { getErrorMessage } from "@/lib/errors";
 import { APIResponse } from "@/types/response";
-import { Experience } from "@prisma/client";
+import { CurrentActivity, Experience } from "@prisma/client";
 import { useMutation } from "@tanstack/react-query";
 
 export const useUpsertExperiences = ({
   onSuccess,
   onError,
 }: {
-  onSuccess: (body: APIResponse) => void;
+  onSuccess: (body: APIResponse<Experience[]>) => void;
   onError?: (body: any) => void;
 }) => {
   return useMutation({
@@ -47,7 +47,7 @@ export const useDeleteExperience = ({
   onSuccess,
   onError,
 }: {
-  onSuccess: (body: APIResponse) => void;
+  onSuccess: (body: APIResponse<{ id: number }>) => void;
   onError?: (body: any) => void;
 }) => {
   return useMutation({
@@ -87,7 +87,7 @@ export const useUpsertCurrentActivity = ({
   onSuccess,
   onError,
 }: {
-  onSuccess: (body: APIResponse) => void;
+  onSuccess: (body: APIResponse<CurrentActivity[]>) => void;
   onError?: (body: any) => void;
 }) => {
   return useMutation({
@@ -126,7 +126,7 @@ export const useDeleteCurrentActivity = ({
   onSuccess,
   onError,
 }: {
-  onSuccess: (body: APIResponse) => void;
+  onSuccess: (body: APIResponse<{ id: number }>) => void;
   onError?: (body: any) => void;
 }) => {
   return useMutation({

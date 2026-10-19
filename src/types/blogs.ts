@@ -1,3 +1,7 @@
+import type { Tag } from "@/types/tags";
+
+export type { Tag };
+
 export enum PostStatus {
   DRAFT = "DRAFT",
   PUBLISHED = "PUBLISHED",
@@ -34,15 +38,6 @@ export interface Category {
   name: string;
   slug: string;
   description?: string;
-  color?: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-export interface Tag {
-  id: string;
-  name: string;
-  slug: string;
   color?: string;
   createdAt: Date;
   updatedAt: Date;

@@ -9,7 +9,7 @@ export const useCreateBlog = ({
   onSuccess,
   onError,
 }: {
-  onSuccess: (body: APIResponse) => void;
+  onSuccess: (body: APIResponse<{ title: string }>) => void;
   onError?: (body: any) => void;
 }) => {
   return useMutation({
@@ -44,7 +44,7 @@ export const useDeleteBlog = ({
   onSuccess,
   onError,
 }: {
-  onSuccess: (body: APIResponse) => void;
+  onSuccess: (body: APIResponse<{ id: string }>) => void;
   onError?: (body: any) => void;
 }) => {
   return useMutation({
@@ -79,7 +79,7 @@ export const useToggleFeaturedPost = ({
   onSuccess,
   onError,
 }: {
-  onSuccess: (body: APIResponse) => void;
+  onSuccess: (body: APIResponse<{ title: string }>) => void;
   onError?: (body: any) => void;
 }) => {
   return useMutation({
@@ -128,7 +128,7 @@ export const useUpdateBlog = ({
   onError,
 }: {
   slug: string;
-  onSuccess: (body: APIResponse) => void;
+  onSuccess: (body: APIResponse<{ title: string }>) => void;
   onError?: (body: any) => void;
 }) => {
   return useMutation({

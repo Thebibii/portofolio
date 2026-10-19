@@ -2,13 +2,14 @@ import { baseURL } from "@/lib/api";
 import { getErrorMessage } from "@/lib/errors";
 import { ProjectFormData } from "@/types/projects";
 import { APIResponse } from "@/types/response";
+import { Project } from "@prisma/client";
 import { useMutation } from "@tanstack/react-query";
 
 export const useCreateProject = ({
   onSuccess,
   onError,
 }: {
-  onSuccess: (body: APIResponse) => void;
+  onSuccess: (body: APIResponse<Project>) => void;
   onError?: (body: any) => void;
 }) => {
   return useMutation({
@@ -45,7 +46,7 @@ export const useDeleteProject = ({
   onSuccess,
   onError,
 }: {
-  onSuccess: (body: APIResponse) => void;
+  onSuccess: (body: APIResponse<{ id: string }>) => void;
   onError?: (body: any) => void;
 }) => {
   return useMutation({
@@ -82,7 +83,7 @@ export const useToggleFeaturedProject = ({
   onSuccess,
   onError,
 }: {
-  onSuccess: (body: APIResponse) => void;
+  onSuccess: (body: APIResponse<Project>) => void;
   onError?: (body: any) => void;
 }) => {
   return useMutation({
@@ -128,7 +129,7 @@ export const useUpdateProject = ({
   onError,
 }: {
   id: string;
-  onSuccess: (body: APIResponse) => void;
+  onSuccess: (body: APIResponse<Project>) => void;
   onError?: (body: any) => void;
 }) => {
   return useMutation({

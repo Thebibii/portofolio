@@ -88,7 +88,7 @@ export default function FormEditProject({
       queryClient.invalidateQueries({ queryKey: ["get.admin.projects"] });
       queryClient.invalidateQueries({ queryKey: ["get.admin.project", id] });
       toast.success("Success", {
-        description: body.message,
+        description: body.message ?? "Success",
       });
       router.back();
     },

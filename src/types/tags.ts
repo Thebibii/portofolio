@@ -5,7 +5,18 @@ export interface Tag {
   color?: string;
   createdAt: Date;
   updatedAt: Date;
+  _count?: {
+    posts: number;
+  };
+}
+
+export interface TagWithCount extends Tag {
   _count: {
     posts: number;
   };
+}
+
+export interface TagFormData {
+  name: string;
+  color?: string;
 }

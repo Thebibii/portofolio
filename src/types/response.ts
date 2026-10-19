@@ -1,1 +1,3 @@
-export type APIResponse = { data: any; message: string; success?: number };
+import type { ApiSuccess } from "@/types/api";
+
+export type APIResponse<T = unknown> = ApiSuccess<T>;
