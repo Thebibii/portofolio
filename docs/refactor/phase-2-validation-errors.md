@@ -29,6 +29,8 @@
 - [x] R-004 — `projectSchema` (4 salinan) disentralisasi ke `src/types/validation/project.ts`; gabung form create/edit ditunda
 - [x] E-001 — 9 file error `{ message }` → `{ error }`; hook admin membaca `data.error` (success `{ data, message }` tetap)
 - [x] E-004 — `mapPrismaError` dipasang di 9 file update/delete by unique key + create routes; manual `P2025`/`P2002` = 0. `Like @@unique` P2002 ditunda: butuh penanganan idempotent, bukan 409
+- [x] E-005 — 14 `.parse(` dimigrasikan ke `parseJsonBody`/`parseSearchParams`; sisa `.parse(` di `src/app/api` = 0; catch Zod lama dibersihkan di E-003
+- [x] E-009 — `parseInt` dihapus; `guestPostListQuerySchema` + `parseId`; query invalid fallback 10/1, ID invalid 400
 - [ ] `taxonomy.ts` — ditunda (tidak ada schema taxonomy di R-003/R-004; R-007 ada di fase lain)
 
 ---
