@@ -62,7 +62,7 @@ export const useDeleteProject = ({
         if (!res.ok) {
           const data = await res.json().catch(() => ({}));
 
-          throw new Error(data.message || "Gagal membuat project");
+          throw new Error(data.error || "Gagal membuat project");
         }
 
         return res.json();
@@ -104,7 +104,7 @@ export const useToggleFeaturedProject = ({
 
         if (!res.ok) {
           const data = await res.json().catch(() => ({}));
-          throw new Error(data.message || "Gagal mengubah featured status");
+          throw new Error(data.error || "Gagal mengubah featured status");
         }
 
         return res.json();
@@ -143,7 +143,7 @@ export const useUpdateProject = ({
         if (!res.ok) {
           const data = await res.json().catch(() => ({}));
 
-          throw new Error(data.message || "Gagal mengedit project");
+          throw new Error(data.error || "Gagal mengedit project");
         }
 
         return res.json();

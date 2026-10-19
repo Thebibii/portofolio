@@ -62,7 +62,7 @@ export const useDeleteWriting = ({
         if (!res.ok) {
           const data = await res.json().catch(() => ({}));
 
-          throw new Error(data.message || "Gagal menghapus blog");
+          throw new Error(data.error || "Gagal menghapus blog");
         }
 
         return res.json();
@@ -101,7 +101,7 @@ export const useUpdateWriting = ({
         if (!res.ok) {
           const data = await res.json().catch(() => ({}));
 
-          throw new Error(data.message || "Gagal mengedit slug");
+          throw new Error(data.error || "Gagal mengedit slug");
         }
 
         return res.json();

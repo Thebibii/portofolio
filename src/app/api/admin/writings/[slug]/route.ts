@@ -32,7 +32,7 @@ export async function GET(
 
     if (!data) {
       return NextResponse.json(
-        { message: "Writings tidak ditemukan" },
+        { error: "Writings tidak ditemukan" },
         { status: 404 }
       );
     }
@@ -41,7 +41,7 @@ export async function GET(
   } catch (error) {
     console.error("Error fetching writing:", error);
     return NextResponse.json(
-      { message: "Terjadi kesalahan pada server" },
+      { error: "Terjadi kesalahan pada server" },
       { status: 500 }
     );
   }
@@ -69,7 +69,7 @@ export async function PUT(
 
     if (!existingBlog) {
       return NextResponse.json(
-        { message: `Writings tidak ditemukan` },
+        { error: `Writings tidak ditemukan` },
         { status: 404 }
       );
     }
@@ -155,7 +155,7 @@ export async function DELETE(
 
     if (!existingWriting) {
       return NextResponse.json(
-        { message: `Writing tidak ditemukan` },
+        { error: `Writing tidak ditemukan` },
         { status: 404 }
       );
     }

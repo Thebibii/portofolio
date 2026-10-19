@@ -23,7 +23,7 @@ export async function PATCH(
     const existing = await prisma.post.findUnique({ where: { slug } });
     if (!existing) {
       return NextResponse.json(
-        { message: "Post tidak ditemukan" },
+        { error: "Post tidak ditemukan" },
         { status: 404 }
       );
     }

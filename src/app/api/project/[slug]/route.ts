@@ -40,7 +40,7 @@ export async function GET(
 
     if (!data) {
       return NextResponse.json(
-        { message: "Project tidak ditemukan" },
+        { error: "Project tidak ditemukan" },
         { status: 404 }
       );
     }
@@ -49,7 +49,7 @@ export async function GET(
   } catch (error) {
     console.error("Error fetching project:", error);
     return NextResponse.json(
-      { message: "Terjadi kesalahan pada server" },
+      { error: "Terjadi kesalahan pada server" },
       { status: 500 }
     );
   }
@@ -66,7 +66,7 @@ export async function DELETE(
     const { slug } = await params;
 
     if (!slug) {
-      return NextResponse.json({ message: "ID is required" }, { status: 400 });
+      return NextResponse.json({ error: "ID is required" }, { status: 400 });
     }
 
     const project = await prisma.project.findUnique({
@@ -80,7 +80,7 @@ export async function DELETE(
     });
 
     if (!project) {
-      return NextResponse.json({ message: "Project not found" }, { status: 404 });
+      return NextResponse.json({ error: "Project not found" }, { status: 404 });
     }
 
     if (project.longDescription) {
@@ -115,11 +115,11 @@ export async function DELETE(
 } catch (error: any) {
     // mapping error Prisma jadi pesan user-friendly
     if (error.code === "P2025") {
-      return NextResponse.json({ message: "Data not found" }, { status: 404 });
+      return NextResponse.json({ error: "Data not found" }, { status: 404 });
     }
     console.error(error); // untuk log internal
     return NextResponse.json(
-      { message: "Internal server error" },
+      { error: "Internal server error" },
       { status: 500 }
     );
   }
@@ -145,7 +145,7 @@ export async function PUT(
     });
     if (!existingProject) {
       return NextResponse.json(
-        { message: `Project tidak ditemukan` },
+        { error: `Project tidak ditemukan` },
         { status: 404 }
       );
     }

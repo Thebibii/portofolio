@@ -65,7 +65,7 @@ export const useDeleteExperience = ({
         if (!res.ok) {
           const data = await res.json().catch(() => ({}));
 
-          throw new Error(data.message || "Gagal membuat category");
+          throw new Error(data.error || "Gagal membuat category");
         }
 
         return res.json();
@@ -142,7 +142,7 @@ export const useDeleteCurrentActivity = ({
         if (!res.ok) {
           const data = await res.json().catch(() => ({}));
 
-          throw new Error(data.message || "Gagal membuat category");
+          throw new Error(data.error || "Gagal membuat category");
         }
 
         return res.json();

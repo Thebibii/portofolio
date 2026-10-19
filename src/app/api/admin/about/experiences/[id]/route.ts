@@ -13,7 +13,7 @@ export async function DELETE(
     const { id } = await params;
 
     if (!id) {
-      return NextResponse.json({ message: "ID is required" }, { status: 400 });
+      return NextResponse.json({ error: "ID is required" }, { status: 400 });
     }
 
     const data = await prisma.experience.delete({
@@ -28,11 +28,11 @@ export async function DELETE(
   } catch (error: any) {
     // mapping error Prisma jadi pesan user-friendly
     if (error.code === "P2025") {
-      return NextResponse.json({ message: "Data not found" }, { status: 404 });
+      return NextResponse.json({ error: "Data not found" }, { status: 404 });
     }
     console.error(error); // untuk log internal
     return NextResponse.json(
-      { message: "Internal server error" },
+      { error: "Internal server error" },
       { status: 500 }
     );
   }
