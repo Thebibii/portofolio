@@ -36,7 +36,7 @@ Struktur project sudah sehat: route group `(guest)/(admin)/(auth)` jelas, server
 - **K-3** — `/api/guest` dan `/api/guest/projects` **tidak dihapus** di refactor ini; hanya dicatat sebagai kandidat di fase terpisah.
 - **K-7** — `revalidatePath("/")` pada view **dipertahankan**; optimasi performa di luar scope.
 - **K-8** — pemindahan `/api/project/**` → `/api/admin/projects/**` **tidak dilakukan sekarang**; menjadi fase opsional terakhir.
-- **K-12** — belum ada CI; sebagai gantinya ditambahkan script `verify` (`tsc` + `lint` + `build`) di Fase 0.
+- **K-12** — belum ada CI; sebagai gantinya ditambahkan script `verify` (`tsc` + `lint`) di Fase 0, `build` dijalankan manual.
 
 ---
 
@@ -182,7 +182,7 @@ Fase 0 ──► Fase 1 ──► Fase 2 ──► Fase 3 ──► Fase 4 ─�
 - [x] K-1 … K-12 dijawab (19 Okt 2026) — lihat [decisions.md](./decisions.md)
 - [x] K-13 — `AppError` minimal (`status`, `code`) — diputuskan
 - [x] K-14 — `unstable_rethrow` disetujui & dipakai paling awal di `catch`
-- [ ] Fase 0 — script `verify` + `NEXT_PUBLIC_SITE_URL` di `.env.example`
+- [x] Fase 0 — script `verify` (`typecheck` + `lint`) + `NEXT_PUBLIC_SITE_URL` di `.env.example` — selesai; gate belum hijau karena error `eslint.config.mjs` pre-existing (lihat [phase-0-verify.md](./phase-0-verify.md#hasil-eksekusi-19-oktober-2026))
 - [ ] Env `NEXT_PUBLIC_SITE_URL` diset di Vercel Production + Preview (di luar repo)
 - [ ] K-2 — query cek duplikat `Project.slug` dijalankan & hasilnya dilampirkan
 - [ ] Fase 6 — persetujuan terpisah untuk K-3/K-8/K-7/K-4
@@ -205,10 +205,11 @@ npm run lint              # next lint, ESLint 9 flat config
 npm run build             # pastikan App Router & route handler valid
 ```
 
-Setelah Fase 0, ketiganya dibungkus menjadi satu perintah:
+Setelah Fase 0, `typecheck` + `lint` dibungkus menjadi satu perintah; `build` tetap terpisah:
 
 ```bash
-npm run verify            # typecheck && lint && build
+npm run verify            # typecheck && lint
+npm run build             # manual, tidak termasuk verify
 ```
 
 Catatan: project **tidak punya test framework** dan tidak ada CI (K-12) — verifikasi bergantung pada `verify` plus manual check. Jangan mengklaim "aman" hanya dari `tsc` untuk perubahan UI.

@@ -19,7 +19,7 @@ Seluruh pertanyaan **K-1…K-14 sudah dijawab** pada 19 Oktober 2026. Kolom **Da
 | **K-9** | **Ya**, perbaiki judul halaman edit. | R-006 (`config` menyediakan judul), Fase 5 | ✅ Terjawab |
 | **K-10** | **Ya**, `NEXT_PUBLIC_SITE_URL` dengan fallback URL produksi. Catat env untuk Vercel (Production + Preview) dan `.env` lokal. | R-012, Fase 0 & 1 | ✅ Terjawab |
 | **K-11** | **Konservatif**: wrapper hanya menangani error dikenal (AppError, Prisma, Zod) dan **melempar ulang** sisanya. Jangan import `isRedirectError` dari internal Next. Cek `unstable_rethrow`. | E-003 ditulis ulang; Next **15.4.8**, `unstable_rethrow` tersedia | ✅ Terjawab |
-| **K-12** | Belum ada CI. Tambahkan script **`verify`** (`tsc` + `lint` + `build`) di fase pertama. Cek `ignoreBuildErrors`/`eslint.ignoreDuringBuilds`. | Fase 0 diubah; hasil cek: `next.config.ts` **tidak** memakai keduanya | ✅ Terjawab |
+| **K-12** | Belum ada CI. Tambahkan script **`verify`** (`tsc` + `lint`; `build` dijalankan manual) di fase pertama. Cek `ignoreBuildErrors`/`eslint.ignoreDuringBuilds`. | Fase 0 diubah; hasil cek: `next.config.ts` **tidak** memakai keduanya | ✅ Terjawab |
 
 ### 6.2 Temuan pendukung K-11 dan K-12
 
@@ -48,7 +48,7 @@ Konsekuensi desain: `withRouteHandler` **melempar ulang semua error tak dikenal*
 | CI | **tidak ada** `.github/workflows` | — |
 | `.env.example` | ada; **belum** memuat `NEXT_PUBLIC_SITE_URL` | perlu ditambah (K-10) |
 
-Artinya: menambahkan `verify` memberi nilai tambah nyata karena `next build` memang gagal pada type error, tetapi `verify` memisahkan tahap `tsc --noEmit` (lebih cepat, tanpa bundling) dan `lint` (bisa dijalankan sebelum build). Tidak ada "lubang" `ignoreBuildErrors` yang perlu ditutup.
+Artinya: menambahkan `verify` memberi nilai tambah nyata karena `next build` memang gagal pada type error, tetapi `verify` memisahkan tahap `tsc --noEmit` (lebih cepat, tanpa bundling) dan `lint`. `build` tetap dijalankan manual karena durasinya lama. Tidak ada "lubang" `ignoreBuildErrors` yang perlu ditutup.
 
 ### 6.3 Pertanyaan lanjutan (sudah terjawab)
 
