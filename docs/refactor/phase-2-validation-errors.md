@@ -28,6 +28,7 @@
 - [x] R-003 — `postSchema` (5 salinan) & `listQuerySchema` (2 salinan) disentralisasi ke `src/types/validation/post.ts`
 - [x] R-004 — `projectSchema` (4 salinan) disentralisasi ke `src/types/validation/project.ts`; gabung form create/edit ditunda
 - [x] E-001 — 9 file error `{ message }` → `{ error }`; hook admin membaca `data.error` (success `{ data, message }` tetap)
+- [x] E-004 — `mapPrismaError` dipasang di 9 file update/delete by unique key + create routes; manual `P2025`/`P2002` = 0. `Like @@unique` P2002 ditunda: butuh penanganan idempotent, bukan 409
 - [ ] `taxonomy.ts` — ditunda (tidak ada schema taxonomy di R-003/R-004; R-007 ada di fase lain)
 
 ---
