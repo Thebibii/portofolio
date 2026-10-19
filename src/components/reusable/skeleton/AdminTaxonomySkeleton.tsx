@@ -18,7 +18,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-export default function AdminTagsSkeleton() {
+export default function AdminTaxonomySkeleton() {
   return (
     <div className="space-y-6 animate-pulse">
       {/* Header */}

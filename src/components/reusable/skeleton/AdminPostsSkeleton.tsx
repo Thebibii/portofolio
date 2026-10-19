@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 
-export function AdminBlogsSkeleton() {
+export function AdminPostsSkeleton() {
   return (
     <div className="flex flex-col space-y-6">
       <div className="flex justify-between">

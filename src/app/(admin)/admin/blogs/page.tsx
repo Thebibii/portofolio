@@ -2,7 +2,7 @@
 import { Suspense } from "react";
 import { AdminBlogsCard } from "@/components/reusable/admin/blogs/admin-blogs-card";
 import SearchContent from "@/components/reusable/admin/search-content";
-import { AdminBlogsSkeleton } from "@/components/reusable/skeleton/AdminBlogsSkeleton";
+import { AdminPostsSkeleton } from "@/components/reusable/skeleton/AdminPostsSkeleton";
 import EmptyState from "@/components/reusable/state/empty-state";
 import LoadingState from "@/components/reusable/state/loading-state";
 import { Button } from "@/components/ui/button";
@@ -121,7 +121,7 @@ function AdminBlogsContent() {
 
   return (
     <div className="flex flex-col space-y-6">
-      <LoadingState data={!isLoading} loadingFallback={<AdminBlogsSkeleton />}>
+      <LoadingState data={!isLoading} loadingFallback={<AdminPostsSkeleton />}>
         <div className="flex items-center justify-between">
           <h2 className="text-3xl font-bold text-foreground">Blogs</h2>
           <Button asChild>
@@ -211,7 +211,7 @@ function AdminBlogsContent() {
 
 export default function Page() {
   return (
-    <Suspense fallback={<AdminBlogsSkeleton />}>
+    <Suspense fallback={<AdminPostsSkeleton />}>
       <AdminBlogsContent />
     </Suspense>
   );

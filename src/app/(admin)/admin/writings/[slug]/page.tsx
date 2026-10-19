@@ -1,6 +1,6 @@
 "use client";
 import { FormCreatePost } from "@/components/reusable/admin/blogs/form-create-post";
-import { BlogFormSkeleton } from "@/components/reusable/skeleton/blog-form-skeleton";
+import { PostFormSkeleton } from "@/components/reusable/skeleton/post-form-skeleton";
 import LoadingState from "@/components/reusable/state/loading-state";
 import { useAdminCategory } from "@/hooks/react-query/admin/category/use-query";
 import { useAdminTag } from "@/hooks/react-query/admin/tag/use-query";
@@ -63,7 +63,7 @@ export default function Page() {
 
       <LoadingState
         data={!isLoadingTag && !isLoadingCategories && !isLoadingPost}
-        loadingFallback={<BlogFormSkeleton />}
+        loadingFallback={<PostFormSkeleton />}
       >
         {/* Form */}
         <FormCreatePost

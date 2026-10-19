@@ -58,7 +58,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import LoadingState from "@/components/reusable/state/loading-state";
-import AdminTagsSkeleton from "@/components/reusable/skeleton/AdminTagsSkeleton";
+import AdminTaxonomySkeleton from "@/components/reusable/skeleton/AdminTaxonomySkeleton";
 import { Icons } from "@/components/icons";
 import { useAdminCategory } from "@/hooks/react-query/admin/category/use-query";
 import {
@@ -151,7 +151,7 @@ export default function Page() {
     .slice(0, 6);
 
   return (
-    <LoadingState data={!isLoadingData} loadingFallback={<AdminTagsSkeleton />}>
+    <LoadingState data={!isLoadingData} loadingFallback={<AdminTaxonomySkeleton />}>
       <div className="space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">

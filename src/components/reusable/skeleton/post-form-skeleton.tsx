@@ -3,7 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
-export function BlogFormSkeleton() {
+export function PostFormSkeleton() {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-pulse">
       {/* Main Content */}
