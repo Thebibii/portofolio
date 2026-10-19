@@ -1,15 +1,14 @@
 import prisma from "@/lib/prisma";
 import { requireAdmin } from "@/lib/require-admin";
-import { errors } from "@/lib/api-error";
-import { mapPrismaError } from "@/lib/prisma-error";
+import { withRouteHandler } from "@/lib/api-handler";
 import { parseId } from "@/lib/validate";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  try {
+type Context = { params: Promise<{ id: string }> };
+
+export const DELETE = withRouteHandler<Context>(
+  "admin/about/current-activities/:id",
+  async (_req, { params }) => {
     const { session, response } = await requireAdmin();
     if (response) return response;
 
@@ -33,13 +32,5 @@ export async function DELETE(
       { data, message: "Data deleted successfully", success: true },
       { status: 200 }
     );
-  } catch (error) {
-    const mapped = mapPrismaError(error);
-    if (mapped) return errors.mapped(mapped);
-    console.error(error); // untuk log internal
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    );
   }
-}
+);

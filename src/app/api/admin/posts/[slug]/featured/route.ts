@@ -1,7 +1,6 @@
 import prisma from "@/lib/prisma";
 import { requireAdmin } from "@/lib/require-admin";
-import { errors } from "@/lib/api-error";
-import { mapPrismaError } from "@/lib/prisma-error";
+import { withRouteHandler } from "@/lib/api-handler";
 import { parseJsonBody } from "@/lib/validate";
 import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
@@ -11,11 +10,11 @@ const featuredSchema = z.object({
   featured: z.boolean(),
 });
 
-export async function PATCH(
-  req: NextRequest,
-  { params }: { params: Promise<{ slug: string }> }
-) {
-  try {
+type Context = { params: Promise<{ slug: string }> };
+
+export const PATCH = withRouteHandler<Context>(
+  "admin/posts/:slug/featured",
+  async (req: NextRequest, { params }) => {
     const { session, response } = await requireAdmin();
     if (response) return response;
 
@@ -45,20 +44,5 @@ export async function PATCH(
       { data, success: true, message: "Featured status updated" },
       { status: 200 }
     );
-  } catch (error) {
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: error.issues.map((e) => e.message) },
-        { status: 400 }
-      );
-    }
-    const mapped = mapPrismaError(error);
-    if (mapped) return errors.mapped(mapped);
-
-    console.error("[admin/posts/:slug/featured] failed:", error);
-    return NextResponse.json(
-      { error: "Terjadi kesalahan pada server" },
-      { status: 500 }
-    );
   }
-}
+);

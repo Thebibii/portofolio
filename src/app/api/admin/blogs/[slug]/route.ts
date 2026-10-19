@@ -1,23 +1,21 @@
 import prisma from "@/lib/prisma";
 import { requireAdmin } from "@/lib/require-admin";
-import { errors } from "@/lib/api-error";
-import { mapPrismaError } from "@/lib/prisma-error";
+import { withRouteHandler } from "@/lib/api-handler";
 import { parseJsonBody } from "@/lib/validate";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import { PostType } from "@/types/blogs";
 import { deleteImage, extractPathFromUrl } from "@/lib/imageUpload";
 import { deleteImagesFromContent } from "@/lib/extract-image-from-content";
 import { generateUniquePostSlug } from "@/lib/slug";
 import { postCreateSchema } from "@/types/validation/post";
-import z from "zod";
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ slug: string }> }
-) {
-  try {
-    const { session, response } = await requireAdmin();
+type Context = { params: Promise<{ slug: string }> };
+
+export const GET = withRouteHandler<Context>(
+  "admin/blogs/:slug",
+  async (_req, { params }) => {
+    const { response } = await requireAdmin();
     if (response) return response;
 
     const { slug } = await params;
@@ -41,21 +39,13 @@ export async function GET(
     }
 
     return NextResponse.json({ data });
-  } catch (error) {
-    console.error("Error fetching blog:", error);
-    return NextResponse.json(
-      { error: "Terjadi kesalahan pada server" },
-      { status: 500 }
-    );
   }
-}
+);
 
-export async function PUT(
-  req: NextRequest,
-  { params }: { params: Promise<{ slug: string }> }
-) {
-  try {
-    const { session, response } = await requireAdmin();
+export const PUT = withRouteHandler<Context>(
+  "admin/blogs/:slug",
+  async (req, { params }) => {
+    const { response } = await requireAdmin();
     if (response) return response;
 
     const { slug } = await params;
@@ -125,31 +115,13 @@ export async function PUT(
       { data, success: true, message: "Blog berhasil diupdate" },
       { status: 200 }
     );
-  } catch (error) {
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: error.issues.map((e) => e.message) },
-        { status: 400 }
-      );
-    }
-
-    const mapped = mapPrismaError(error);
-    if (mapped) return errors.mapped(mapped);
-
-    console.error("[admin/blogs/:slug] failed:", error);
-    return NextResponse.json(
-      { error: "Terjadi kesalahan pada server" },
-      { status: 500 }
-    );
   }
-}
+);
 
-export async function DELETE(
-  req: NextRequest,
-  { params }: { params: Promise<{ slug: string }> }
-) {
-  try {
-    const { session, response } = await requireAdmin();
+export const DELETE = withRouteHandler<Context>(
+  "admin/blogs/:slug",
+  async (_req, { params }) => {
+    const { response } = await requireAdmin();
     if (response) return response;
 
     const { slug } = await params;
@@ -190,14 +162,5 @@ export async function DELETE(
       { data, message: "Data deleted successfully" },
       { status: 200 }
     );
-  } catch (error) {
-    const mapped = mapPrismaError(error);
-    if (mapped) return errors.mapped(mapped);
-
-    console.error("[admin/blogs/:slug] failed:", error);
-    return NextResponse.json(
-      { error: "Terjadi kesalahan pada server" },
-      { status: 500 }
-    );
   }
-}
+);

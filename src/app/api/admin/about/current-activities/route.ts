@@ -1,10 +1,12 @@
 import prisma from "@/lib/prisma";
 import { requireAdmin } from "@/lib/require-admin";
+import { withRouteHandler } from "@/lib/api-handler";
 import { parseId } from "@/lib/validate";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function POST(req: NextRequest) {
-  try {
+export const POST = withRouteHandler(
+  "admin/about/current-activities",
+  async (req: NextRequest) => {
     const { session, response } = await requireAdmin();
     if (response) return response;
 
@@ -58,11 +60,5 @@ export async function POST(req: NextRequest) {
       data: results,
       message: "Data created succesfully",
     });
-  } catch (error) {
-    console.error(error);
-    return NextResponse.json(
-      { error: "Internal Server Error" },
-      { status: 500 }
-    );
   }
-}
+);

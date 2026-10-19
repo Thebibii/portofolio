@@ -1,10 +1,9 @@
 import { generateSlug } from "@/lib/slug";
 import prisma from "@/lib/prisma";
 import { requireAdmin } from "@/lib/require-admin";
-import { errors } from "@/lib/api-error";
-import { mapPrismaError } from "@/lib/prisma-error";
+import { withRouteHandler } from "@/lib/api-handler";
 import { parseJsonBody } from "@/lib/validate";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import z from "zod";
 
 const tagSchema = z.object({
@@ -12,12 +11,12 @@ const tagSchema = z.object({
   color: z.string().optional(),
 });
 
-export async function PUT(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  try {
-    const { session, response } = await requireAdmin();
+type Context = { params: Promise<{ id: string }> };
+
+export const PUT = withRouteHandler<Context>(
+  "admin/tag/:id",
+  async (req, { params }) => {
+    const { response } = await requireAdmin();
     if (response) return response;
 
     const { id } = await params;
@@ -51,31 +50,13 @@ export async function PUT(
       { data, success: true, message: "Slug berhasil diperbarui" },
       { status: 200 }
     );
-  } catch (error) {
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: error.issues.map((e) => e.message) },
-        { status: 400 }
-      );
-    }
-
-    const mapped = mapPrismaError(error);
-    if (mapped) return errors.mapped(mapped);
-
-    console.error("[admin/tag/:id] failed:", error);
-    return NextResponse.json(
-      { error: "Terjadi kesalahan pada server" },
-      { status: 500 }
-    );
   }
-}
+);
 
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  try {
-    const { session, response } = await requireAdmin();
+export const DELETE = withRouteHandler<Context>(
+  "admin/tag/:id",
+  async (_req, { params }) => {
+    const { response } = await requireAdmin();
     if (response) return response;
 
     const { id } = await params;
@@ -93,13 +74,5 @@ export async function DELETE(
       { data, message: "Data deleted successfully" },
       { status: 200 }
     );
-  } catch (error) {
-    const mapped = mapPrismaError(error);
-    if (mapped) return errors.mapped(mapped);
-    console.error(error); // untuk log internal
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    );
   }
-}
+);
