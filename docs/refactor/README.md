@@ -151,18 +151,18 @@ Fase 0 ──► Fase 1 ──► Fase 2 ──► Fase 3 ──► Fase 4 ─�
 - [ ] R-009 — Serialisasi tanggal 6×
 - [ ] R-010 — `getBlogsData` vs `getWritingsData` — config-driven (K-1)
 - [ ] R-011 — Utilitas slug (typo nama) + `Project.slug @unique` dengan cek duplikat dulu (K-2)
-- [ ] R-012 — Base URL & metadata SEO 13× + `NEXT_PUBLIC_SITE_URL` (K-10)
+- [x] R-012 — Base URL & metadata SEO 13× + `NEXT_PUBLIC_SITE_URL` (K-10)
 - [ ] R-013 — Key React Query literal
-- [ ] R-014 — Helper visitor/IP duplikat — cookie saja, tanpa fallback IP (K-6)
+- [x] R-014 — Helper visitor/IP duplikat — cookie saja, tanpa fallback IP (K-6)
 - [ ] R-015 — Filter/pencarian admin
 - [ ] R-016 — Dialog konfirmasi hapus 5×
 - [ ] R-017 — Empty/loading state belum berpreset
 - [ ] R-018 — Format tanggal tersebar
 - [ ] R-019 — Duplikasi tipe & `any`
 - [ ] R-020 — Dead code & import tak terpakai (route `/api/guest*` **dikecualikan**, K-3)
-- [ ] R-021 — 22 hook `.tsx` tanpa JSX
+- [x] R-021 — 22 hook `.tsx` tanpa JSX
 - [ ] R-022 — Dua implementasi upload Supabase
-- [ ] R-023 — Skeleton tak terpakai & penamaan
+- [x] R-023 — Skeleton tak terpakai & penamaan
 
 ### Error handling
 

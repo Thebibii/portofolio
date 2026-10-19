@@ -238,7 +238,7 @@ export const qk = {
 - **Tidak ada perubahan perilaku yang diharapkan.** Semua langkah hanya memindahkan/rename.
 - Smoke test: `/`, `/blogs`, `/writings`, `/projects`, `/blogs/[slug]`, `/writings/[slug]` render tanpa error console.
 - Cek metadata: canonical & OG image di 3 list page + 3 detail page tidak berubah nilainya.
-- Cek import lama: `genarate-slug.ts`/`unique-slug.ts` sudah tidak dirujuk (grep); `use-formatted-date` re-export masih dipakai.
+- Cek import lama: `genarate-slug.ts`/`unique-slug.ts` sudah tidak dirujuk (grep); `use-formatted-date.ts` dihapus dan seluruh import dipindah ke `@/lib/format-date`.
 - Rename `.tsx` → `.ts` tidak boleh mengubah import (import tanpa ekstensi).
 
 Verifikasi global (halaman minimum & cek regresi): [README](./README.md#verifikasi-global).
