@@ -1,26 +1,10 @@
 import prisma from "@/lib/prisma";
+import {
+  getClientIp,
+  resolveVisitor,
+  setVisitorIdCookie,
+} from "@/lib/visitor";
 import { NextRequest, NextResponse } from "next/server";
-
-function getVisitorId(request: NextRequest): string | null {
-  return request.cookies.get("visitor_id")?.value ?? null;
-}
-
-function setVisitorIdCookie(response: NextResponse, id: string) {
-  response.cookies.set("visitor_id", id, {
-    path: "/",
-    maxAge: 60 * 60 * 24 * 365,
-    httpOnly: false,
-    sameSite: "lax",
-  });
-}
-
-function getClientIp(request: NextRequest): string {
-  return (
-    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
-    request.headers.get("x-real-ip") ??
-    "127.0.0.1"
-  );
-}
 
 export async function GET(
   request: NextRequest,
@@ -29,9 +13,7 @@ export async function GET(
   try {
     const { slug } = await params;
 
-    const ip = getClientIp(request);
-    const visitorId = getVisitorId(request);
-    const newVisitorId = visitorId || crypto.randomUUID();
+    const { visitorId, isNew } = resolveVisitor(request);
 
     const post = await prisma.post.findFirst({
       where: { slug, type: "BLOG", status: "PUBLISHED" },
@@ -46,7 +28,7 @@ export async function GET(
     }
 
     const existing = await prisma.like.findUnique({
-      where: { visitorId_postId: { visitorId: newVisitorId, postId: post.id } },
+      where: { visitorId_postId: { visitorId, postId: post.id } },
     });
 
     const likeCount = await prisma.like.count({
@@ -58,8 +40,8 @@ export async function GET(
       likeCount,
     });
 
-    if (!visitorId) {
-      setVisitorIdCookie(response, newVisitorId);
+    if (isNew) {
+      setVisitorIdCookie(response, visitorId);
     }
 
     return response;
@@ -79,8 +61,7 @@ export async function PATCH(
     const { slug } = await params;
 
     const ip = getClientIp(request);
-    const visitorId = getVisitorId(request);
-    const newVisitorId = visitorId || crypto.randomUUID();
+    const { visitorId, isNew } = resolveVisitor(request);
 
     const post = await prisma.post.findFirst({
       where: { slug, type: "BLOG", status: "PUBLISHED" },
@@ -95,14 +76,14 @@ export async function PATCH(
     }
 
     const existing = await prisma.like.findUnique({
-      where: { visitorId_postId: { visitorId: newVisitorId, postId: post.id } },
+      where: { visitorId_postId: { visitorId, postId: post.id } },
     });
 
     if (existing) {
       await prisma.like.delete({ where: { id: existing.id } });
     } else {
       await prisma.like.create({
-        data: { visitorId: newVisitorId, ipAddress: ip, postId: post.id },
+        data: { visitorId, ipAddress: ip, postId: post.id },
       });
     }
 
@@ -115,8 +96,8 @@ export async function PATCH(
       likeCount,
     });
 
-    if (!visitorId) {
-      setVisitorIdCookie(response, newVisitorId);
+    if (isNew) {
+      setVisitorIdCookie(response, visitorId);
     }
 
     return response;
