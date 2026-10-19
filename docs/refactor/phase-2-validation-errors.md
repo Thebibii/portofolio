@@ -33,7 +33,7 @@
 - [x] E-009 — `parseInt` dihapus; `guestPostListQuerySchema` + `parseId`; query invalid fallback 10/1, ID invalid 400
 - [x] E-002 — 8 catch guest route ditambah `console.error` bertag
 - [x] E-010 — 10 `console.log` debug dihapus (audit log `auth.ts` dipertahankan); 0 `catch (error: any)`; typo `imageUpload`; rule `no-console`
-- [ ] E-003 — berjalan: domain project + admin selesai; guest/cron belum
+- [x] E-003 — project, admin, guest (17 route) memakai wrapper; `cron/keep-alive` dikecualikan (catch health-check dipertahankan)
 - [ ] `taxonomy.ts` — ditunda (tidak ada schema taxonomy di R-003/R-004; R-007 ada di fase lain)
 
 ---
