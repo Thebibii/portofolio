@@ -4,13 +4,14 @@ import {
   resolveVisitor,
   setVisitorIdCookie,
 } from "@/lib/visitor";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
+import { withRouteHandler } from "@/lib/api-handler";
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ slug: string }> }
-) {
-  try {
+type Context = { params: Promise<{ slug: string }> };
+
+export const GET = withRouteHandler<Context>(
+  "guest/blogs/:slug/like",
+  async (request, { params }) => {
     const { slug } = await params;
 
     const { visitorId, isNew } = resolveVisitor(request);
@@ -45,20 +46,12 @@ export async function GET(
     }
 
     return response;
-  } catch (error) {
-    console.error("[guest/blogs/:slug/like] failed:", error);
-    return NextResponse.json(
-      { error: "Terjadi kesalahan" },
-      { status: 500 }
-    );
   }
-}
+);
 
-export async function PATCH(
-  request: NextRequest,
-  { params }: { params: Promise<{ slug: string }> }
-) {
-  try {
+export const PATCH = withRouteHandler<Context>(
+  "guest/blogs/:slug/like",
+  async (request, { params }) => {
     const { slug } = await params;
 
     const ip = getClientIp(request);
@@ -102,11 +95,5 @@ export async function PATCH(
     }
 
     return response;
-  } catch (error) {
-    console.error("[guest/blogs/:slug/like] failed:", error);
-    return NextResponse.json(
-      { error: "Terjadi kesalahan" },
-      { status: 500 }
-    );
   }
-}
+);

@@ -1,11 +1,12 @@
+import { withRouteHandler } from "@/lib/api-handler";
 import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
-export async function GET(
-  _req: Request,
-  { params }: { params: Promise<{ slug: string }> }
-) {
-  try {
+type Context = { params: Promise<{ slug: string }> };
+
+export const GET = withRouteHandler<Context>(
+  "guest/projects/:slug",
+  async (_req, { params }) => {
     const { slug } = await params;
 
     const project = await prisma.project.findFirst({
@@ -25,11 +26,5 @@ export async function GET(
         updatedAt: project.updatedAt.toISOString(),
       },
     });
-  } catch (error) {
-    console.error("[guest/projects/:slug] failed:", error);
-    return NextResponse.json(
-      { error: "Terjadi kesalahan pada server" },
-      { status: 500 }
-    );
   }
-}
+);

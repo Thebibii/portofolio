@@ -1,11 +1,12 @@
 import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
+import { withRouteHandler } from "@/lib/api-handler";
 
-export async function GET(
-  _req: Request,
-  { params }: { params: Promise<{ slug: string }> }
-) {
-  try {
+type Context = { params: Promise<{ slug: string }> };
+
+export const GET = withRouteHandler<Context>(
+  "guest/writings/:slug",
+  async (_req, { params }) => {
     const { slug } = await params;
 
     const post = await prisma.post.findUnique({
@@ -38,11 +39,5 @@ export async function GET(
         _count: { likes: post._count.likes },
       },
     });
-  } catch (error) {
-    console.error("[guest/writings/:slug] failed:", error);
-    return NextResponse.json(
-      { error: "Terjadi kesalahan pada server" },
-      { status: 500 }
-    );
   }
-}
+);

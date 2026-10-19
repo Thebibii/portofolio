@@ -1,12 +1,13 @@
 import prisma from "@/lib/prisma";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
+import { withRouteHandler } from "@/lib/api-handler";
 
-export async function PATCH(
-  _req: NextRequest,
-  { params }: { params: Promise<{ slug: string }> }
-) {
-  try {
+type Context = { params: Promise<{ slug: string }> };
+
+export const PATCH = withRouteHandler<Context>(
+  "guest/blogs/:slug/view",
+  async (_req, { params }) => {
     const { slug } = await params;
 
     const post = await prisma.post.findFirst({
@@ -30,11 +31,5 @@ export async function PATCH(
     revalidatePath("/");
 
     return NextResponse.json({ success: true, data: updated });
-  } catch (error) {
-    console.error("[guest/blogs/:slug/view] failed:", error);
-    return NextResponse.json(
-      { error: "Terjadi kesalahan" },
-      { status: 500 }
-    );
   }
-}
+);

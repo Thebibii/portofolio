@@ -1,9 +1,11 @@
+import { withRouteHandler } from "@/lib/api-handler";
 import { omitId } from "@/lib/helper";
 import prisma from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(request: NextRequest) {
-  try {
+export const GET = withRouteHandler(
+  "guest/projects",
+  async (request: NextRequest) => {
     const searchParams = request.nextUrl.searchParams;
     const featuredParam = searchParams.get("featured");
 
@@ -18,16 +20,5 @@ export async function GET(request: NextRequest) {
     const data = omitId(projects);
 
     return NextResponse.json({ success: true, data });
-  } catch (error) {
-    console.error("[guest/projects] failed:", error);
-
-    const message =
-      process.env.APP_ENV === "development"
-        ? error instanceof Error
-          ? error.message
-          : String(error)
-        : "Terjadi kesalahan, silakan coba lagi.";
-
-    return NextResponse.json({ error: message }, { status: 500 });
   }
-}
+);
