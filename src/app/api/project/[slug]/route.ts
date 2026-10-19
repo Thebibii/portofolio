@@ -5,30 +5,8 @@ import { requireAdmin } from "@/lib/require-admin";
 import { deleteImage, deleteMultipleImages, extractPathFromUrl } from "@/lib/imageUpload";
 import { deleteImagesFromContent } from "@/lib/extract-image-from-content";
 import z from "zod";
-import { ProjectStatus } from "@prisma/client";
 import { generateSlug } from "@/lib/slug";
-const projectSchema = z.object({
-  title: z.string().min(1, "Title is required"),
-  description: z.string().min(1, "Description is required"),
-  longDescription: z.string().optional(),
-  image: z.string().optional(),
-  images: z.array(z.string()).default([]),
-  technologies: z
-    .array(z.string())
-    .min(1, "At least one technology is required"),
-  demoUrl: z.string().optional(),
-  sourceUrl: z.string().optional(),
-  status: z.nativeEnum(ProjectStatus),
-  featured: z.boolean().default(false),
-  startDate: z.preprocess(
-    (val) => (val ? new Date(val as string) : undefined),
-    z.date().optional()
-  ),
-  endDate: z.preprocess(
-    (val) => (val ? new Date(val as string) : undefined),
-    z.date().optional()
-  ),
-});
+import { projectServerSchema } from "@/types/validation/project";
 
 function isValidCUID(str: string): boolean {
   const cuidRegex = /^c[0-9a-z]{24}$/i;
@@ -159,7 +137,7 @@ export async function PUT(
     const json = await req.json();
 
     // Validasi body
-    const body = projectSchema.parse(json);
+    const body = projectServerSchema.parse(json);
 
     // Cek apakah project ada
     const existingProject = await prisma.project.findUnique({

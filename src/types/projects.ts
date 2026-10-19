@@ -1,17 +1,6 @@
-export interface ProjectFormData {
-  title: string;
-  description: string;
-  longDescription?: string;
-  image?: string;
-  images: string[];
-  technologies: string[];
-  demoUrl?: string;
-  sourceUrl?: string;
-  status: ProjectStatus;
-  featured: boolean;
-  startDate?: Date;
-  endDate?: Date;
-}
+import type { ProjectFormValues } from "@/types/validation/project";
+
+export type ProjectFormData = ProjectFormValues;
 
 export enum ProjectStatus {
   PLANNING = "PLANNING",

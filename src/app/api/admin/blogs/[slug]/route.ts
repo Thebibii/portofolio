@@ -2,29 +2,12 @@ import prisma from "@/lib/prisma";
 import { requireAdmin } from "@/lib/require-admin";
 import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
-import { PostStatus, PostType } from "@/types/blogs";
+import { PostType } from "@/types/blogs";
 import { deleteImage, extractPathFromUrl } from "@/lib/imageUpload";
 import { deleteImagesFromContent } from "@/lib/extract-image-from-content";
 import { generateUniquePostSlug } from "@/lib/slug";
+import { postCreateSchema } from "@/types/validation/post";
 import z from "zod";
-
-const postSchema = z
-  .object({
-    title: z.string().min(1, "Title is required").max(200, "Title too long"),
-    slug: z.string().max(120, "Slug too long").optional(),
-    content: z
-      .string()
-      .min(1, "Content is required")
-      .max(100000, "Content too long"),
-    excerpt: z.string().max(500, "Excerpt too long").optional(),
-    coverImage: z.string().max(2048, "Cover image URL too long").optional(),
-    status: z.nativeEnum(PostStatus),
-    featured: z.boolean(),
-    readingTime: z.number().min(1, "Reading time must be at least 1 minute"),
-    categoryId: z.string().optional(),
-    tagIds: z.array(z.string()).max(20, "Too many tags").optional(),
-  })
-  .strict();
 
 export async function GET(
   request: NextRequest,
@@ -76,7 +59,7 @@ export async function PUT(
     const json = await req.json();
 
     // Validasi body
-    const body = postSchema.parse(json);
+    const body = postCreateSchema.parse(json);
 
     // Pisahkan tagIds dari data lainnya
     const { tagIds, ...postData } = body;

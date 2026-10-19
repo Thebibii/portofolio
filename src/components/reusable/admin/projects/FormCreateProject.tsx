@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
+import { projectFormSchema } from "@/types/validation/project";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -47,23 +47,6 @@ import {
 } from "@/components/ui/image-uploader";
 import { PlateEditor } from "@/components/plate-editor";
 
-const projectSchema = z.object({
-  title: z.string().min(1, "Title is required"),
-  description: z.string().min(1, "Description is required"),
-  longDescription: z.string().optional(),
-  image: z.string().optional(),
-  images: z.array(z.string()).default([]),
-  technologies: z
-    .array(z.string())
-    .min(1, "At least one technology is required"),
-  demoUrl: z.string().optional(),
-  sourceUrl: z.string().optional(),
-  status: z.nativeEnum(ProjectStatus),
-  featured: z.boolean().default(false),
-  startDate: z.date().optional(),
-  endDate: z.date().optional(),
-});
-
 interface ProjectFormProps {
   initialData?: ProjectFormData;
   isEditing?: boolean;
@@ -100,7 +83,7 @@ export default function FormCreateProject({
   });
 
   const form = useForm({
-    resolver: zodResolver(projectSchema),
+    resolver: zodResolver(projectFormSchema),
     defaultValues: initialData || {
       title: "",
       description: "",

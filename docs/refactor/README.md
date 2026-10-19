@@ -142,8 +142,8 @@ Fase 0 ──► Fase 1 ──► Fase 2 ──► Fase 3 ──► Fase 4 ─�
 
 - [ ] R-001 — Route API Blog/Writing identik (4 pasang + featured) — **config-driven** (K-1)
 - [ ] R-002 — Hook React Query Blog/Writing identik — **config-driven** (K-1)
-- [ ] R-003 — `postSchema` & `listQuerySchema` 3×
-- [ ] R-004 — `projectSchema` 4× (+ gabung form create/edit)
+- [x] R-003 — `postSchema` (5 salinan) & `listQuerySchema` (2 salinan)
+- [x] R-004 — `projectSchema` 4× (schema selesai; gabung form create/edit ditunda)
 - [ ] R-005 — Komponen client Blog/Writing (list 557/547, detail 189/192) — reset page 1 (K-5)
 - [ ] R-006 — Halaman admin blogs/writings identik + judul edit (K-9)
 - [ ] R-007 — CRUD taxonomy Category/Tag (API + hook + halaman)

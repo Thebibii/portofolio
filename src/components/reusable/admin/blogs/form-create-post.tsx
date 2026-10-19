@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
+import { postInputSchema, type PostInput } from "@/types/validation/post";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -31,23 +31,7 @@ import EmptyState from "../../state/empty-state";
 import { SingleImageUploader } from "@/components/ui/image-uploader";
 import { PlateEditor } from "@/components/plate-editor";
 
-const postSchema = z.object({
-  title: z.string().min(1, "Title is required").max(200, "Title too long"),
-  slug: z.string().max(120, "Slug too long").optional(),
-  content: z
-    .string()
-    .min(1, "Content is required")
-    .max(100000, "Content too long"),
-  excerpt: z.string().max(500, "Excerpt too long").optional(),
-  coverImage: z.string().max(2048, "Cover image URL too long").optional(),
-  status: z.nativeEnum(PostStatus),
-  featured: z.boolean(),
-  readingTime: z.number().min(1, "Reading time must be at least 1 minute"),
-  categoryId: z.string().optional(),
-  tagIds: z.array(z.string()).max(20, "Too many tags").optional(),
-});
-
-type FormCreatePostData = z.infer<typeof postSchema>;
+type FormCreatePostData = PostInput;
 
 interface FormCreatePostProps {
   post?: Post;
@@ -75,7 +59,7 @@ export function FormCreatePost({
   );
 
   const form = useForm<FormCreatePostData>({
-    resolver: zodResolver(postSchema),
+    resolver: zodResolver(postInputSchema),
     defaultValues: {
       title: post?.title || "",
       slug: post?.slug || "",

@@ -1,6 +1,10 @@
 import prisma from "@/lib/prisma";
 import { requireAdmin } from "@/lib/require-admin";
-import { PostStatus, PostType } from "@/types/blogs";
+import { PostType } from "@/types/blogs";
+import {
+  adminPostListQuerySchema,
+  postCreateSchema,
+} from "@/types/validation/post";
 import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import { generateUniquePostSlug } from "@/lib/slug";
@@ -11,33 +15,6 @@ import z from "zod";
 const BLOG_CREATE_MAX = 10;
 const BLOG_CREATE_WINDOW_MS = 60 * 1000;
 
-const postSchema = z
-  .object({
-    title: z.string().min(1, "Title is required").max(200, "Title too long"),
-    slug: z.string().max(120, "Slug too long").optional(),
-    content: z
-      .string()
-      .min(1, "Content is required")
-      .max(100000, "Content too long"),
-    excerpt: z.string().max(500, "Excerpt too long").optional(),
-    coverImage: z.string().max(2048, "Cover image URL too long").optional(),
-    status: z.nativeEnum(PostStatus),
-    featured: z.boolean(),
-    readingTime: z.number().min(1, "Reading time must be at least 1 minute"),
-    categoryId: z.string().optional(),
-    tagIds: z.array(z.string()).max(20, "Too many tags").optional(),
-  })
-  .strict();
-
-const listQuerySchema = z.object({
-  page: z.coerce.number().int().min(1).default(1),
-  limit: z.coerce.number().int().min(1).max(50).default(15),
-  search: z.string().trim().max(200).optional(),
-  status: z.nativeEnum(PostStatus).optional(),
-  categoryId: z.string().optional(),
-  tagId: z.string().optional(),
-});
-
 export async function GET(req: NextRequest) {
   try {
     const { response } = await requireAdmin();
@@ -45,7 +22,7 @@ export async function GET(req: NextRequest) {
 
     const { searchParams } = new URL(req.url);
     const { page, limit, search, status, categoryId, tagId } =
-      listQuerySchema.parse({
+      adminPostListQuerySchema.parse({
         page: searchParams.get("page") ?? undefined,
         limit: searchParams.get("limit") ?? undefined,
         search: searchParams.get("search") ?? undefined,
@@ -156,7 +133,7 @@ export async function POST(req: NextRequest) {
 
     const json = await req.json();
 
-    const body = postSchema.parse(json);
+    const body = postCreateSchema.parse(json);
 
     const { tagIds, ...postData } = body;
     // Slug selalu dibuat di server; slug dari client diabaikan.

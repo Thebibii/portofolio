@@ -23,6 +23,12 @@
 **Gate:** `npm run verify` hijau; uji manual 3 endpoint (POST invalid body → 400 `{error: string[]}`, POST duplikat tag → 409, DELETE id tidak ada → 404). Pastikan error tak dikenal masih menghasilkan respons Next default (bukan ditelan wrapper).
 **Commit:** `refactor(api): unify validation schemas and error contract`
 
+### Status eksekusi (19 Oktober 2026)
+
+- [x] R-003 — `postSchema` (5 salinan) & `listQuerySchema` (2 salinan) disentralisasi ke `src/types/validation/post.ts`
+- [x] R-004 — `projectSchema` (4 salinan) disentralisasi ke `src/types/validation/project.ts`; gabung form create/edit ditunda
+- [ ] `taxonomy.ts` — ditunda (tidak ada schema taxonomy di R-003/R-004; R-007 ada di fase lain)
+
 ---
 
 ## Temuan dalam fase ini
