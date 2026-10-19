@@ -1,6 +1,8 @@
 import { generateSlug } from "@/lib/slug";
 import prisma from "@/lib/prisma";
 import { requireAdmin } from "@/lib/require-admin";
+import { errors } from "@/lib/api-error";
+import { mapPrismaError } from "@/lib/prisma-error";
 import { NextRequest, NextResponse } from "next/server";
 import z from "zod";
 
@@ -63,6 +65,9 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
     }
+
+    const mapped = mapPrismaError(error);
+    if (mapped) return errors.mapped(mapped);
 
     console.error("[admin/category] failed:", error);
     return NextResponse.json(

@@ -1,5 +1,7 @@
 import prisma from "@/lib/prisma";
 import { requireAdmin } from "@/lib/require-admin";
+import { errors } from "@/lib/api-error";
+import { mapPrismaError } from "@/lib/prisma-error";
 import { PostType } from "@/types/blogs";
 import {
   adminPostListQuerySchema,
@@ -185,6 +187,9 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
     }
+
+    const mapped = mapPrismaError(error);
+    if (mapped) return errors.mapped(mapped);
 
     console.error("[admin/blogs] failed:", error);
     return NextResponse.json(

@@ -1,5 +1,7 @@
 import prisma from "@/lib/prisma";
 import { requireAdmin } from "@/lib/require-admin";
+import { errors } from "@/lib/api-error";
+import { mapPrismaError } from "@/lib/prisma-error";
 import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import z from "zod";
@@ -48,6 +50,9 @@ export async function PATCH(
         { status: 400 }
       );
     }
+    const mapped = mapPrismaError(error);
+    if (mapped) return errors.mapped(mapped);
+
     console.error("[admin/posts/:slug/featured] failed:", error);
     return NextResponse.json(
       { error: "Terjadi kesalahan pada server" },

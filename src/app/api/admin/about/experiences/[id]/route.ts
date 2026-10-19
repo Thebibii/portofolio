@@ -1,5 +1,7 @@
 import prisma from "@/lib/prisma";
 import { requireAdmin } from "@/lib/require-admin";
+import { errors } from "@/lib/api-error";
+import { mapPrismaError } from "@/lib/prisma-error";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function DELETE(
@@ -26,10 +28,8 @@ export async function DELETE(
       { status: 200 }
     );
   } catch (error: any) {
-    // mapping error Prisma jadi pesan user-friendly
-    if (error.code === "P2025") {
-      return NextResponse.json({ error: "Data not found" }, { status: 404 });
-    }
+    const mapped = mapPrismaError(error);
+    if (mapped) return errors.mapped(mapped);
     console.error(error); // untuk log internal
     return NextResponse.json(
       { error: "Internal server error" },
