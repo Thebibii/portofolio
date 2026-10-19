@@ -68,7 +68,7 @@ export const useUpdateCategory = ({
         if (!res.ok) {
           const data = await res.json().catch(() => ({}));
 
-          throw new Error(data.message || "Gagal mengedit category");
+          throw new Error(data.error || "Gagal mengedit category");
         }
 
         return res.json();
@@ -105,7 +105,7 @@ export const useDeleteCategory = ({
         if (!res.ok) {
           const data = await res.json().catch(() => ({}));
 
-          throw new Error(data.message || "Gagal membuat category");
+          throw new Error(data.error || "Gagal membuat category");
         }
 
         return res.json();

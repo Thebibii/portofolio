@@ -70,7 +70,7 @@ export const useUpdateTag = ({
         if (!res.ok) {
           const data = await res.json().catch(() => ({}));
 
-          throw new Error(data.message || "Gagal mengedit tag");
+          throw new Error(data.error || "Gagal mengedit tag");
         }
 
         return res.json();
@@ -107,7 +107,7 @@ export const useDeleteTag = ({
         if (!res.ok) {
           const data = await res.json().catch(() => ({}));
 
-          throw new Error(data.message || "Gagal membuat tag");
+          throw new Error(data.error || "Gagal membuat tag");
         }
 
         return res.json();

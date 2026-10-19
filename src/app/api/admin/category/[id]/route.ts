@@ -1,6 +1,8 @@
 import { generateSlug } from "@/lib/slug";
 import prisma from "@/lib/prisma";
 import { requireAdmin } from "@/lib/require-admin";
+import { errors } from "@/lib/api-error";
+import { mapPrismaError } from "@/lib/prisma-error";
 import { NextRequest, NextResponse } from "next/server";
 import z from "zod";
 
@@ -30,7 +32,7 @@ export async function PUT(
 
     if (!existingSlug) {
       return NextResponse.json(
-        { message: `Slug tidak ditemukan` },
+        { error: `Slug tidak ditemukan` },
         { status: 404 }
       );
     }
@@ -56,6 +58,9 @@ export async function PUT(
       );
     }
 
+    const mapped = mapPrismaError(error);
+    if (mapped) return errors.mapped(mapped);
+
     console.error("[admin/category/:id] failed:", error);
     return NextResponse.json(
       { error: "Terjadi kesalahan pada server" },
@@ -75,7 +80,7 @@ export async function DELETE(
     const { id } = await params;
 
     if (!id) {
-      return NextResponse.json({ message: "ID is required" }, { status: 400 });
+      return NextResponse.json({ error: "ID is required" }, { status: 400 });
     }
 
     const data = await prisma.category.delete({
@@ -88,13 +93,11 @@ export async function DELETE(
       { status: 200 }
     );
   } catch (error: any) {
-    // mapping error Prisma jadi pesan user-friendly
-    if (error.code === "P2025") {
-      return NextResponse.json({ message: "Data not found" }, { status: 404 });
-    }
+    const mapped = mapPrismaError(error);
+    if (mapped) return errors.mapped(mapped);
     console.error(error); // untuk log internal
     return NextResponse.json(
-      { message: "Internal server error" },
+      { error: "Internal server error" },
       { status: 500 }
     );
   }
