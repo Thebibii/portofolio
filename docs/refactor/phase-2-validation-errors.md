@@ -34,6 +34,7 @@
 - [x] E-002 — 8 catch guest route ditambah `console.error` bertag
 - [x] E-010 — 10 `console.log` debug dihapus (audit log `auth.ts` dipertahankan); 0 `catch (error: any)`; typo `imageUpload`; rule `no-console`
 - [x] E-003 — project, admin, guest (17 route) memakai wrapper; `cron/keep-alive` dikecualikan (catch health-check dipertahankan)
+- [x] E-006 — `getErrorMessage` + fallback spesifik per aksi di 6 hook admin; 11 pesan copy-paste diperbaiki
 - [ ] `taxonomy.ts` — ditunda (tidak ada schema taxonomy di R-003/R-004; R-007 ada di fase lain)
 
 ---
@@ -343,7 +344,7 @@ const body = postSchema.parse(json);   // throw → ditangkap catch generik
 
 - **Kategori:** UX error
 - **Lokasi:** `src/hooks/react-query/admin/about/use-mutation.tsx:28,68,105,145` ("Gagal membuat category"), `src/hooks/react-query/admin/projects/use-mutation.tsx:65` ("Gagal membuat project" pada operasi update), `src/hooks/react-query/admin/writings/use-mutation.tsx:65` (pesan update menyebut create)
-- **Jumlah pemakaian:** 6 titik.
+- **Jumlah pemakaian:** 11 titik di 6 file (audit aktual; docs awal 6 titik di 3 file).
 - **Potongan kode:**
 
 ```ts
@@ -353,7 +354,7 @@ throw new Error(data.message || "Gagal membuat category");
 
 - **Usulan:** Sediakan `getErrorMessage(error, fallback)` di `src/lib/errors.ts`, dan fallback spesifik per aksi: `"Gagal menambahkan pengalaman"`, `"Gagal memperbarui project"`, dst. Setelah R-002/R-007, pesan ini otomatis terpusat di factory — jangan perbaiki dua kali.
 - **Server/Client:** client.
-- **File terdampak:** 3 file.
+- **File terdampak:** 6 file (about, projects, blogs, writings, category, tag).
 - **Prioritas:** **Sedang**
 - **Risiko:** Sangat rendah.
 - **Estimasi usaha:** 30 menit.

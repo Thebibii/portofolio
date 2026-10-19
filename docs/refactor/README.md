@@ -171,7 +171,7 @@ Fase 0 ──► Fase 1 ──► Fase 2 ──► Fase 3 ──► Fase 4 ─�
 - [x] E-003 — Wrapper handler konservatif, 51 catch block (K-11); `cron/keep-alive` dikecualikan (kontrak health-check)
 - [x] E-004 — `P2025` parsial, `P2002` nol → `mapPrismaError` terpasang; `P2002` = 409 (Like ditunda)
 - [x] E-005 — Zod `parse` 12 route → `parseJsonBody`/`parseSearchParams`
-- [ ] E-006 — Pesan error client salah
+- [x] E-006 — Pesan error client salah
 - [ ] E-007 — Error state UI tidak konsisten
 - [ ] E-008 — `QueryClient` tanpa default
 - [x] E-009 — `parseInt`/`Number` tanpa guard → `parseId` + `guestPostListQuerySchema`
