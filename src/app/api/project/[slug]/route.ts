@@ -6,7 +6,7 @@ import { deleteImage, deleteMultipleImages, extractPathFromUrl } from "@/lib/ima
 import { deleteImagesFromContent } from "@/lib/extract-image-from-content";
 import z from "zod";
 import { ProjectStatus } from "@prisma/client";
-import { generateSlug } from "@/lib/genarate-slug";
+import { generateSlug } from "@/lib/slug";
 const projectSchema = z.object({
   title: z.string().min(1, "Title is required"),
   description: z.string().min(1, "Description is required"),

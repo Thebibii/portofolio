@@ -1,4 +1,4 @@
-import { generateSlug } from "@/lib/genarate-slug";
+import { generateSlug } from "@/lib/slug";
 import prisma from "@/lib/prisma";
 import { requireAdmin } from "@/lib/require-admin";
 import { NextRequest, NextResponse } from "next/server";

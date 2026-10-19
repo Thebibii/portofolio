@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 import { PostStatus, PostType } from "@/types/blogs";
 import { deleteImage, extractPathFromUrl } from "@/lib/imageUpload";
 import { deleteImagesFromContent } from "@/lib/extract-image-from-content";
-import { generateUniquePostSlug } from "@/lib/unique-slug";
+import { generateUniquePostSlug } from "@/lib/slug";
 import z from "zod";
 
 const postSchema = z

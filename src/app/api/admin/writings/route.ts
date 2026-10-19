@@ -1,7 +1,7 @@
 import prisma from "@/lib/prisma";
 import { requireAdmin } from "@/lib/require-admin";
 import { consumeRateLimit } from "@/lib/login-throttle";
-import { generateUniquePostSlug } from "@/lib/unique-slug";
+import { generateUniquePostSlug } from "@/lib/slug";
 import { PostStatus, PostType } from "@/types/blogs";
 import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
