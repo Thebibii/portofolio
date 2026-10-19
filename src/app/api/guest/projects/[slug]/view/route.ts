@@ -28,6 +28,7 @@ export async function PATCH(
 
     return NextResponse.json({ success: true, data: updated });
   } catch (error) {
+    console.error("[guest/projects/:slug/view] failed:", error);
     return NextResponse.json(
       { error: "Terjadi kesalahan" },
       { status: 500 }

@@ -46,6 +46,7 @@ export async function GET(
 
     return response;
   } catch (error) {
+    console.error("[guest/writings/:slug/like] failed:", error);
     return NextResponse.json(
       { error: "Terjadi kesalahan" },
       { status: 500 }
@@ -102,6 +103,7 @@ export async function PATCH(
 
     return response;
   } catch (error) {
+    console.error("[guest/writings/:slug/like] failed:", error);
     return NextResponse.json(
       { error: "Terjadi kesalahan" },
       { status: 500 }
