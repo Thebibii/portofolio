@@ -182,10 +182,6 @@ export async function DELETE(
       select: { id: true },
     });
 
-    console.log(
-      `[admin/writings/:slug] deleted id=${data.id} slug=${slug} by=${session.user.id}`
-    );
-
     revalidatePath('/');
     revalidatePath('/writings');
     revalidatePath(`/writings/${slug}`);

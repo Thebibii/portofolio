@@ -30,7 +30,7 @@ export async function uploadImage(
       });
 
     if (error) {
-      console.error("Upload errorrr:", error);
+      console.error("Upload error:", error);
       return { url: "", path: "", error: error.message };
     }
 
@@ -44,7 +44,7 @@ export async function uploadImage(
       path: data.path,
     };
   } catch (error) {
-    console.error("Upload errorr:", error);
+    console.error("Upload error:", error);
     return { url: "", path: "", error: "Upload failed" };
   }
 }

@@ -100,15 +100,11 @@ export default function FormCreateProject({
     },
   });
 
-  const handleSubmit = async (data: ProjectFormData) => {
-    try {
-      mutate({
-        longDescription: JSON.stringify(data.longDescription),
-        ...data,
-      });
-    } catch (e) {
-      console.log(e);
-    }
+  const handleSubmit = (data: ProjectFormData) => {
+    mutate({
+      longDescription: JSON.stringify(data.longDescription),
+      ...data,
+    });
   };
 
   const addTechnology = () => {

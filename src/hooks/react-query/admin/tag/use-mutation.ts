@@ -53,8 +53,6 @@ export const useUpdateTag = ({
   onSuccess: (body: APIResponse) => void;
   onError?: (body: any) => void;
 }) => {
-  console.log(id);
-
   return useMutation({
     mutationKey: ["update.admin.tag", id],
     mutationFn: async (body: TagFormData) => {

@@ -166,10 +166,6 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    console.log(
-      `[admin/writings] created id=${data.id} slug=${data.slug} by=${session.user.id}`
-    );
-
     revalidatePath('/');
     revalidatePath('/writings');
 

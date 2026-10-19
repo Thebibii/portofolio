@@ -103,12 +103,8 @@ export default function FormEditProject({
     },
   });
 
-  const handleSubmit = async (data: ProjectFormData) => {
-    try {
-      mutate(data);
-    } catch (e) {
-      console.log(e);
-    }
+  const handleSubmit = (data: ProjectFormData) => {
+    mutate(data);
   };
 
   const addTechnology = () => {

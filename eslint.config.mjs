@@ -9,6 +9,13 @@ const eslintConfig = defineConfig([
       "@next/next/no-page-custom-font": "off",
       "react-hooks/rules-of-hooks": "error",
       "react-hooks/exhaustive-deps": "off",
+      "no-console": ["warn", { allow: ["error", "warn"] }],
+    },
+  },
+  {
+    files: ["src/lib/auth.ts"],
+    rules: {
+      "no-console": "off",
     },
   },
   // Override default ignores of eslint-config-next.

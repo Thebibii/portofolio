@@ -33,7 +33,7 @@ export async function DELETE(
       { data, message: "Data deleted successfully" },
       { status: 200 }
     );
-  } catch (error: any) {
+  } catch (error) {
     const mapped = mapPrismaError(error);
     if (mapped) return errors.mapped(mapped);
     console.error(error); // untuk log internal

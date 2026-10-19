@@ -68,10 +68,6 @@ export default function Page() {
     deleted({ id: values });
   };
 
-  const onError = (errors: any) => {
-    console.log("❌ Validation errors:", errors);
-  };
-
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -102,7 +98,7 @@ export default function Page() {
       >
         <FormProvider {...form}>
           <form
-            onSubmit={form.handleSubmit(onSubmit, onError)}
+            onSubmit={form.handleSubmit(onSubmit)}
             className="space-y-6"
           >
             <ExperienceForm onRemove={onRemove} />
