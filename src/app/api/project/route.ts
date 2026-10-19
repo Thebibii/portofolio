@@ -1,6 +1,8 @@
 import { generateSlug } from "@/lib/slug";
 import prisma from "@/lib/prisma";
 import { requireAdmin } from "@/lib/require-admin";
+import { errors } from "@/lib/api-error";
+import { mapPrismaError } from "@/lib/prisma-error";
 import { projectServerSchema } from "@/types/validation/project";
 import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
@@ -58,6 +60,9 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
     }
+
+    const mapped = mapPrismaError(error);
+    if (mapped) return errors.mapped(mapped);
 
     console.error("[project] failed:", error);
     return NextResponse.json(

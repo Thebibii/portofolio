@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import prisma from "@/lib/prisma";
 import { requireAdmin } from "@/lib/require-admin";
+import { errors } from "@/lib/api-error";
+import { mapPrismaError } from "@/lib/prisma-error";
 import { deleteImage, deleteMultipleImages, extractPathFromUrl } from "@/lib/imageUpload";
 import { deleteImagesFromContent } from "@/lib/extract-image-from-content";
 import z from "zod";
@@ -113,10 +115,8 @@ export async function DELETE(
     { status: 200 }
   );
 } catch (error: any) {
-    // mapping error Prisma jadi pesan user-friendly
-    if (error.code === "P2025") {
-      return NextResponse.json({ error: "Data not found" }, { status: 404 });
-    }
+    const mapped = mapPrismaError(error);
+    if (mapped) return errors.mapped(mapped);
     console.error(error); // untuk log internal
     return NextResponse.json(
       { error: "Internal server error" },
@@ -178,6 +178,9 @@ export async function PUT(
         { status: 400 }
       );
     }
+
+    const mapped = mapPrismaError(error);
+    if (mapped) return errors.mapped(mapped);
 
     console.error("[project/:slug] failed:", error);
     return NextResponse.json(
