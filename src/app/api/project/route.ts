@@ -3,6 +3,7 @@ import prisma from "@/lib/prisma";
 import { requireAdmin } from "@/lib/require-admin";
 import { errors } from "@/lib/api-error";
 import { mapPrismaError } from "@/lib/prisma-error";
+import { parseJsonBody } from "@/lib/validate";
 import { projectServerSchema } from "@/types/validation/project";
 import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
@@ -32,16 +33,15 @@ export async function POST(req: NextRequest) {
     const { session, response } = await requireAdmin();
     if (response) return response;
 
-    const json = await req.json();
-
-    // Validasi body
-    const body = projectServerSchema.parse(json);
+    const parsed = await parseJsonBody(req, projectServerSchema);
+    if (!parsed.ok) return parsed.response;
+    const body = parsed.data;
 
     const data = await prisma.project.create({
       data: {
         ...body,
-        startDate: json.startDate ? new Date(json.startDate) : undefined,
-        endDate: json.endDate ? new Date(json.endDate) : undefined,
+        startDate: body.startDate,
+        endDate: body.endDate,
         slug: generateSlug(body.title),
       },
     });

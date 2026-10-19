@@ -1,5 +1,6 @@
 import prisma from "@/lib/prisma";
 import { requireAdmin } from "@/lib/require-admin";
+import { parseId } from "@/lib/validate";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
@@ -16,6 +17,13 @@ export async function POST(req: NextRequest) {
         { error: "Invalid request body" },
         { status: 400 }
       );
+    }
+
+    const invalidId = experiences.some(
+      (exp) => exp.dbId && parseId(exp.dbId) === null
+    );
+    if (invalidId) {
+      return NextResponse.json({ error: "ID tidak valid" }, { status: 400 });
     }
 
     const results = await Promise.all(

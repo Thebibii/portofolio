@@ -1,4 +1,5 @@
 import { withRouteHandler } from "@/lib/api-handler";
+import { parseJsonBody } from "@/lib/validate";
 import { generateSlug } from "@/lib/slug";
 import prisma from "@/lib/prisma";
 import { requireAdmin } from "@/lib/require-admin";
@@ -32,10 +33,9 @@ export const POST = withRouteHandler("admin/tag", async (req) => {
   const { session, response } = await requireAdmin();
   if (response) return response;
 
-  const json = await req.json();
-
-  // Validasi body
-  const body = tagSchema.parse(json);
+  const parsed = await parseJsonBody(req, tagSchema);
+  if (!parsed.ok) return parsed.response;
+  const body = parsed.data;
 
   const data = await prisma.tag.create({
     data: {

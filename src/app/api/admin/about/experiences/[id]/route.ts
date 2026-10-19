@@ -2,6 +2,7 @@ import prisma from "@/lib/prisma";
 import { requireAdmin } from "@/lib/require-admin";
 import { errors } from "@/lib/api-error";
 import { mapPrismaError } from "@/lib/prisma-error";
+import { parseId } from "@/lib/validate";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function DELETE(
@@ -18,8 +19,13 @@ export async function DELETE(
       return NextResponse.json({ error: "ID is required" }, { status: 400 });
     }
 
+    const idNumber = parseId(id);
+    if (idNumber === null) {
+      return NextResponse.json({ error: "ID tidak valid" }, { status: 400 });
+    }
+
     const data = await prisma.experience.delete({
-      where: { id: Number(id) },
+      where: { id: idNumber },
       select: { id: true },
     });
 

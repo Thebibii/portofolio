@@ -2,6 +2,7 @@ import prisma from "@/lib/prisma";
 import { requireAdmin } from "@/lib/require-admin";
 import { errors } from "@/lib/api-error";
 import { mapPrismaError } from "@/lib/prisma-error";
+import { parseJsonBody } from "@/lib/validate";
 import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import { PostType } from "@/types/blogs";
@@ -58,10 +59,10 @@ export async function PUT(
     if (response) return response;
 
     const { slug } = await params;
-    const json = await req.json();
 
-    // Validasi body
-    const body = postCreateSchema.parse(json);
+    const parsed = await parseJsonBody(req, postCreateSchema);
+    if (!parsed.ok) return parsed.response;
+    const body = parsed.data;
 
     // Pisahkan tagIds dari data lainnya
     const { tagIds, ...postData } = body;

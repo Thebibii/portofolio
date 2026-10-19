@@ -3,6 +3,7 @@ import prisma from "@/lib/prisma";
 import { requireAdmin } from "@/lib/require-admin";
 import { errors } from "@/lib/api-error";
 import { mapPrismaError } from "@/lib/prisma-error";
+import { parseJsonBody } from "@/lib/validate";
 import { NextRequest, NextResponse } from "next/server";
 import z from "zod";
 
@@ -42,10 +43,9 @@ export async function POST(req: NextRequest) {
     const { session, response } = await requireAdmin();
     if (response) return response;
 
-    const json = await req.json();
-
-    // Validasi body
-    const body = categorySchema.parse(json);
+    const parsed = await parseJsonBody(req, categorySchema);
+    if (!parsed.ok) return parsed.response;
+    const body = parsed.data;
 
     const data = await prisma.category.create({
       data: {

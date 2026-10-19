@@ -1,19 +1,25 @@
 import prisma from "@/lib/prisma";
+import { parseSearchParams } from "@/lib/validate";
+import { guestPostListQuerySchema } from "@/types/validation/post";
 import { NextResponse } from "next/server";
 import { NextRequest } from "next/server";
 
 export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url);
-
-    // Get query parameters
-    const search = searchParams.get("search") || "";
-    const tagSlug = searchParams.get("tag") || "";
-    const categorySlug = searchParams.get("category") || ""; // Add this line
-    const limit = parseInt(searchParams.get("limit") || "10");
-    const page = parseInt(searchParams.get("page") || "1");
-    const sortBy = searchParams.get("sortBy") || "createdAt";
-    const sortOrder = searchParams.get("sortOrder") || "desc";
+    const parsed = parseSearchParams(
+      new URL(request.url).searchParams,
+      guestPostListQuerySchema
+    );
+    if (!parsed.ok) return parsed.response;
+    const {
+      search,
+      tag: tagSlug,
+      category: categorySlug,
+      limit,
+      page,
+      sortBy,
+      sortOrder,
+    } = parsed.data;
 
     // Build where clause
     const whereClause: any = {

@@ -3,6 +3,7 @@ import prisma from "@/lib/prisma";
 import { requireAdmin } from "@/lib/require-admin";
 import { errors } from "@/lib/api-error";
 import { mapPrismaError } from "@/lib/prisma-error";
+import { parseJsonBody } from "@/lib/validate";
 import { NextRequest, NextResponse } from "next/server";
 import z from "zod";
 
@@ -20,10 +21,10 @@ export async function PUT(
     if (response) return response;
 
     const { id } = await params;
-    const json = await req.json();
 
-    // Validasi body
-    const body = categorySchema.parse(json);
+    const parsed = await parseJsonBody(req, categorySchema);
+    if (!parsed.ok) return parsed.response;
+    const body = parsed.data;
 
     // Cek apakah tag ada
     const existingSlug = await prisma.category.findUnique({

@@ -2,6 +2,7 @@ import prisma from "@/lib/prisma";
 import { requireAdmin } from "@/lib/require-admin";
 import { errors } from "@/lib/api-error";
 import { mapPrismaError } from "@/lib/prisma-error";
+import { parseJsonBody, parseSearchParams } from "@/lib/validate";
 import { consumeRateLimit } from "@/lib/login-throttle";
 import { generateUniquePostSlug } from "@/lib/slug";
 import { PostType } from "@/types/blogs";
@@ -22,16 +23,12 @@ export async function GET(req: NextRequest) {
     const { response } = await requireAdmin();
     if (response) return response;
 
-    const { searchParams } = new URL(req.url);
-    const { page, limit, search, status, categoryId, tagId } =
-      adminPostListQuerySchema.parse({
-        page: searchParams.get("page") ?? undefined,
-        limit: searchParams.get("limit") ?? undefined,
-        search: searchParams.get("search") ?? undefined,
-        status: searchParams.get("status") ?? undefined,
-        categoryId: searchParams.get("categoryId") ?? undefined,
-        tagId: searchParams.get("tagId") ?? undefined,
-      });
+    const parsed = parseSearchParams(
+      new URL(req.url).searchParams,
+      adminPostListQuerySchema
+    );
+    if (!parsed.ok) return parsed.response;
+    const { page, limit, search, status, categoryId, tagId } = parsed.data;
 
     const where = {
       type: PostType.WRITING,
@@ -133,9 +130,9 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const json = await req.json();
-
-    const body = postCreateSchema.parse(json);
+    const parsedBody = await parseJsonBody(req, postCreateSchema);
+    if (!parsedBody.ok) return parsedBody.response;
+    const body = parsedBody.data;
 
     const { tagIds, ...postData } = body;
     // Slug selalu dibuat di server; slug dari client diabaikan.

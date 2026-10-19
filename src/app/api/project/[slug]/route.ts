@@ -4,6 +4,7 @@ import prisma from "@/lib/prisma";
 import { requireAdmin } from "@/lib/require-admin";
 import { errors } from "@/lib/api-error";
 import { mapPrismaError } from "@/lib/prisma-error";
+import { parseJsonBody } from "@/lib/validate";
 import { deleteImage, deleteMultipleImages, extractPathFromUrl } from "@/lib/imageUpload";
 import { deleteImagesFromContent } from "@/lib/extract-image-from-content";
 import z from "zod";
@@ -134,10 +135,9 @@ export async function PUT(
     if (response) return response;
 
     const { slug } = await params;
-    const json = await req.json();
-
-    // Validasi body
-    const body = projectServerSchema.parse(json);
+    const parsed = await parseJsonBody(req, projectServerSchema);
+    if (!parsed.ok) return parsed.response;
+    const body = parsed.data;
 
     // Cek apakah project ada
     const existingProject = await prisma.project.findUnique({
@@ -155,8 +155,8 @@ export async function PUT(
       where: { id: slug },
       data: {
         ...body,
-        startDate: json.startDate ? new Date(json.startDate) : undefined,
-        endDate: json.endDate ? new Date(json.endDate) : undefined,
+        startDate: body.startDate,
+        endDate: body.endDate,
         slug: generateSlug(body.title),
       },
     });

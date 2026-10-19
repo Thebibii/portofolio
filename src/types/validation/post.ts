@@ -28,5 +28,16 @@ export const adminPostListQuerySchema = z.object({
   tagId: z.string().optional(),
 });
 
+export const guestPostListQuerySchema = z.object({
+  search: z.string().optional(),
+  tag: z.string().optional(),
+  category: z.string().optional(),
+  limit: z.coerce.number().int().min(1).max(50).catch(10),
+  page: z.coerce.number().int().min(1).catch(1),
+  sortBy: z.string().default("createdAt"),
+  sortOrder: z.enum(["asc", "desc"]).catch("desc"),
+});
+
 export type PostInput = z.infer<typeof postInputSchema>;
 export type AdminPostListQuery = z.infer<typeof adminPostListQuerySchema>;
+export type GuestPostListQuery = z.infer<typeof guestPostListQuerySchema>;

@@ -2,6 +2,7 @@ import prisma from "@/lib/prisma";
 import { requireAdmin } from "@/lib/require-admin";
 import { errors } from "@/lib/api-error";
 import { mapPrismaError } from "@/lib/prisma-error";
+import { parseJsonBody } from "@/lib/validate";
 import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import z from "zod";
@@ -19,8 +20,9 @@ export async function PATCH(
     if (response) return response;
 
     const { slug } = await params;
-    const json = await req.json();
-    const body = featuredSchema.parse(json);
+    const parsed = await parseJsonBody(req, featuredSchema);
+    if (!parsed.ok) return parsed.response;
+    const body = parsed.data;
 
     const existing = await prisma.project.findUnique({ where: { id: slug } });
     if (!existing) {
