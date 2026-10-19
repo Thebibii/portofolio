@@ -167,7 +167,7 @@ Fase 0 ──► Fase 1 ──► Fase 2 ──► Fase 3 ──► Fase 4 ─�
 ### Error handling
 
 - [x] E-001 — Envelope error tidak konsisten
-- [ ] E-002 — Catch tanpa logging (8 blok)
+- [x] E-002 — Catch tanpa logging (8 blok)
 - [ ] E-003 — Wrapper handler konservatif, 51 catch block (K-11)
 - [x] E-004 — `P2025` parsial, `P2002` nol → `mapPrismaError` terpasang; `P2002` = 409 (Like ditunda)
 - [x] E-005 — Zod `parse` 12 route → `parseJsonBody`/`parseSearchParams`
@@ -175,7 +175,7 @@ Fase 0 ──► Fase 1 ──► Fase 2 ──► Fase 3 ──► Fase 4 ─�
 - [ ] E-007 — Error state UI tidak konsisten
 - [ ] E-008 — `QueryClient` tanpa default
 - [x] E-009 — `parseInt`/`Number` tanpa guard → `parseId` + `guestPostListQuerySchema`
-- [ ] E-010 — `console.log` sisa debugging & `catch (error: any)`
+- [x] E-010 — `console.log` sisa debugging & `catch (error: any)`
 
 ### Gate & keputusan
 
