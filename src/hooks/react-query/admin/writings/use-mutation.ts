@@ -1,4 +1,5 @@
 import { baseURL } from "@/lib/api";
+import { getErrorMessage } from "@/lib/errors";
 import { Post, PostDelete } from "@/types/blogs";
 import { APIResponse } from "@/types/response";
 import { useMutation } from "@tanstack/react-query";
@@ -25,14 +26,14 @@ export const useCreateWriting = ({
         if (!res.ok) {
           const errors = await res.json().catch(() => ({}));
 
-          throw new Error(errors.error || "Gagal membuat writings");
+          throw new Error(
+            getErrorMessage(errors.error, "Gagal membuat writing")
+          );
         }
 
         return res.json();
       } catch (error) {
-        throw new Error(
-          error instanceof Error ? error.message : "Terjadi kesalahan"
-        );
+        throw new Error(getErrorMessage(error, "Gagal membuat writing"));
       }
     },
     onSuccess,
@@ -62,14 +63,14 @@ export const useDeleteWriting = ({
         if (!res.ok) {
           const data = await res.json().catch(() => ({}));
 
-          throw new Error(data.error || "Gagal menghapus blog");
+          throw new Error(
+            getErrorMessage(data.error, "Gagal menghapus writing")
+          );
         }
 
         return res.json();
       } catch (error) {
-        throw new Error(
-          error instanceof Error ? error.message : "Terjadi kesalahan"
-        );
+        throw new Error(getErrorMessage(error, "Gagal menghapus writing"));
       }
     },
     onSuccess,
@@ -101,14 +102,14 @@ export const useUpdateWriting = ({
         if (!res.ok) {
           const data = await res.json().catch(() => ({}));
 
-          throw new Error(data.error || "Gagal mengedit slug");
+          throw new Error(
+            getErrorMessage(data.error, "Gagal memperbarui writing")
+          );
         }
 
         return res.json();
       } catch (error) {
-        throw new Error(
-          error instanceof Error ? error.message : "Terjadi kesalahan"
-        );
+        throw new Error(getErrorMessage(error, "Gagal memperbarui writing"));
       }
     },
     onSuccess,

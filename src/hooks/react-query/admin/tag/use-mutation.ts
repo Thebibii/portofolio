@@ -1,4 +1,5 @@
 import { baseURL } from "@/lib/api";
+import { getErrorMessage } from "@/lib/errors";
 import { APIResponse } from "@/types/response";
 import { useMutation } from "@tanstack/react-query";
 
@@ -29,14 +30,12 @@ export const useCreateTag = ({
         if (!res.ok) {
           const errors = await res.json().catch(() => ({}));
 
-          throw new Error(errors.error || "Gagal membuat tag");
+          throw new Error(getErrorMessage(errors.error, "Gagal membuat tag"));
         }
 
         return res.json();
       } catch (error) {
-        throw new Error(
-          error instanceof Error ? error.message : "Terjadi kesalahan"
-        );
+        throw new Error(getErrorMessage(error, "Gagal membuat tag"));
       }
     },
     onSuccess,
@@ -68,14 +67,14 @@ export const useUpdateTag = ({
         if (!res.ok) {
           const data = await res.json().catch(() => ({}));
 
-          throw new Error(data.error || "Gagal mengedit tag");
+          throw new Error(
+            getErrorMessage(data.error, "Gagal memperbarui tag")
+          );
         }
 
         return res.json();
       } catch (error) {
-        throw new Error(
-          error instanceof Error ? error.message : "Terjadi kesalahan"
-        );
+        throw new Error(getErrorMessage(error, "Gagal memperbarui tag"));
       }
     },
     onSuccess,
@@ -105,14 +104,12 @@ export const useDeleteTag = ({
         if (!res.ok) {
           const data = await res.json().catch(() => ({}));
 
-          throw new Error(data.error || "Gagal membuat tag");
+          throw new Error(getErrorMessage(data.error, "Gagal menghapus tag"));
         }
 
         return res.json();
       } catch (error) {
-        throw new Error(
-          error instanceof Error ? error.message : "Terjadi kesalahan"
-        );
+        throw new Error(getErrorMessage(error, "Gagal menghapus tag"));
       }
     },
     onSuccess,

@@ -1,4 +1,5 @@
 import { baseURL } from "@/lib/api";
+import { getErrorMessage } from "@/lib/errors";
 import { Post, PostDelete } from "@/types/blogs";
 import { ProjectFormData } from "@/types/projects";
 import { APIResponse } from "@/types/response";
@@ -26,14 +27,12 @@ export const useCreateBlog = ({
         if (!res.ok) {
           const errors = await res.json().catch(() => ({}));
 
-          throw new Error(errors.error || "Gagal membuat blogs");
+          throw new Error(getErrorMessage(errors.error, "Gagal membuat blog"));
         }
 
         return res.json();
       } catch (error) {
-        throw new Error(
-          error instanceof Error ? error.message : "Terjadi kesalahan"
-        );
+        throw new Error(getErrorMessage(error, "Gagal membuat blog"));
       }
     },
     onSuccess,
@@ -63,14 +62,12 @@ export const useDeleteBlog = ({
         if (!res.ok) {
           const data = await res.json().catch(() => ({}));
 
-          throw new Error(data.error || "Gagal menghapus blog");
+          throw new Error(getErrorMessage(data.error, "Gagal menghapus blog"));
         }
 
         return res.json();
       } catch (error) {
-        throw new Error(
-          error instanceof Error ? error.message : "Terjadi kesalahan"
-        );
+        throw new Error(getErrorMessage(error, "Gagal menghapus blog"));
       }
     },
     onSuccess,
@@ -108,13 +105,15 @@ export const useToggleFeaturedPost = ({
 
         if (!res.ok) {
           const data = await res.json().catch(() => ({}));
-          throw new Error(data.error || "Gagal mengubah featured status");
+          throw new Error(
+            getErrorMessage(data.error, "Gagal mengubah status featured")
+          );
         }
 
         return res.json();
       } catch (error) {
         throw new Error(
-          error instanceof Error ? error.message : "Terjadi kesalahan"
+          getErrorMessage(error, "Gagal mengubah status featured")
         );
       }
     },
@@ -147,14 +146,12 @@ export const useUpdateBlog = ({
         if (!res.ok) {
           const data = await res.json().catch(() => ({}));
 
-          throw new Error(data.error || "Gagal mengedit slug");
+          throw new Error(getErrorMessage(data.error, "Gagal memperbarui blog"));
         }
 
         return res.json();
       } catch (error) {
-        throw new Error(
-          error instanceof Error ? error.message : "Terjadi kesalahan"
-        );
+        throw new Error(getErrorMessage(error, "Gagal memperbarui blog"));
       }
     },
     onSuccess,
