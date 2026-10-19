@@ -35,6 +35,7 @@
 - [x] E-010 — 10 `console.log` debug dihapus (audit log `auth.ts` dipertahankan); 0 `catch (error: any)`; typo `imageUpload`; rule `no-console`
 - [x] E-003 — project, admin, guest (17 route) memakai wrapper; `cron/keep-alive` dikecualikan (catch health-check dipertahankan)
 - [x] E-006 — `getErrorMessage` + fallback spesifik per aksi di 6 hook admin; 11 pesan copy-paste diperbaiki
+- [x] R-019 — `src/types/api.ts`; `APIResponse` bertipe generik; `Tag` + `TagFormData` satu definisi; `data: any`/`success?: number` dihapus
 - [ ] `taxonomy.ts` — ditunda (tidak ada schema taxonomy di R-003/R-004; R-007 ada di fase lain)
 
 ---
@@ -129,7 +130,7 @@ export interface PaginationMeta { total: number; page: number; limit: number; to
 
   `src/types/tags.ts` menjadi satu-satunya definisi `Tag`; `src/types/blogs.ts` mengimpor dan mengekspor ulang (karena `Post.tags: Tag[]`).
 - **Server/Client:** shared murni.
-- **File terdampak:** 8 file.
+- **File terdampak:** 19 file (6 hook, 9 page/component, 3 tipe + `api.ts` baru).
 - **Prioritas:** **Rendah**
 - **Risiko:** Rendah, tetapi mengganti `APIResponse` bisa memunculkan banyak error TS sekaligus — lakukan per-domain.
 - **Estimasi usaha:** 3 jam.

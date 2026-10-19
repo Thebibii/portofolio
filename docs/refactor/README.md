@@ -158,7 +158,7 @@ Fase 0 ──► Fase 1 ──► Fase 2 ──► Fase 3 ──► Fase 4 ─�
 - [ ] R-016 — Dialog konfirmasi hapus 5×
 - [ ] R-017 — Empty/loading state belum berpreset
 - [ ] R-018 — Format tanggal tersebar
-- [ ] R-019 — Duplikasi tipe & `any`
+- [x] R-019 — Duplikasi tipe & `any`
 - [ ] R-020 — Dead code & import tak terpakai (route `/api/guest*` **dikecualikan**, K-3)
 - [x] R-021 — 22 hook `.tsx` tanpa JSX
 - [ ] R-022 — Dua implementasi upload Supabase
