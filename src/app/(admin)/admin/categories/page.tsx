@@ -38,7 +38,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { useAdminTag } from "@/hooks/react-query/admin/tag/use-query";
-import { formattedDate } from "@/hooks/use-formatted-date";
+import { formattedDate } from "@/lib/format-date";
 import { Tag } from "@/types/tags";
 import {
   useCreateTag,

@@ -11,7 +11,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useAdminDashboard } from "@/hooks/react-query/admin/dashboard/use-query";
-import { formattedDate } from "@/hooks/use-formatted-date";
+import { formattedDate } from "@/lib/format-date";
 import {
   Activity,
   ArrowRight,

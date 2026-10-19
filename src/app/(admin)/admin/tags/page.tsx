@@ -59,7 +59,7 @@ import {
 import LoadingState from "@/components/reusable/state/loading-state";
 import AdminTagsSkeleton from "@/components/reusable/skeleton/AdminTagsSkeleton";
 import { Icons } from "@/components/icons";
-import { formattedDate } from "@/hooks/use-formatted-date";
+import { formattedDate } from "@/lib/format-date";
 
 export default function Page() {
   const { data, isLoading: isLoadingData } = useAdminTag();

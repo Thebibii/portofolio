@@ -2,7 +2,7 @@
 import { Icons } from "@/components/icons";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { formatCreatedUpdated } from "@/hooks/use-formatted-date";
+import { formatCreatedUpdated } from "@/lib/format-date";
 import Image from "next/image";
 import ProfileImage from "../../../../../../public/profile.png";
 import Link from "next/link";

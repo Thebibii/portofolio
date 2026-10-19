@@ -1,6 +1,6 @@
 "use client";
 import { useGetDataAbout } from "@/hooks/react-query/guest/use-query";
-import { formattedDate } from "@/hooks/use-formatted-date";
+import { formattedDate } from "@/lib/format-date";
 import LoadingState from "@/components/reusable/state/loading-state";
 import { CurrentActivitySkeleton } from "@/components/reusable/skeleton/CurrentActivitySkeleton";
 import { ExperienceSkeleton } from "@/components/reusable/skeleton/ExperienceSkeleton";
