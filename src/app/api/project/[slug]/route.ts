@@ -2,12 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import prisma from "@/lib/prisma";
 import { requireAdmin } from "@/lib/require-admin";
-import { errors } from "@/lib/api-error";
-import { mapPrismaError } from "@/lib/prisma-error";
+import { withRouteHandler } from "@/lib/api-handler";
 import { parseJsonBody } from "@/lib/validate";
 import { deleteImage, deleteMultipleImages, extractPathFromUrl } from "@/lib/imageUpload";
 import { deleteImagesFromContent } from "@/lib/extract-image-from-content";
-import z from "zod";
 import { generateSlug } from "@/lib/slug";
 import { projectServerSchema } from "@/types/validation/project";
 
@@ -16,11 +14,11 @@ function isValidCUID(str: string): boolean {
   return cuidRegex.test(str);
 }
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ slug: string }> }
-) {
-  try {
+type ProjectContext = { params: Promise<{ slug: string }> };
+
+export const GET = withRouteHandler<ProjectContext>(
+  "project/:slug",
+  async (_req, { params }) => {
     const { session, response } = await requireAdmin();
     if (response) return response;
 
@@ -49,20 +47,12 @@ export async function GET(
     }
 
     return NextResponse.json({ data });
-  } catch (error) {
-    console.error("Error fetching project:", error);
-    return NextResponse.json(
-      { error: "Terjadi kesalahan pada server" },
-      { status: 500 }
-    );
   }
-}
+);
 
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: Promise<{ slug: string }> }
-) {
-  try {
+export const DELETE = withRouteHandler<ProjectContext>(
+  "project/:slug",
+  async (_req, { params }) => {
     const { session, response } = await requireAdmin();
     if (response) return response;
 
@@ -107,30 +97,20 @@ export async function DELETE(
       select: { id: true },
     });
 
-  revalidatePath('/');
-  revalidatePath('/projects');
-  if (project?.slug) revalidatePath(`/projects/${project.slug}`);
+    revalidatePath('/');
+    revalidatePath('/projects');
+    if (project?.slug) revalidatePath(`/projects/${project.slug}`);
 
-  return NextResponse.json(
-    { data, message: "Data deleted successfully" },
-    { status: 200 }
-  );
-  } catch (error) {
-    const mapped = mapPrismaError(error);
-    if (mapped) return errors.mapped(mapped);
-    console.error(error); // untuk log internal
     return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
+      { data, message: "Data deleted successfully" },
+      { status: 200 }
     );
   }
-}
+);
 
-export async function PUT(
-  req: NextRequest,
-  { params }: { params: Promise<{ slug: string }> }
-) {
-  try {
+export const PUT = withRouteHandler<ProjectContext>(
+  "project/:slug",
+  async (req: NextRequest, { params }) => {
     const { session, response } = await requireAdmin();
     if (response) return response;
 
@@ -171,21 +151,5 @@ export async function PUT(
       { data, success: true, message: "Project berhasil diperbarui" },
       { status: 200 }
     );
-  } catch (error) {
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: error.issues.map((e) => e.message) },
-        { status: 400 }
-      );
-    }
-
-    const mapped = mapPrismaError(error);
-    if (mapped) return errors.mapped(mapped);
-
-    console.error("[project/:slug] failed:", error);
-    return NextResponse.json(
-      { error: "Terjadi kesalahan pada server" },
-      { status: 500 }
-    );
   }
-}
+);
