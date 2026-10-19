@@ -166,7 +166,7 @@ Fase 0 ──► Fase 1 ──► Fase 2 ──► Fase 3 ──► Fase 4 ─�
 
 ### Error handling
 
-- [ ] E-001 — Envelope error tidak konsisten
+- [x] E-001 — Envelope error tidak konsisten
 - [ ] E-002 — Catch tanpa logging (8 blok)
 - [ ] E-003 — Wrapper handler konservatif, 51 catch block (K-11)
 - [ ] E-004 — `P2025` parsial, `P2002` nol → `P2002` = 409 wajib sebelum migrasi (K-2)
