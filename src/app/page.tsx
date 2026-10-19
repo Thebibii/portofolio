@@ -3,8 +3,9 @@ import JsonLd from "@/components/seo/json-ld";
 import { personSchema, websiteSchema } from "@/components/seo/schemas";
 import HomeClient from "@/components/home/home-client";
 import { getHomeData } from "@/lib/server/get-home-data";
+import { SITE_URL } from "@/lib/seo/site";
 
-const baseUrl = "https://thebibie.vercel.app";
+const baseUrl = SITE_URL;
 
 export const revalidate = 3600;
 

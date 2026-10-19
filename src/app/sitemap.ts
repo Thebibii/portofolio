@@ -1,8 +1,9 @@
 import type { MetadataRoute } from "next";
 import prisma from "@/lib/prisma";
+import { SITE_URL } from "@/lib/seo/site";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = "https://thebibie.vercel.app";
+  const baseUrl = SITE_URL;
 
   const staticPages = [
     { url: baseUrl, lastModified: new Date(), changeFrequency: "monthly" as const, priority: 1 },

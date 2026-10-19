@@ -3,13 +3,13 @@ import { notFound } from "next/navigation";
 import prisma from "@/lib/prisma";
 import JsonLd from "@/components/seo/json-ld";
 import { softwareApplicationSchema, breadcrumbSchema } from "@/components/seo/schemas";
+import { buildPostMetadata } from "@/lib/seo/metadata";
+import { SITE_URL } from "@/lib/seo/site";
 import ProjectDetailClient from "./_components/project-detail-client";
 
 type Props = {
   params: Promise<{ slug: string }>;
 };
-
-const baseUrl = "https://thebibie.vercel.app";
 
 export const revalidate = 3600;
 
@@ -31,26 +31,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   if (!project) return { title: "Projek Tidak Ditemukan" };
 
-  return {
+  return buildPostMetadata({
     title: project.title,
     description: project.description ?? undefined,
-    alternates: {
-      canonical: `${baseUrl}/projects/${slug}`,
-    },
-    openGraph: {
-      title: project.title,
-      description: project.description ?? undefined,
-      url: `${baseUrl}/projects/${slug}`,
-      images: project.image
-        ? [{ url: project.image }]
-        : [{ url: "/profile.png", width: 1080, height: 1440, alt: "The Bibi" }],
-    },
-    twitter: {
-      title: project.title,
-      description: project.description ?? undefined,
-      images: project.image ? [project.image] : ["/profile.png"],
-    },
-  };
+    path: `/projects/${slug}`,
+    image: project.image,
+  });
 }
 
 export default async function ProjectDetailPage({ params }: Props) {
@@ -71,9 +57,9 @@ export default async function ProjectDetailPage({ params }: Props) {
       <JsonLd
         schema={breadcrumbSchema({
           items: [
-            { name: "Beranda", url: baseUrl },
-            { name: "Projek", url: `${baseUrl}/projects` },
-            { name: project.title, url: `${baseUrl}/projects/${project.slug}` },
+            { name: "Beranda", url: SITE_URL },
+            { name: "Projek", url: `${SITE_URL}/projects` },
+            { name: project.title, url: `${SITE_URL}/projects/${project.slug}` },
           ],
         })}
       />
@@ -81,8 +67,8 @@ export default async function ProjectDetailPage({ params }: Props) {
         schema={softwareApplicationSchema({
           name: project.title,
           description: project.description ?? undefined,
-          url: `${baseUrl}/projects/${project.slug}`,
-          image: project.image ?? `${baseUrl}/profile.png`,
+          url: `${SITE_URL}/projects/${project.slug}`,
+          image: project.image ?? `${SITE_URL}/profile.png`,
           operatingSystem: "Web",
           applicationCategory: "WebApplication",
         })}

@@ -3,13 +3,13 @@ import { notFound } from "next/navigation";
 import prisma from "@/lib/prisma";
 import JsonLd from "@/components/seo/json-ld";
 import { articleSchema, breadcrumbSchema } from "@/components/seo/schemas";
+import { buildPostMetadata } from "@/lib/seo/metadata";
+import { SITE_URL } from "@/lib/seo/site";
 import WritingDetailClient from "./_components/writing-detail-client";
 
 type Props = {
   params: Promise<{ slug: string }>;
 };
-
-const baseUrl = "https://thebibie.vercel.app";
 
 export const revalidate = 3600;
 
@@ -35,27 +35,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   if (!writing) return { title: "Tulisan Tidak Ditemukan" };
 
-  return {
+  return buildPostMetadata({
     title: writing.title,
     description: writing.excerpt ?? undefined,
-    alternates: {
-      canonical: `${baseUrl}/writings/${slug}`,
-    },
-    openGraph: {
-      title: writing.title,
-      description: writing.excerpt ?? undefined,
-      url: `${baseUrl}/writings/${slug}`,
-      type: "article",
-      images: writing.coverImage
-        ? [{ url: writing.coverImage }]
-        : [{ url: "/profile.png", width: 1080, height: 1440, alt: "The Bibi" }],
-    },
-    twitter: {
-      title: writing.title,
-      description: writing.excerpt ?? undefined,
-      images: writing.coverImage ? [writing.coverImage] : ["/profile.png"],
-    },
-  };
+    path: `/writings/${slug}`,
+    image: writing.coverImage,
+    type: "article",
+  });
 }
 
 export default async function WritingDetailPage({ params }: Props) {
@@ -93,9 +79,9 @@ export default async function WritingDetailPage({ params }: Props) {
       <JsonLd
         schema={breadcrumbSchema({
           items: [
-            { name: "Beranda", url: baseUrl },
-            { name: "Tulisan", url: `${baseUrl}/writings` },
-            { name: writing.title, url: `${baseUrl}/writings/${writing.slug}` },
+            { name: "Beranda", url: SITE_URL },
+            { name: "Tulisan", url: `${SITE_URL}/writings` },
+            { name: writing.title, url: `${SITE_URL}/writings/${writing.slug}` },
           ],
         })}
       />
@@ -103,10 +89,10 @@ export default async function WritingDetailPage({ params }: Props) {
         schema={articleSchema({
           headline: writing.title,
           description: writing.excerpt ?? undefined,
-          image: writing.coverImage ?? `${baseUrl}/profile.png`,
+          image: writing.coverImage ?? `${SITE_URL}/profile.png`,
           datePublished: writing.createdAt.toISOString(),
           dateModified: writing.updatedAt.toISOString(),
-          url: `${baseUrl}/writings/${writing.slug}`,
+          url: `${SITE_URL}/writings/${writing.slug}`,
           authorName: "Habibie Bayezid Wildan",
         })}
       />

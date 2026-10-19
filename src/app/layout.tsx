@@ -7,6 +7,7 @@ import { ReactQueryClientProvider } from "@/provider/react-query";
 import ProgressProvider from "@/provider/proggres-bar";
 import { Toaster } from "sonner";
 import { Providers } from "@/provider/next-auth";
+import { SITE_URL } from "@/lib/seo/site";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -21,7 +22,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://thebibie.vercel.app"),
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "The Bibi — Portfolio",
     template: "%s | The Bibi",
@@ -31,7 +32,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "The Bibi — Portfolio",
     description: "Portofolio pribadi Habibie Bayezid Wildan (The Bibi), menampilkan projek, blog, dan tulisan",
-    url: "https://thebibie.vercel.app",
+    url: SITE_URL,
     siteName: "The Bibi",
     locale: "id_ID",
     type: "website",

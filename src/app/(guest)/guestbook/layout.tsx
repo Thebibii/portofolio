@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { absoluteUrl } from "@/lib/seo/site";
 
 export const metadata: Metadata = {
   title: "Buku Tamu",
@@ -10,7 +11,7 @@ export const metadata: Metadata = {
       "Tinggalkan pesan — buku tamu untuk pengunjung berbagi pemikiran, masukan, atau sekadar menyapa.",
   },
   alternates: {
-    canonical: "https://thebibie.vercel.app/guestbook",
+    canonical: absoluteUrl("/guestbook"),
   },
 };
 

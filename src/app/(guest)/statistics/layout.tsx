@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { absoluteUrl } from "@/lib/seo/site";
 
 export const metadata: Metadata = {
   title: "Statistik",
@@ -10,7 +11,7 @@ export const metadata: Metadata = {
       "Statistik dan analitik situs — dilihat, disukai, dan metrik keterlibatan untuk blog, tulisan, dan projek.",
   },
   alternates: {
-    canonical: "https://thebibie.vercel.app/statistics",
+    canonical: absoluteUrl("/statistics"),
   },
 };
 

@@ -3,13 +3,13 @@ import { notFound } from "next/navigation";
 import prisma from "@/lib/prisma";
 import JsonLd from "@/components/seo/json-ld";
 import { articleSchema, breadcrumbSchema } from "@/components/seo/schemas";
+import { buildPostMetadata } from "@/lib/seo/metadata";
+import { SITE_URL } from "@/lib/seo/site";
 import BlogDetailClient from "./_components/blog-detail-client";
 
 type Props = {
   params: Promise<{ slug: string }>;
 };
-
-const baseUrl = "https://thebibie.vercel.app";
 
 export const revalidate = 3600;
 
@@ -35,27 +35,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   if (!blog) return { title: "Blog Tidak Ditemukan" };
 
-  return {
+  return buildPostMetadata({
     title: blog.title,
     description: blog.excerpt ?? undefined,
-    alternates: {
-      canonical: `${baseUrl}/blogs/${slug}`,
-    },
-    openGraph: {
-      title: blog.title,
-      description: blog.excerpt ?? undefined,
-      url: `${baseUrl}/blogs/${slug}`,
-      type: "article",
-      images: blog.coverImage
-        ? [{ url: blog.coverImage }]
-        : [{ url: "/profile.png", width: 1080, height: 1440, alt: "The Bibi" }],
-    },
-    twitter: {
-      title: blog.title,
-      description: blog.excerpt ?? undefined,
-      images: blog.coverImage ? [blog.coverImage] : ["/profile.png"],
-    },
-  };
+    path: `/blogs/${slug}`,
+    image: blog.coverImage,
+    type: "article",
+  });
 }
 
 export default async function BlogDetailPage({ params }: Props) {
@@ -93,9 +79,9 @@ export default async function BlogDetailPage({ params }: Props) {
       <JsonLd
         schema={breadcrumbSchema({
           items: [
-            { name: "Beranda", url: baseUrl },
-            { name: "Blog", url: `${baseUrl}/blogs` },
-            { name: blog.title, url: `${baseUrl}/blogs/${blog.slug}` },
+            { name: "Beranda", url: SITE_URL },
+            { name: "Blog", url: `${SITE_URL}/blogs` },
+            { name: blog.title, url: `${SITE_URL}/blogs/${blog.slug}` },
           ],
         })}
       />
@@ -103,10 +89,10 @@ export default async function BlogDetailPage({ params }: Props) {
         schema={articleSchema({
           headline: blog.title,
           description: blog.excerpt ?? undefined,
-          image: blog.coverImage ?? `${baseUrl}/profile.png`,
+          image: blog.coverImage ?? `${SITE_URL}/profile.png`,
           datePublished: blog.createdAt.toISOString(),
           dateModified: blog.updatedAt.toISOString(),
-          url: `${baseUrl}/blogs/${blog.slug}`,
+          url: `${SITE_URL}/blogs/${blog.slug}`,
           authorName: "Habibie Bayezid Wildan",
         })}
       />
