@@ -15,6 +15,7 @@ import { useAdminCategory } from "@/hooks/react-query/admin/category/use-query";
 import { useAdminTag } from "@/hooks/react-query/admin/tag/use-query";
 import { Post, PostDelete } from "@/types/blogs";
 import { useQueryClient } from "@tanstack/react-query";
+import { qk } from "@/lib/react-query/keys";
 import { BookOpen, Plus } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -92,7 +93,7 @@ function AdminBlogsContent() {
       toast.success("Success", {
         description: body.message ?? "Success",
       });
-      queryClient.invalidateQueries({ queryKey: ["get.admin.blogs"] });
+      queryClient.invalidateQueries({ queryKey: qk.admin.blogs });
       // Deleting the last item of a page past the first one: step back so the
       // user does not land on an empty page.
       if (page > 1 && (data?.data?.length ?? 0) <= 1) {
@@ -104,7 +105,7 @@ function AdminBlogsContent() {
   const { mutate: toggleFeatured } = useToggleFeaturedPost({
     onSuccess: (body) => {
       toast.success(body.message ?? "Success");
-      queryClient.invalidateQueries({ queryKey: ["get.admin.blogs"] });
+      queryClient.invalidateQueries({ queryKey: qk.admin.blogs });
     },
     onError: (error) => {
       toast.error(error?.message || "Gagal mengubah featured status");

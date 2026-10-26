@@ -11,6 +11,5 @@ export const useGuestStatistics = () => {
       if (!res.ok) throw new Error(data.error);
       return data;
     },
-    refetchOnWindowFocus: false,
   });
 };

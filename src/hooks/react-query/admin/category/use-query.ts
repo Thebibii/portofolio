@@ -11,6 +11,5 @@ export const useAdminCategory = () => {
       if (!res.ok) throw new Error("Failed to fetch category");
       return data;
     },
-    refetchOnWindowFocus: false,
   });
 };

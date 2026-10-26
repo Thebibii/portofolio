@@ -12,6 +12,5 @@ export const useGuestCategory = (type: string, initialData?: any) => {
       return data;
     },
     initialData,
-    refetchOnWindowFocus: false,
   });
 };

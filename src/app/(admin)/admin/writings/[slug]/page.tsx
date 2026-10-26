@@ -7,6 +7,7 @@ import { useAdminTag } from "@/hooks/react-query/admin/tag/use-query";
 import { useUpdateWriting } from "@/hooks/react-query/admin/writings/use-mutation";
 import { useAdminWritingBySlug } from "@/hooks/react-query/admin/writings/use-query";
 import { useQueryClient } from "@tanstack/react-query";
+import { qk } from "@/lib/react-query/keys";
 import { useParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
 
@@ -24,9 +25,9 @@ export default function Page() {
   const { mutate } = useUpdateWriting({
     slug: params.slug,
     onSuccess: (data) => {
-      queryClient.invalidateQueries({
-        queryKey: ["get.admin.writings", params.slug],
-      });
+      // The list prefix also covers the detail key, so both the editor cache
+      // and the list are refreshed (staleTime would otherwise hide the edit).
+      queryClient.invalidateQueries({ queryKey: qk.admin.writings });
       toast.success("Post updated successfully", {
         description: `"${data?.data?.title}" has been updated and saved.`,
       });

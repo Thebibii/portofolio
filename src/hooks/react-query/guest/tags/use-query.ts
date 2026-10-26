@@ -12,6 +12,5 @@ export const useGuestTags = (type: string, initialData?: any) => {
       return data;
     },
     initialData,
-    refetchOnWindowFocus: false,
   });
 };

@@ -6,6 +6,7 @@ import { useAdminCategory } from "@/hooks/react-query/admin/category/use-query";
 import { useAdminTag } from "@/hooks/react-query/admin/tag/use-query";
 import { useCreateWriting } from "@/hooks/react-query/admin/writings/use-mutation";
 import { useQueryClient } from "@tanstack/react-query";
+import { qk } from "@/lib/react-query/keys";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
@@ -20,7 +21,7 @@ export default function Page() {
       toast.success("Post created successfully", {
         description: `"${data.data.title}" has been created and saved.`,
       });
-      queryClient.invalidateQueries({ queryKey: ["get.admin.writings"] });
+      queryClient.invalidateQueries({ queryKey: qk.admin.writings });
       router.back();
     },
     onError: (error: any) => {

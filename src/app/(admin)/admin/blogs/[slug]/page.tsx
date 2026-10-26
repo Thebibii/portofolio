@@ -8,6 +8,7 @@ import { useAdminBlogBySlug } from "@/hooks/react-query/admin/blogs/use-query";
 import { useAdminCategory } from "@/hooks/react-query/admin/category/use-query";
 import { useAdminTag } from "@/hooks/react-query/admin/tag/use-query";
 import { useQueryClient } from "@tanstack/react-query";
+import { qk } from "@/lib/react-query/keys";
 import { useParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
 
@@ -25,9 +26,9 @@ export default function Page() {
   const { mutate } = useUpdateBlog({
     slug: params.slug,
     onSuccess: (data) => {
-      queryClient.invalidateQueries({
-        queryKey: ["get.admin.blogs", params.slug],
-      });
+      // The list prefix also covers the detail key, so both the editor cache
+      // and the list are refreshed (staleTime would otherwise hide the edit).
+      queryClient.invalidateQueries({ queryKey: qk.admin.blogs });
       toast.success("Post updated successfully", {
         description: `"${data?.data?.title}" has been updated and saved.`,
       });

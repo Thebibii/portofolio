@@ -1,4 +1,5 @@
 "use client";
+import { useEffect } from "react";
 import { useGetDataAbout } from "@/hooks/react-query/guest/use-query";
 import { formattedDate } from "@/lib/format-date";
 import LoadingState from "@/components/reusable/state/loading-state";
@@ -16,12 +17,15 @@ import {
 export default function Page() {
   const { data, isLoading, isError, error } = useGetDataAbout();
 
-  if (isError && error) {
+  // Toasting during render fired on every re-render; run it once per error.
+  useEffect(() => {
+    if (!isError || !error) return;
+
     toast.error("Gagal memuat data", {
       description: error.message,
       id: "about-error",
     });
-  }
+  }, [isError, error]);
 
   return (
     <div className="space-y-12 font-mono pt-9 pb-12 lg:pt-24 mx-auto w-full max-w-6xl px-6 lg:px-8 xl:px-0">

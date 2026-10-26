@@ -11,6 +11,5 @@ export const useAdminTag = () => {
       if (!res.ok) throw new Error("Failed to fetch tag");
       return data;
     },
-    refetchOnWindowFocus: false,
   });
 };

@@ -1,8 +1,14 @@
+import { FlatCompat } from "@eslint/eslintrc";
 import { defineConfig, globalIgnores } from "eslint/config";
-import nextVitals from "eslint-config-next/core-web-vitals";
+
+// eslint-config-next 15.x ships legacy (eslintrc) configs, so ESLint 9 flat
+// config needs to load it through FlatCompat.
+const compat = new FlatCompat({
+  baseDirectory: import.meta.dirname,
+});
 
 const eslintConfig = defineConfig([
-  ...nextVitals,
+  ...compat.extends("next/core-web-vitals"),
   {
     rules: {
       "react/no-unescaped-entities": "off",
@@ -25,6 +31,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Vendored shadcn/ui + Plate primitives (upstream code, not hand-edited).
+    "src/components/ui/**",
   ]),
 ]);
 

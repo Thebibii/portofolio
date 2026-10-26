@@ -13,7 +13,6 @@ export const useGetDataHome = () => {
       if (!res.ok) throw new Error(data.error);
       return data;
     },
-    refetchOnWindowFocus: false,
   });
 };
 
@@ -27,6 +26,5 @@ export const useGetDataAbout = () => {
       if (!res.ok) throw new Error(data.error);
       return data;
     },
-    refetchOnWindowFocus: false,
   });
 };
