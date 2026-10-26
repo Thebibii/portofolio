@@ -1,6 +1,7 @@
 "use client";
 import ProjectCard from "@/components/reusable/home/project-card";
 import EmptyState from "@/components/reusable/state/empty-state";
+import { EmptyProjects } from "@/components/reusable/state/empty-presets";
 import { Rocket, Archive } from "lucide-react";
 
 type Props = {
@@ -22,13 +23,12 @@ export default function ProjectsClient({ featured, other }: Props) {
           <EmptyState
             data={featured}
             emptyFallback={
-              <div className="flex flex-col items-center justify-center py-16 text-center col-span-full">
-                <Rocket className="h-12 w-12 text-muted-foreground/40 mb-3" />
-                <h3 className="font-semibold">Belum ada projek unggulan</h3>
-                <p className="text-sm text-muted-foreground mt-1">
-                  Nanti lagi ya.
-                </p>
-              </div>
+              <EmptyProjects
+                icon={Rocket}
+                title="Belum ada projek unggulan"
+                description="Nanti lagi ya."
+                className="col-span-full"
+              />
             }
           >
             <ProjectCard data={featured} />
@@ -46,13 +46,12 @@ export default function ProjectsClient({ featured, other }: Props) {
           <EmptyState
             data={other}
             emptyFallback={
-              <div className="flex flex-col items-center justify-center py-16 text-center col-span-full">
-                <Archive className="h-12 w-12 text-muted-foreground/40 mb-3" />
-                <h3 className="font-semibold">Belum ada projek lain</h3>
-                <p className="text-sm text-muted-foreground mt-1">
-                  Nanti lagi ya.
-                </p>
-              </div>
+              <EmptyProjects
+                icon={Archive}
+                title="Belum ada projek lain"
+                description="Nanti lagi ya."
+                className="col-span-full"
+              />
             }
           >
             <ProjectCard data={other} />

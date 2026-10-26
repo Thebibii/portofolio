@@ -184,3 +184,12 @@ export const blogHooks = createGuestPostHooks({
 export const writingHooks = createGuestPostHooks(
   POST_TYPE_CONFIG[PostType.WRITING]
 );
+
+/** Hook set per post type, indexed by config so UI can stay type-agnostic. */
+export const GUEST_POST_HOOKS: Record<
+  PostType,
+  ReturnType<typeof createGuestPostHooks>
+> = {
+  [PostType.BLOG]: blogHooks,
+  [PostType.WRITING]: writingHooks,
+};

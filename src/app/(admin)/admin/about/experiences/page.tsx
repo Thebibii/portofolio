@@ -15,7 +15,7 @@ import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 import { Experience } from "@prisma/client";
 import LoadingState from "@/components/reusable/state/loading-state";
-import { Skeleton } from "@/components/ui/skeleton";
+import FormSkeleton from "@/components/reusable/skeleton/form-skeleton";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 
@@ -88,13 +88,7 @@ export default function Page() {
 
       <LoadingState
         data={!isLoading}
-        loadingFallback={
-          <div className="space-y-4">
-            <Skeleton className="h-10 w-full" />
-            <Skeleton className="h-64 w-full" />
-            <Skeleton className="h-10 w-full" />
-          </div>
-        }
+        loadingFallback={<FormSkeleton contentClassName="h-64" />}
       >
         <FormProvider {...form}>
           <form

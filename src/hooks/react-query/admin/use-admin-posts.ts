@@ -156,3 +156,12 @@ export const blogHooks = createAdminPostHooks(
 export const writingHooks = createAdminPostHooks(
   POST_TYPE_CONFIG[PostType.WRITING]
 );
+
+/** Hook set per post type, indexed by config so admin UI can stay type-agnostic. */
+export const ADMIN_POST_HOOKS: Record<
+  PostType,
+  ReturnType<typeof createAdminPostHooks>
+> = {
+  [PostType.BLOG]: blogHooks,
+  [PostType.WRITING]: writingHooks,
+};

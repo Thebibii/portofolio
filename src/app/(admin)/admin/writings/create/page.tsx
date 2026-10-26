@@ -1,72 +1,10 @@
 "use client";
-import { FormCreatePost } from "@/components/reusable/admin/blogs/form-create-post";
-import { PostFormSkeleton } from "@/components/reusable/skeleton/post-form-skeleton";
-import LoadingState from "@/components/reusable/state/loading-state";
-import { useAdminCategory } from "@/hooks/react-query/admin/category/use-query";
-import { useAdminTag } from "@/hooks/react-query/admin/tag/use-query";
-import { useCreateWriting } from "@/hooks/react-query/admin/writings/use-mutation";
-import { useQueryClient } from "@tanstack/react-query";
-import { qk } from "@/lib/react-query/keys";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
+import { PostFormPage } from "@/components/reusable/admin/post-form-page";
+import { POST_TYPE_CONFIG } from "@/lib/post-type-config";
+import { PostType } from "@/types/blogs";
 
 export default function Page() {
-  const { data: tag, isLoading: isLoadingTag } = useAdminTag();
-  const { data: categories, isLoading: isLoadingCategories } =
-    useAdminCategory();
-  const queryClient = useQueryClient();
-  const router = useRouter();
-  const { mutate } = useCreateWriting({
-    onSuccess: (data) => {
-      toast.success("Post created successfully", {
-        description: `"${data.data.title}" has been created and saved.`,
-      });
-      queryClient.invalidateQueries({ queryKey: qk.admin.writings });
-      router.back();
-    },
-    onError: (error: any) => {
-      const message =
-        error instanceof Error
-          ? error.message
-          : "Terjadi kesalahan yang tidak diketahui";
-
-      toast.error("Error", {
-        description: message,
-      });
-    },
-  });
-  const handleSubmit = (data: any) => {
-    mutate(data);
-  };
-
-  const handleCancel = () => {
-    router.push("/admin/writings");
-  };
-
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold">Create New Post</h1>
-        <p className="text-muted-foreground">
-          Write and publish a new blog post
-        </p>
-      </div>
-
-      <LoadingState
-        data={!isLoadingTag && !isLoadingCategories}
-        loadingFallback={<PostFormSkeleton />}
-      >
-        {/* Form */}
-        <FormCreatePost
-          categories={categories?.data}
-          tags={tag?.data}
-          onSubmit={handleSubmit}
-          onCancel={handleCancel}
-          uploadBucket="posts"
-          uploadFolder="writing/description"
-        />
-      </LoadingState>
-    </div>
+    <PostFormPage config={POST_TYPE_CONFIG[PostType.WRITING]} mode="create" />
   );
 }

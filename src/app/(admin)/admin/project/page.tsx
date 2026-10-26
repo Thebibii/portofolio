@@ -2,6 +2,7 @@
 import { useState, useCallback } from "react";
 import { AdminProjectsSkeleton } from "@/components/reusable/skeleton/AdminProjectsSkeleton";
 import EmptyState from "@/components/reusable/state/empty-state";
+import { EmptyProjects } from "@/components/reusable/state/empty-presets";
 import LoadingState from "@/components/reusable/state/loading-state";
 
 import { useAdminProjects } from "@/hooks/react-query/admin/projects/use-query";
@@ -72,21 +73,20 @@ export default function Page() {
         <EmptyState
           data={projectsToShow}
           emptyFallback={
-            <div className="flex flex-col items-center justify-center py-20 text-center">
-              <Folder className="h-16 w-16 text-muted-foreground/40 mb-4" />
-              <h3 className="text-lg font-semibold text-foreground">
-                No projects yet
-              </h3>
-              <p className="text-sm text-muted-foreground mt-1 mb-6">
-                Get started by creating your first project.
-              </p>
-              <Button asChild>
-                <Link href="/admin/project/create">
-                  <Plus className="h-4 w-4 mr-2" />
-                  Create your first project
-                </Link>
-              </Button>
-            </div>
+            <EmptyProjects
+              variant="admin"
+              icon={Folder}
+              title="No projects yet"
+              description="Get started by creating your first project."
+              action={
+                <Button asChild>
+                  <Link href="/admin/project/create">
+                    <Plus className="h-4 w-4 mr-2" />
+                    Create your first project
+                  </Link>
+                </Button>
+              }
+            />
           }
         >
           <div className="grid grid-rows-1 gap-4 grid-cols-1 lg:grid-cols-2 xl:grid-cols-3">

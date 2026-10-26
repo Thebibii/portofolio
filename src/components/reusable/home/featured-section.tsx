@@ -4,6 +4,7 @@ import Link from "next/link";
 import BlogsCard from "./blogs-card";
 import LoadingState from "../state/loading-state";
 import EmptyState from "../state/empty-state";
+import { EmptyPosts, EmptyProjects } from "../state/empty-presets";
 import { BlogsCardSkeleton } from "../skeleton/blogs-card-skeleton";
 import ProjectCardSkeleton from "../skeleton/project-card-skeleton";
 import { CardTitle } from "@/components/ui/card";
@@ -40,13 +41,12 @@ export default function FeaturedSection({
             <EmptyState
               data={data?.projects}
               emptyFallback={
-                <div className="flex flex-col items-center justify-center py-16 text-center col-span-full">
-                  <Rocket className="h-12 w-12 text-muted-foreground/40 mb-3" />
-                  <h3 className="font-semibold">Belum ada projek unggulan</h3>
-                  <p className="text-sm text-muted-foreground mt-1">
-                    Nanti lagi ya.
-                  </p>
-                </div>
+                <EmptyProjects
+                  icon={Rocket}
+                  title="Belum ada projek unggulan"
+                  description="Nanti lagi ya."
+                  className="col-span-full"
+                />
               }
             >
               <ProjectCard data={data?.projects} />
@@ -77,13 +77,12 @@ export default function FeaturedSection({
             <EmptyState
               data={displayBlogs}
               emptyFallback={
-                <div className="flex flex-col items-center justify-center py-16 text-center col-span-full">
-                  <BookOpen className="h-12 w-12 text-muted-foreground/40 mb-3" />
-                  <h3 className="font-semibold">Belum ada blog unggulan</h3>
-                  <p className="text-sm text-muted-foreground mt-1">
-                    Nanti lagi ya.
-                  </p>
-                </div>
+                <EmptyPosts
+                  icon={BookOpen}
+                  title="Belum ada blog unggulan"
+                  description="Nanti lagi ya."
+                  className="col-span-full"
+                />
               }
             >
               <BlogsCard to="blogs" data={displayBlogs} />
