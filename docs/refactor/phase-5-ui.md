@@ -13,14 +13,14 @@
 | 5.1 | R-005 | `usePostListUrlState` + `PostListShell` + `PaginationBar`; **reset ke page 1** saat filter berubah (K-5) |
 | 5.2 | R-005 | `PostDetailLayout`; bagian like/view kondisional dari `config.features` (K-1) |
 | 5.3 | R-006 | `PostListPage` admin; 6 halaman jadi tipis; **judul edit diperbaiki** (K-9) |
-| 5.4 | R-007 (UI) | `TaxonomyManager`; categories/tags page jadi konfigurasi |
-| 5.5 | R-016 | `ConfirmDeleteDialog` |
-| 5.6 | R-017 | preset empty state + skeleton bersama |
+| 5.4 | R-007 (UI) | **DIBATALKAN 26 Okt 2026** — `TaxonomyManager` tidak dibuat; `categories`/`tags` page tidak disentuh |
+| 5.5 | R-016 | `ConfirmDeleteDialog` — **DITUNDA 26 Okt 2026**: tersisa 2 call site setelah R-007 batal & `delete-project.tsx` dihapus (di bawah ambang ≥3) |
+| 5.6 | R-017 | preset empty state + skeleton bersama (tanpa `EmptyTaxonomy`) |
 | 5.7 | R-015 | `FilterBar` — **hanya** bila perilaku filter project disetujui; `SearchProject` boleh dibiarkan (lihat [not-extracted.md](./not-extracted.md)) |
 | 5.8 | R-022 | inti upload bersama (opsional, boleh fase terpisah) |
 
-**Gate:** screenshot before/after untuk 8 halaman (blogs, writings, blog detail, writing detail, admin blogs, admin writings, categories, tags); responsive 375px/768px/1440px. Uji khusus K-5: dari page 3, ubah filter → kembali ke page 1.
-**Commit:** `refactor(ui): share post list, detail, and taxonomy components`
+**Gate:** screenshot before/after untuk 6 halaman (blogs, writings, blog detail, writing detail, admin blogs, admin writings) — `categories`/`tags` **tidak** disentuh; responsive 375px/768px/1440px. Uji khusus K-5: dari page 3, ubah filter → kembali ke page 1.
+**Commit:** `refactor(ui): share post list and detail components`
 
 ---
 
@@ -85,6 +85,8 @@ const { mutate: toggleFeatured } = useToggleFeaturedPost({
 
 #### R-007 — CRUD taxonomy Category/Tag kembar (API + halaman + hook)
 
+> **DIBATALKAN 26 Okt 2026.** Tidak ada `TaxonomyManager`, langkah 5.4 dihapus, dan halaman `categories`/`tags` tetap seperti sekarang (duplikasi diterima).
+
 > Lanjutan dari [Fase 3](./phase-3-server-routes.md). Blok lengkap: lihat fase tersebut.
 
 - **Lokasi:**
@@ -123,6 +125,8 @@ useEffect(() => { if (debouncedSearchTerm !== search) onSearchChange?.(debounced
 - **Estimasi usaha:** 3 jam (jika disetujui).
 
 ### R-016 — Dialog konfirmasi hapus berulang 5×
+
+> **DITUNDA 26 Okt 2026.** Setelah R-007 dibatalkan (2 halaman taxonomy tidak disentuh) dan `delete-project.tsx` dihapus di 3.7, hanya tersisa 2 call site — di bawah ambang ≥3. Angka 5× di bawah adalah kondisi saat audit.
 
 - **Kategori:** Duplikasi UI destruktif
 - **Lokasi:** `src/components/reusable/admin/blogs/dropdown-blogs.tsx` (AlertDialog), `src/components/reusable/admin/projects/dropdown-project.tsx`, `src/components/reusable/admin/projects/delete-project.tsx:1-50`, `src/app/(admin)/admin/categories/page.tsx:50-58`, `src/app/(admin)/admin/tags/page.tsx:49-57`
@@ -170,7 +174,7 @@ useEffect(() => { if (debouncedSearchTerm !== search) onSearchChange?.(debounced
 
 - **Usulan:**
   - `src/components/reusable/state/empty-state.tsx` → tambah varian `icon`, `title`, `description` agar tidak perlu menulis markup.
-  - `src/components/reusable/state/empty-presets.tsx` → `EmptyProjects`, `EmptyPosts`, `EmptyTaxonomy`.
+  - `src/components/reusable/state/empty-presets.tsx` → `EmptyProjects`, `EmptyPosts`. **`EmptyTaxonomy` tidak dibuat** (R-007 dibatalkan 26 Okt 2026).
   - `src/components/reusable/skeleton/statistics-skeleton.tsx` (pindahkan dari halaman) dan `form-skeleton.tsx` generik untuk about pages.
   - Pertimbangkan menggabungkan `EmptyState` + `LoadingState` menjadi satu `QueryState` **hanya jika** error state ikut diseragamkan (E-007).
 - **Server/Client:** `EmptyState` tanpa directive; karena menerima `children` ReactNode dan tidak memakai hook, biarkan tanpa directive.

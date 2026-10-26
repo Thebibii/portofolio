@@ -26,9 +26,11 @@ Struktur project sudah sehat: route group `(guest)/(admin)/(auth)` jelas, server
 | Hook React Query berekstensi `.tsx` tanpa JSX | 22 dari 24 | mis. `admin/blogs/use-query.tsx` |
 | Skeleton tidak terpakai | 2 | `PostDetailSkeleton`, `ProjectDetailsSkeleton` |
 
-**Kesimpulan:** 7 temuan reusability prioritas **Tinggi** (R-001…R-007) dan 4 temuan error-handling **Tinggi** (E-001…E-004) memberi dampak terbesar dengan risiko terkendali karena sebagian besar murni konsolidasi perilaku yang sudah identik. Estimasi total ±8 hari kerja terfokus (Fase 0–5), plus satu fase opsional terpisah di akhir ([Fase 6](./phase-6-optional.md)). Setiap fase dapat di-commit sendiri.
+**Kesimpulan:** 7 temuan reusability prioritas **Tinggi** (R-001…R-007) dan 4 temuan error-handling **Tinggi** (E-001…E-004) memberi dampak terbesar dengan risiko terkendali karena sebagian besar murni konsolidasi perilaku yang sudah identik — **R-007 dibatalkan 26 Okt 2026**, jadi 6 temuan yang dikerjakan. Estimasi total ±7 hari kerja terfokus (Fase 0–5), plus satu fase opsional terpisah di akhir ([Fase 6](./phase-6-optional.md)). Setiap fase dapat di-commit sendiri.
 
 **Status keputusan:** seluruh pertanyaan **K-1…K-14 sudah dijawab** (19 Oktober 2026). **Tidak ada pertanyaan terbuka** — rencana siap dieksekusi fase demi fase ([decisions.md](./decisions.md)).
+
+**Perubahan lingkup (26 Okt 2026):** **R-007 (CRUD taxonomy Category/Tag) dibatalkan atas keputusan pemilik project.** Tidak ada artefak taxonomy yang dibuat — `src/lib/api/taxonomy.ts`, `src/types/validation/taxonomy.ts`, `useTaxonomyHooks`, `TaxonomyManager`, dan preset `EmptyTaxonomy` **tidak** akan ada. Dari blok taxonomy hanya **1.7 / R-023 (rename `AdminTagsSkeleton` → `AdminTaxonomySkeleton`)** yang tetap. Langkah 3.6, 4.4, dan 5.4 dihapus dari rencana; duplikasi ±1.400 baris `category`/`tag` diterima sebagai utang teknis. Rincian: [decisions.md §7](./decisions.md#7-perubahan-lingkup).
 
 **Arah keputusan yang memengaruhi seluruh rencana:**
 - **K-1** — Blog dan Writing **belum pasti identik selamanya**. Semua penggabungan (R-001/R-002/R-005/R-006/R-010) harus **config-driven**: perilaku per tipe dinyatakan sebagai objek konfigurasi/props, bukan `if (type === "BLOG")` yang tersebar. Tujuannya agar Writing bisa divergen tanpa membongkar komponen bersama.
@@ -97,7 +99,7 @@ src/app/
 | `src/lib/post-type-config.ts`, `src/lib/api-error.ts`, `src/lib/prisma-selects.ts`, `src/lib/slug.ts`, `src/lib/serialize.ts` | tanpa `"use client"` |
 | `src/lib/visitor.ts`, `src/lib/server/get-posts-data.ts` | `import "server-only"` |
 | `src/lib/seo/*` | server-safe, jangan `"use client"` |
-| `src/lib/validation/{post,project,taxonomy}.ts` | **bebas `"use client"`** (dipakai route handler dan form client); zod murni, tanpa `server-only` |
+| `src/lib/validation/{post,project}.ts` | **bebas `"use client"`** (dipakai route handler dan form client); zod murni, tanpa `server-only` |
 | `src/lib/http.ts`, `src/lib/react-query/keys.ts`, `src/lib/format-date.ts` | shared murni |
 | `src/components/reusable/guest/post-list/*`, `pagination-bar`, `confirm-delete-dialog`, `filter-bar` | **wajib `"use client"`** |
 | `src/components/reusable/admin/*` | pertahankan `"use client"` yang sudah ada |
@@ -113,12 +115,12 @@ Setiap fase **dapat di-commit sendiri** dan tidak meninggalkan kode setengah jad
 | 0 — Gate `verify` | [phase-0-verify.md](./phase-0-verify.md) | 0,5 hari | — (K-10, K-12) | — |
 | 1 — Fondasi | [phase-1-foundation.md](./phase-1-foundation.md) | 0,5 hari | R-011, R-012, R-013, R-014, R-018, R-021, R-023 | Fase 0 |
 | 2 — Validasi & error | [phase-2-validation-errors.md](./phase-2-validation-errors.md) | 1,5 hari | R-003, R-004, R-019, E-001…E-006, E-009, E-010 | Fase 1 |
-| 3 — Server & route | [phase-3-server-routes.md](./phase-3-server-routes.md) | 2 hari | R-001, R-007, R-008, R-009, R-010, R-020 | Fase 2 (khusus `mapPrismaError` sebelum migrasi) |
-| 4 — Hooks & cache | [phase-4-client-hooks.md](./phase-4-client-hooks.md) | 1,5 hari | R-002, R-007 (lanj.), R-013 (lanj.), E-006 (lanj.), E-007, E-008 | Fase 3 |
-| 5 — UI | [phase-5-ui.md](./phase-5-ui.md) | 2 hari | R-005, R-006, R-007 (lanj.), R-015, R-016, R-017, R-022 | Fase 4 (R-002) |
+| 3 — Server & route | [phase-3-server-routes.md](./phase-3-server-routes.md) | 2 hari | R-001, R-008, R-009, R-010, R-020 | Fase 2 (khusus `mapPrismaError` sebelum migrasi) |
+| 4 — Hooks & cache | [phase-4-client-hooks.md](./phase-4-client-hooks.md) | 1 hari | R-002, R-013 (lanj.), E-006 (lanj.), E-007, E-008 — **selesai 26 Okt 2026** | Fase 3 |
+| 5 — UI | [phase-5-ui.md](./phase-5-ui.md) | 1,5 hari | R-005, R-006, R-017, R-022, R-015 (opsional) | Fase 4 (R-002) |
 | 6 — Opsional | [phase-6-optional.md](./phase-6-optional.md) | +1–1,5 hari | K-3, K-4, K-7, K-8 | Fase 0–5 selesai + persetujuan terpisah |
 
-**Total Fase 0–5:** ±8 hari (tanpa Fase 0: ±7,5 hari). Fase 6 tidak termasuk karena menunggu persetujuan.
+**Total Fase 0–5:** ±7 hari (tanpa Fase 0: ±6,5 hari). Fase 6 tidak termasuk karena menunggu persetujuan.
 
 ### Ketergantungan
 
@@ -126,13 +128,14 @@ Setiap fase **dapat di-commit sendiri** dan tidak meninggalkan kode setengah jad
 Fase 0 ──► Fase 1 ──► Fase 2 ──► Fase 3 ──► Fase 4 ──► Fase 5 ──► Fase 6 (opsional)
  verify     config      schema      handlers    hooks       UI          cleanup/rename path
             slug        api-error   selects     keys        list/detail
-            visitor     prisma-err  serialize   defaults    taxonomy
+            visitor     prisma-err  serialize   defaults    presets
 ```
 
 - `src/lib/post-type-config.ts` (Fase 1.8) adalah prasyarat R-001, R-002, R-005, R-006, R-010.
 - `mapPrismaError` (Fase 2.3) **harus** selesai sebelum migrasi `Project.slug` (Fase 3.8).
 - Fase 5 tidak boleh dimulai sebelum R-002 (Fase 4) selesai, karena komponen UI baru mengonsumsi factory hook.
 - Fase 6 hanya setelah seluruh Fase 0–5 terverifikasi.
+- **R-007 (taxonomy) dibatalkan 26 Okt 2026** — langkah 3.6, 4.4, dan 5.4 dihapus; `lib/api/taxonomy.ts`, `types/validation/taxonomy.ts`, `useTaxonomyHooks`, `TaxonomyManager`, dan preset `EmptyTaxonomy` tidak dibuat. R-016 ikut ditunda (lihat checklist).
 
 ---
 
@@ -141,22 +144,22 @@ Fase 0 ──► Fase 1 ──► Fase 2 ──► Fase 3 ──► Fase 4 ─�
 ### Reusability
 
 - [x] R-001 — Route API Blog/Writing identik (4 pasang + featured) — **config-driven** (K-1)
-- [ ] R-002 — Hook React Query Blog/Writing identik — **config-driven** (K-1)
+- [x] R-002 — Hook React Query Blog/Writing identik — **config-driven** (K-1) — selesai 26 Okt 2026 (`use-admin-posts.ts`, `use-guest-posts.ts`, file lama jadi re-export)
 - [x] R-003 — `postSchema` (5 salinan) & `listQuerySchema` (2 salinan)
 - [x] R-004 — `projectSchema` 4× (schema selesai; gabung form create/edit ditunda)
 - [ ] R-005 — Komponen client Blog/Writing (list 557/547, detail 189/192) — reset page 1 (K-5)
 - [ ] R-006 — Halaman admin blogs/writings identik + judul edit (K-9)
-- [ ] R-007 — CRUD taxonomy Category/Tag (API + hook + halaman)
+- [-] R-007 — CRUD taxonomy Category/Tag — **DIBATALKAN 26 Okt 2026** (keputusan user: taxonomy tidak di-refactor; hanya rename skeleton 1.7/R-023 yang tetap)
 - [x] R-008 — Bentuk `select` post 5×
 - [x] R-009 — Serialisasi tanggal 6×
 - [x] R-010 — `getBlogsData` vs `getWritingsData` — config-driven (K-1)
 - [ ] R-011 — Utilitas slug (typo nama) + `Project.slug @unique` dengan cek duplikat dulu (K-2)
 - [x] R-012 — Base URL & metadata SEO 13× + `NEXT_PUBLIC_SITE_URL` (K-10)
-- [ ] R-013 — Key React Query literal
+- [ ] R-013 — Key React Query literal — **sebagian**: hook post sudah lewat `qk` (26 Okt 2026); 14 literal `queryKey` masih tersisa di hook non-post (taxonomy, projects, about, dashboard, featured, statistics) — di luar scope Fase 4
 - [x] R-014 — Helper visitor/IP duplikat — cookie saja, tanpa fallback IP (K-6)
 - [ ] R-015 — Filter/pencarian admin
-- [ ] R-016 — Dialog konfirmasi hapus 5×
-- [ ] R-017 — Empty/loading state belum berpreset
+- [ ] R-016 — Dialog konfirmasi hapus — **DITUNDA 26 Okt 2026**: setelah R-007 dibatalkan dan `delete-project.tsx` dihapus (3.7), tersisa 2 call site (`dropdown-blogs`, `dropdown-project`) → di bawah ambang ≥3 ([not-extracted.md](./not-extracted.md))
+- [ ] R-017 — Empty/loading state belum berpreset (`EmptyTaxonomy` dikeluarkan dari daftar preset)
 - [ ] R-018 — Format tanggal tersebar
 - [x] R-019 — Duplikasi tipe & `any`
 - [x] R-020 — Dead code & import tak terpakai (route `/api/guest*` **dikecualikan**, K-3) — bagian yang diizinkan selesai 19 Okt 2026; route/hook ditunda
@@ -172,8 +175,8 @@ Fase 0 ──► Fase 1 ──► Fase 2 ──► Fase 3 ──► Fase 4 ─�
 - [x] E-004 — `P2025` parsial, `P2002` nol → `mapPrismaError` terpasang; `P2002` = 409 (Like ditunda)
 - [x] E-005 — Zod `parse` 12 route → `parseJsonBody`/`parseSearchParams`
 - [x] E-006 — Pesan error client salah
-- [ ] E-007 — Error state UI tidak konsisten
-- [ ] E-008 — `QueryClient` tanpa default
+- [ ] E-007 — Error state UI tidak konsisten — **sebagian**: `src/components/reusable/state/query-state.tsx` (`QueryState`/`ErrorState`/`QueryStateSkeleton`) sudah dibuat & toast about diperbaiki (26 Okt 2026), tetapi komponen belum diadopsi halaman mana pun
+- [x] E-008 — `QueryClient` tanpa default — selesai 26 Okt 2026 (`staleTime` 60s, 4xx tidak retry, `refetchOnWindowFocus` dipusatkan)
 - [x] E-009 — `parseInt`/`Number` tanpa guard → `parseId` + `guestPostListQuerySchema`
 - [x] E-010 — `console.log` sisa debugging & `catch (error: any)`
 
@@ -182,7 +185,7 @@ Fase 0 ──► Fase 1 ──► Fase 2 ──► Fase 3 ──► Fase 4 ─�
 - [x] K-1 … K-12 dijawab (19 Okt 2026) — lihat [decisions.md](./decisions.md)
 - [x] K-13 — `AppError` minimal (`status`, `code`) — diputuskan
 - [x] K-14 — `unstable_rethrow` disetujui & dipakai paling awal di `catch`
-- [x] Fase 0 — script `verify` (`typecheck` + `lint`) + `NEXT_PUBLIC_SITE_URL` di `.env.example` — selesai; gate belum hijau karena error `eslint.config.mjs` pre-existing (lihat [phase-0-verify.md](./phase-0-verify.md#hasil-eksekusi-19-oktober-2026))
+- [x] Fase 0 — script `verify` (`typecheck` + `lint`) + `NEXT_PUBLIC_SITE_URL` di `.env.example` — selesai; **`npm run verify` hijau per 26 Okt 2026** (hanya warning `no-img-element` + 1 unused disable directive), lihat [phase-0-verify.md](./phase-0-verify.md#update-26-oktober-2026)
 - [ ] Env `NEXT_PUBLIC_SITE_URL` diset di Vercel Production + Preview (di luar repo)
 - [ ] K-2 — query cek duplikat `Project.slug` dijalankan & hasilnya dilampirkan
 - [ ] Fase 6 — persetujuan terpisah untuk K-3/K-8/K-7/K-4
@@ -253,9 +256,9 @@ Catatan: project **tidak punya test framework** dan tidak ada CI (K-12) — veri
 | 1 — Fondasi | 0,5 hari |
 | 2 — Validasi & error | 1,5 hari |
 | 3 — Server & route | 2 hari |
-| 4 — Hooks & cache | 1,5 hari |
-| 5 — UI | 2 hari |
-| **Total Fase 0–5** | **±8 hari** (tanpa Fase 0: ±7,5 hari) |
+| 4 — Hooks & cache | 1 hari |
+| 5 — UI | 1,5 hari |
+| **Total Fase 0–5** | **±7 hari** (tanpa Fase 0: ±6,5 hari) |
 | 6 — Opsional (K-3/K-8/K-7/K-4) | +1–1,5 hari, **hanya bila disetujui** |
 
 Estimasi mengasumsikan satu orang yang sudah familiar dengan codebase, tanpa perubahan lingkup (mis. penambahan fitur atau desain ulang). Fase 6 tidak termasuk dalam total karena eksekusinya menunggu persetujuan terpisah.

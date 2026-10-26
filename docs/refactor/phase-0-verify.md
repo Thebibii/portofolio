@@ -59,3 +59,15 @@ Verifikasi global (halaman minimum & cek regresi): [README](./README.md#verifika
 
 **Catatan:** `eslint-config-next@15.5.6` tidak punya `exports` map, sehingga import ESM tanpa ekstensi di `eslint.config.mjs:2` gagal resolve. Perbaikan file tersebut **di luar lingkup Fase 0** dan belum dilakukan; sampai diperbaiki, `npm run verify` akan selalu berhenti di tahap `lint`.
 
+
+## Update 26 Oktober 2026
+
+Gate `verify` sudah **hijau** (exit 0). Penyebab lamanya bukan pada file Fase 0: `eslint.config.mjs` sudah dimigrasikan ke `FlatCompat` pada commit `6d701d7`, jadi catatan “pre-existing” di atas tidak berlaku lagi.
+
+| Perintah | Hasil |
+|---|---|
+| `npm run typecheck` | lolos, tanpa output |
+| `npm run lint` | exit 0 — hanya 2 warning: `<img>` di `admin-blogs-card.tsx:70` dan unused eslint-disable di `search-content.tsx:66` |
+| `npm run verify` | exit 0 |
+
+Tidak ada lagi blocker untuk Fase 4–5. Sisa tugas di luar repo: set `NEXT_PUBLIC_SITE_URL` di Vercel Production + Preview.

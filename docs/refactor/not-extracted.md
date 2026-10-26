@@ -11,6 +11,7 @@ Daftar ini sama pentingnya dengan daftar temuan: mencegah over-engineering.
 | `api/guest/about` vs `api/admin/about` | `guest/about/route.ts:12-20`, `admin/about/route.ts:10-18` | `orderBy` berbeda (desc vs asc), `omitId` hanya di guest, admin mengembalikan `experiences` + `currentActivities`. Aturan berbeda → jangan disatukan. |
 | `api/guest/projects/[slug]` mengembalikan `id` | `guest/projects/[slug]/route.ts:23-25` | Inkonsistensi kebocoran `id`, bukan duplikasi. Perlu keputusan produk, bukan ekstraksi. |
 | `api/guest/category` vs `api/guest/tags` | 2 file | Hanya 2 pemakaian; bentuk respons sudah berbeda (`_count` vs tidak). Di bawah ambang ≥3. |
+| `api/admin/category` vs `api/admin/tag` + hook + halaman | 4 route, 4 hook, 2 halaman | **R-007 dibatalkan 26 Okt 2026.** Duplikasi diterima sebagai utang teknis: Category punya `description` + relasi 1:N, Tag N:M via `PostTag`; manager config-driven akan penuh cabang. Halaman tidak disentuh di Fase 5. |
 | `search-project.tsx` vs `search-content.tsx` | 2 file | Perilaku state berbeda (lokal vs URL). Menyatukan = mengubah UX, bukan DRY. Lihat R-015. |
 | `getPageList` (pagination ellipsis) | 2 file | 2 pemakaian. Bila R-005 dikerjakan, otomatis jadi 1; jangan ekstrak terpisah. |
 | `formatCreatedUpdated` | `use-formatted-date.ts:35-55` | 2 pemakaian; cukup pindah file bersama `formattedDate` (R-018). |

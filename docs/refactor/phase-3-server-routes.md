@@ -15,12 +15,12 @@
 | 3.3 | R-010 | `get-posts-data.ts` + wrapper lama; config-driven — selesai 19 Okt 2026 |
 | 3.4 | R-001 | factory handler post guest (list, detail, like, view) berbasis `PostTypeConfig`; **verifikasi cookie `visitor_id` masih ter-set**; `revalidatePath` tetap (K-7) — guest selesai 19 Okt 2026 (8 route) |
 | 3.5 | R-001 | factory handler post admin (list, item, featured) — selesai 19 Okt 2026 (6 route) |
-| 3.6 | R-007 | taxonomy API helper — dilewati 19 Okt 2026 (keputusan user) |
+| 3.6 | R-007 | taxonomy API helper — **DIBATALKAN** 26 Okt 2026 (dilewati 19 Okt 2026, lalu dipastikan tidak dikerjakan) |
 | 3.7 | R-020 (sebagian) | hapus import mati, duplikasi hapus-project, `console.log`. **Route `/api/guest*` dan 2 hook-nya TIDAK dihapus** (K-3); komentar TODO ditambahkan — selesai 19 Okt 2026 (5 import, `delete-project.tsx` dihapus; 3 `console.log` target sudah tidak ada; `showErrorToast` tidak disentuh) |
 | 3.8 | **K-2 (bagian 2)** | Cek duplikat `Project.slug` → bila kosong: tambah `@unique` + `prisma migrate dev` + `generate`; bila ada duplikat: **tunda migrasi** dan laporkan daftar slug |
 
 **Gate:** semua endpoint guest & admin diuji manual (GET list, GET detail, PATCH like dua kali, PATCH view, CRUD post, CRUD category/tag). Untuk K-2: hasil query duplikat dilampirkan di PR.
-**Commit:** `refactor(api): share post and taxonomy handlers` + commit terpisah `feat(db): add unique constraint on Project.slug` (hanya bila cek duplikat bersih)
+**Commit:** `refactor(api): share post handlers` + commit terpisah `feat(db): add unique constraint on Project.slug` (hanya bila cek duplikat bersih)
 
 ---
 
@@ -170,6 +170,8 @@ export const POST_TYPE_CONFIG: Record<PostType, PostTypeConfig> = { ... };
 - **Keputusan terkait:** K-1 (config-driven), K-6 (cookie `visitor_id` saja), K-7 (revalidate tetap).
 
 ### R-007 — CRUD taxonomy Category/Tag kembar (API + halaman + hook)
+
+> **DIBATALKAN 26 Okt 2026.** R-007 tidak dikerjakan. Blok ini dipertahankan sebagai catatan audit — jangan buat `lib/api/taxonomy.ts`, `TaxonomyManager`, atau `useTaxonomyHooks`.
 
 - **Kategori:** Duplikasi CRUD dengan model berbeda, aturan sama
 - **Lokasi:**

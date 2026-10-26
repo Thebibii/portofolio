@@ -58,3 +58,13 @@ Artinya: menambahkan `verify` memberi nilai tambah nyata karena `next build` mem
 | **K-14** | **Setuju** memakai `unstable_rethrow(e)` dari `next/navigation`. | E-003 dipanggil paling awal di `catch`; [§6.2](#62-temuan-pendukung-k-11-dan-k-12) mencatat perilaku & mitigasi versi | ✅ Terjawab |
 
 **Tidak ada pertanyaan terbuka.** Rencana siap dieksekusi.
+
+---
+
+## 7. Perubahan lingkup
+
+| Tanggal | Perubahan | Alasan | Dampak |
+|---|---|---|---|
+| 26 Okt 2026 | **R-007 (CRUD taxonomy Category/Tag) dibatalkan** | Keputusan pemilik project: taxonomy tidak di-refactor | Langkah 3.6, 4.4, 5.4, `taxonomy.ts` (validasi), dan `EmptyTaxonomy` dihapus; hanya 1.7/R-023 (rename skeleton) yang tetap. R-016 ikut ditunda (2 call site). Estimasi Fase 4 → 1 hari, Fase 5 → 1,5 hari, total ±7 hari. |
+
+Tidak ada artefak taxonomy yang dibuat: `src/lib/api/taxonomy.ts`, `src/types/validation/taxonomy.ts`, `useTaxonomyHooks`, `src/components/reusable/admin/taxonomy/TaxonomyManager.tsx`.

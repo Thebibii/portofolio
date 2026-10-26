@@ -16,7 +16,7 @@
 | 1.4 | R-012 | `src/lib/seo/site.ts` + `metadata.ts`; `SITE_URL` pakai `||` fallback (K-10) |
 | 1.5 | R-013 | `src/lib/react-query/keys.ts` (string lama dipertahankan) |
 | 1.6 | R-021 | rename 22 file `.tsx` → `.ts` |
-| 1.7 | R-023 | hapus 2 skeleton mati + rename 3 skeleton |
+| 1.7 | R-023 | hapus 2 skeleton mati + rename 3 skeleton; **satu-satunya bagian taxonomy yang tetap** (`AdminTagsSkeleton` → `AdminTaxonomySkeleton`, kosmetik). R-007 dibatalkan 26 Okt 2026 |
 | 1.8 | **K-1** | `src/lib/post-type-config.ts` — dibuat sekarang sebagai fondasi, belum dipakai |
 
 **Alasan urutan:** semua langkah ini murni pemindahan/penamaan; belum menyentuh logika. Fase 2–5 bergantung pada helper di sini.

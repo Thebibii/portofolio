@@ -1,6 +1,8 @@
 # Peta audit file
 
 > Bagian dari rencana refactor. Indeks: [README](./README.md) · Keputusan: [decisions.md](./decisions.md)
+>
+> **Catatan 26 Okt 2026:** baris dengan usulan **R-007** bersifat historis — R-007 **dibatalkan** dan tidak akan dieksekusi. Lihat [README](./README.md).
 
 | File | Masalah | Usulan | Alasan |
 |---|---|---|---|

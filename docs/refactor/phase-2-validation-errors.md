@@ -10,7 +10,7 @@
 
 | Langkah | Temuan | Catatan |
 |---|---|---|
-| 2.1 | R-003 + R-004 | `src/types/validation/{post,project,taxonomy}.ts`; hapus schema duplikat di 7 file |
+| 2.1 | R-003 + R-004 | `src/types/validation/{post,project}.ts`; hapus schema duplikat di 7 file; `taxonomy.ts` **dibatalkan** (R-007) |
 | 2.2 | E-001 | `src/lib/api-error.ts`; migrasi 9 file `{message}` → `{error}` **bersamaan dengan hook pembacanya** |
 | 2.3 | E-004 | `src/lib/prisma-error.ts` (`P2025` → 404, `P2002` → 409); pasang di 9 file + `[slug]` post |
 | 2.4 | E-005 + E-009 | sentralisasi Zod; `coerce` untuk query param |
@@ -36,7 +36,7 @@
 - [x] E-003 — project, admin, guest (17 route) memakai wrapper; `cron/keep-alive` dikecualikan (catch health-check dipertahankan)
 - [x] E-006 — `getErrorMessage` + fallback spesifik per aksi di 6 hook admin; 11 pesan copy-paste diperbaiki
 - [x] R-019 — `src/types/api.ts`; `APIResponse` bertipe generik; `Tag` + `TagFormData` satu definisi; `data: any`/`success?: number` dihapus
-- [ ] `taxonomy.ts` — ditunda (tidak ada schema taxonomy di R-003/R-004; R-007 ada di fase lain)
+- [-] `taxonomy.ts` — **DIBATALKAN 26 Okt 2026** (R-007 tidak dikerjakan; `categorySchema`/`tagSchema` tetap inline di route masing-masing)
 
 ---
 

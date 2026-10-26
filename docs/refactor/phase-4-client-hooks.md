@@ -11,14 +11,29 @@
 | Langkah | Temuan | Catatan |
 |---|---|---|
 | 4.1 | R-002 | `createAdminPostHooks(config)` / `createGuestPostHooks(config)`; file lama jadi re-export |
-| 4.2 | R-013 (lanjutan) | ganti literal `queryKey` di 22 hook + 22 invalidation |
+| 4.2 | R-013 (lanjutan) | ganti literal `queryKey` di hook post (8 file) + invalidation terkait; hook taxonomy dibiarkan apa adanya (4.4 batal) |
 | 4.3 | E-008 | aktifkan `defaultOptions`; hapus `refetchOnWindowFocus` per-hook |
-| 4.4 | R-007 (client) | `useTaxonomyHooks` untuk category/tag |
+| 4.4 | R-007 (client) | **DIBATALKAN 26 Okt 2026** — `useTaxonomyHooks` tidak dibuat (keputusan user) |
 | 4.5 | E-006 | perbaiki fallback pesan di factory (sekali saja) |
 | 4.6 | E-007 | `QueryState`/`ErrorState`; perbaiki toast saat render di about page |
 
 **Gate:** create/update/delete blog → list ter-refresh tanpa reload; network tab: tidak ada request berulang dalam 60 detik; 401 tidak di-retry.
-**Commit:** `refactor(hooks): unify post/taxonomy query hooks and query client defaults`
+**Commit:** `refactor(hooks): unify post query hooks and query client defaults`
+
+---
+
+### Status eksekusi (26 Oktober 2026)
+
+| Langkah | Status | Bukti |
+|---|---|---|
+| 4.1 | ✅ Selesai | `src/hooks/react-query/admin/use-admin-posts.ts` + `guest/use-guest-posts.ts`; 8 file lama jadi re-export dengan export name identik |
+| 4.2 | ✅ Selesai (hook post) | `qk.*` dipakai di kedua factory; 14 literal `queryKey` masih ada di hook non-post (di luar scope) |
+| 4.3 | ✅ Selesai | `src/provider/react-query.tsx` — `staleTime` 60s, `refetchOnWindowFocus: false`, `retry` menolak 4xx (butuh `getErrorStatus` di `src/lib/errors.ts`) |
+| 4.4 | ⛔ Dibatalkan | R-007 taxonomy — tidak dibuat (keputusan user 26 Okt 2026) |
+| 4.5 | ✅ Selesai | `getErrorMessage`/`createHttpError` dipakai di factory |
+| 4.6 | ⚠️ Sebagian | `src/components/reusable/state/query-state.tsx` dibuat; toast about diperbaiki via `useEffect`; komponen belum diadopsi halaman lain |
+
+`npm run verify` exit 0 pada 26 Okt 2026 (hanya warning `no-img-element` dan 1 unused disable directive).
 
 ---
 
@@ -102,6 +117,8 @@ export const qk = {
 
 #### R-007 — CRUD taxonomy Category/Tag kembar (API + halaman + hook)
 
+> **DIBATALKAN 26 Okt 2026** — tidak ada pekerjaan hook taxonomy di fase ini. Blok dipertahankan sebagai catatan audit.
+>
 > Lanjutan dari [Fase 3](./phase-3-server-routes.md). Blok lengkap: lihat fase tersebut.
 
 - **Lokasi:**
