@@ -21,7 +21,7 @@ Create `.env` with `DATABASE_URL`, `DIRECT_URL`, `NEXTAUTH_SECRET`, `NEXT_PUBLIC
 - **Next.js 15 App Router** with Turbopack dev server
 - Route groups: `(guest)` — public pages, `(admin)` — protected dashboard, `(auth)` — signin/register
 - API: `/api/guest/*` (public), `/api/admin/*` (session required), `/api/auth/*` (NextAuth + register)
-- **Prisma** + PostgreSQL — models: `Project`, `Post` (BLOG/WRITING type), `Category`, `Tag`, `User`, `Like` (IP-based), `Experience`, `CurrentActivity`
+- **Prisma** + PostgreSQL — models: `Project`, `Post` (BLOG/WRITING type), `Category`, `Tag`, `User`, `Like` (IP-based), `Experience`, `CurrentActivity`, `BucketItem`
 - **NextAuth v4** — credentials + GitHub OAuth, JWT strategy, role field in token/session
 - **React Query** hooks in `@/hooks/react-query/` — split by domain (`guest/`, `admin/`) then by entity (`blogs/`, `writings/`, `projects/`, `category/`, `tag/`, `about/`, `dashboard/`)
 - **Plate editor** (rich text) used for blog/writing/project content

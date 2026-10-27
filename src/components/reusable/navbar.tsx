@@ -21,6 +21,7 @@ import {
   FileText,
   User,
   MessageSquare,
+  Trophy,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 
@@ -69,6 +70,12 @@ export default function Navbar() {
       description: "Tinggalkan pesan atau sapa",
     },
     {
+      name: "Impian",
+      href: "/bucketlist",
+      icon: Trophy,
+      description: "Daftar impian dan target",
+    },
+    {
       name: "Statistik",
       href: "/statistics",
       icon: Icons.ChartNoAxesCombined,
@@ -82,6 +89,12 @@ export default function Navbar() {
       href: "/guestbook",
       icon: Icons.BookOpen,
       description: "Tinggalkan pesan atau sapa",
+    },
+    {
+      name: "Impian",
+      href: "/bucketlist",
+      icon: Trophy,
+      description: "Daftar impian dan target",
     },
     {
       name: "Statistik",

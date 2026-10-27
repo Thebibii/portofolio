@@ -44,6 +44,7 @@ export const qk = {
     dashboard: ["get.admin.dashboard"] as const,
     categories: ["get.admin.category"] as const,
     tags: ["get.admin.tag"] as const,
+    bucketlist: ["get.admin.bucketlist"] as const,
     projects: ["get.admin.projects"] as const,
     project: (id: string) => ["get.admin.project", id] as const,
     blogs: ["get.admin.blogs"] as const,

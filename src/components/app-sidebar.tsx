@@ -24,6 +24,7 @@ import {
   Projector,
   Settings,
   Tags,
+  Trophy,
 } from "lucide-react";
 import { NavUser } from "./nav-user";
 
@@ -51,6 +52,12 @@ const data = {
       title: "Blogs",
       url: "/admin/blogs",
       icon: Folder,
+      collapsible: false,
+    },
+    {
+      title: "Bucket List",
+      url: "/admin/bucketlist",
+      icon: Trophy,
       collapsible: false,
     },
     {

@@ -67,26 +67,10 @@ export default function Footer() {
               <ul className="mt-4 space-y-3 text-sm">
                 <li>
                   <Link
-                    href="#"
+                    href="/bucketlist"
                     className="text-muted-foreground hover:text-primary  transition-colors"
                   >
-                    Bucket List
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="#"
-                    className="text-muted-foreground hover:text-primary  transition-colors"
-                  >
-                    Perlengkapan
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="#"
-                    className="text-muted-foreground hover:text-primary  transition-colors"
-                  >
-                    Atribusi
+                    Impian
                   </Link>
                 </li>
                 <li>

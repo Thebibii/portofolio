@@ -227,6 +227,22 @@ model CurrentActivity {
   createdAt DateTime @default(now())
 }
 
+// Daftar impian / bucket list. Ditampilkan di /bucketlist, dikelola dari /admin/bucketlist.
+model BucketItem {
+  id          String    @id @default(cuid())
+  title       String
+  description String?
+  completed   Boolean   @default(false)
+  completedAt DateTime?
+  images      String[]  @default([])
+  order       Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([completed, order])
+  @@map("bucket_items")
+}
+
 // Throttle login (DB-based, aman untuk Vercel serverless).
 // key: "ip:<ip>" (lockout keras) atau "email:<email>" (backoff bertambah).
 model LoginThrottle {
