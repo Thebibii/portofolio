@@ -2,34 +2,54 @@ const { PrismaClient } = require("@prisma/client");
 const bcrypt = require("bcryptjs");
 const prisma = new PrismaClient();
 
+/**
+ * Seed aman: TIDAK lagi membuat akun demo dengan password default.
+ * Akun admin hanya dibuat bila ADMIN_EMAIL & ADMIN_PASSWORD diset eksplisit.
+ *
+ * Pemakaian:
+ *   ADMIN_EMAIL="you@example.com" ADMIN_PASSWORD="password-panjang" npx prisma db seed
+ */
 async function main() {
-  const users = [
-    {
-      name: "Admin User",
-      email: "admin@example.com",
-      password: await bcrypt.hash("admin123", 12),
+  const email = process.env.ADMIN_EMAIL;
+  const password = process.env.ADMIN_PASSWORD;
+
+  if (!email || !password) {
+    console.log(
+      "ℹ️  Seed dilewati: set ADMIN_EMAIL dan ADMIN_PASSWORD bila memang ingin membuat/mengubah akun admin."
+    );
+    return;
+  }
+
+  if (password.length < 12) {
+    throw new Error("ADMIN_PASSWORD minimal 12 karakter.");
+  }
+
+  const passwordHash = await bcrypt.hash(password, 12);
+  const existing = await prisma.user.findUnique({ where: { email } });
+
+  if (existing) {
+    // Ganti password + naikkan tokenVersion agar sesi lama langsung tidak valid.
+    await prisma.user.update({
+      where: { email },
+      data: {
+        password: passwordHash,
+        role: "ADMIN",
+        tokenVersion: { increment: 1 },
+      },
+    });
+    console.log(`✅ Password admin diperbarui: ${email}`);
+    return;
+  }
+
+  await prisma.user.create({
+    data: {
+      name: "Admin",
+      email,
+      password: passwordHash,
       role: "ADMIN",
     },
-    {
-      name: "John Doe",
-      email: "john@example.com",
-      password: await bcrypt.hash("password123", 12),
-      role: "USER",
-    },
-    {
-      name: "Jane Smith",
-      email: "jane@example.com",
-      password: await bcrypt.hash("password456", 12),
-      role: "USER",
-    },
-  ];
-
-  await prisma.user.createMany({
-    data: users,
-    skipDuplicates: true,
   });
-
-  console.log("✅ Users seeded with hashed passwords");
+  console.log(`✅ Admin dibuat: ${email}`);
 }
 
 main()
