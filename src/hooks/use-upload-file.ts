@@ -1,7 +1,7 @@
 import * as React from "react";
 import { toast } from "sonner";
 import { z } from "zod";
-import { supabase } from "@/lib/supabase"; // Sesuaikan path dengan lokasi file Anda
+import { deleteImage, uploadImage } from "@/lib/imageUpload";
 
 export type UploadedFile = {
   key: string;
@@ -126,14 +126,8 @@ export function useUploadFile({
     setProgress(0);
 
     try {
-      // Generate unique filename
-      const timestamp = Date.now();
-      const randomString = Math.random().toString(36).substring(2, 15);
-      const fileExt = file.name.split(".").pop();
-      const fileName = `${timestamp}-${randomString}.${fileExt}`;
-      const filePath = folder ? `${folder}/${fileName}` : fileName;
-
-      // Simulate progress for small files (Supabase doesn't provide native progress)
+      // Simulate progress for small files (the upload API doesn't expose
+      // native progress events)
       const progressInterval = setInterval(() => {
         setProgress((prev) => {
           const newProgress = prev + 10;
@@ -142,36 +136,24 @@ export function useUploadFile({
         });
       }, 100);
 
-      // Upload to Supabase Storage
-      const { data, error } = await supabase.storage
-        .from(bucket)
-        .upload(filePath, file, {
-          cacheControl: "3600",
-          upsert: false,
-        });
+      // Upload through the session-protected admin API route
+      const result = await uploadImage(file, bucket, folder);
 
       clearInterval(progressInterval);
 
-      if (error) {
-        throw error;
+      if (!result || result.error || !result.url || !result.path) {
+        throw new Error(result?.error || "Upload failed");
       }
 
-      if (!data) {
-        throw new Error("Upload failed: No data returned");
-      }
-
-      // Get public URL
-      const { data: urlData } = supabase.storage
-        .from(bucket)
-        .getPublicUrl(filePath);
+      const fileName = result.path.split("/").pop() || file.name;
 
       const uploadedFileData: UploadedFile = {
-        key: data.id || fileName,
-        url: urlData.publicUrl,
+        key: fileName,
+        url: result.url,
         name: file.name,
         size: file.size,
         type: file.type,
-        path: data.path,
+        path: result.path,
       };
 
       setProgress(100);
@@ -200,10 +182,10 @@ export function useUploadFile({
 
   const deleteFile = async (filePath: string): Promise<boolean> => {
     try {
-      const { error } = await supabase.storage.from(bucket).remove([filePath]);
+      const success = await deleteImage(filePath, bucket);
 
-      if (error) {
-        throw error;
+      if (!success) {
+        throw new Error("Failed to delete file");
       }
 
       toast.success("File deleted successfully");

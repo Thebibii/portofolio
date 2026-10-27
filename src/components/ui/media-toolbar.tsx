@@ -30,8 +30,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 
 import { CaptionButton } from "./caption";
-import { deleteImage } from "@/lib/imageUpload";
-import { parseImageUrl } from "@/lib/extract-image-from-content";
+import { deleteImage, parseImageUrl } from "@/lib/imageUpload";
 
 const inputVariants = cva(
   "flex h-[28px] w-full rounded-md border-none bg-transparent px-1.5 py-1 text-base placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-transparent md:text-sm"

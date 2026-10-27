@@ -4,7 +4,8 @@ import prisma from "@/lib/prisma";
 import { requireAdmin } from "@/lib/require-admin";
 import { withRouteHandler } from "@/lib/api-handler";
 import { parseJsonBody } from "@/lib/validate";
-import { deleteImage, deleteMultipleImages, extractPathFromUrl } from "@/lib/imageUpload";
+import { extractPathFromUrl } from "@/lib/imageUpload";
+import { removeObjects } from "@/lib/storage-server";
 import { deleteImagesFromContent } from "@/lib/extract-image-from-content";
 import { generateSlug } from "@/lib/slug";
 import { projectServerSchema } from "@/types/validation/project";
@@ -82,14 +83,14 @@ export const DELETE = withRouteHandler<ProjectContext>(
 
     if (project.image) {
       const path = extractPathFromUrl(project.image);
-      if (path) await deleteImage(path);
+      if (path) await removeObjects("projects", [path]);
     }
 
     if (project.images && project.images.length > 0) {
       const galleryPaths = project.images
         .map((url) => extractPathFromUrl(url))
         .filter(Boolean) as string[];
-      if (galleryPaths.length > 0) await deleteMultipleImages(galleryPaths);
+      if (galleryPaths.length > 0) await removeObjects("projects", galleryPaths);
     }
 
     const data = await prisma.project.delete({

@@ -7,7 +7,8 @@ import { requireAdmin } from "@/lib/require-admin";
 import { consumeRateLimit } from "@/lib/login-throttle";
 import { generateUniquePostSlug } from "@/lib/slug";
 import { parseJsonBody, parseSearchParams } from "@/lib/validate";
-import { deleteImage, extractPathFromUrl } from "@/lib/imageUpload";
+import { extractPathFromUrl } from "@/lib/imageUpload";
+import { removeObjects } from "@/lib/storage-server";
 import { deleteImagesFromContent } from "@/lib/extract-image-from-content";
 import {
   adminPostListQuerySchema,
@@ -277,7 +278,7 @@ export function createAdminPostItemHandlers(config: PostTypeConfig) {
       if (existing.coverImage) {
         const coverPath = extractPathFromUrl(existing.coverImage);
         if (coverPath) {
-          await deleteImage(coverPath);
+          await removeObjects("posts", [coverPath]);
         }
       }
 

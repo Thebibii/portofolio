@@ -1,18 +1,7 @@
-import { deleteMultipleImages } from "./imageUpload";
+import { parseImageUrl } from "./imageUpload";
+import { removeObjects } from "./storage-server";
 
-export function parseImageUrl(
-  url: string
-): { bucket: string; path: string } | null {
-  try {
-    const match = url.match(
-      /\/storage\/v1\/object\/public\/([^/]+)\/(.+)$/
-    );
-    if (!match) return null;
-    return { bucket: match[1], path: match[2] };
-  } catch {
-    return null;
-  }
-}
+export { parseImageUrl };
 
 export function extractImagesFromContent(
   contentJson: string
@@ -66,7 +55,7 @@ export async function deleteImagesFromContent(
 
   await Promise.all(
     Object.entries(grouped).map(([bucket, paths]) =>
-      deleteMultipleImages(paths, bucket)
+      removeObjects(bucket, paths)
     )
   );
 }
