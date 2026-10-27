@@ -4,6 +4,7 @@ import { useGetDataAbout } from "@/hooks/react-query/guest/use-query";
 import { formattedDate } from "@/lib/format-date";
 import LoadingState from "@/components/reusable/state/loading-state";
 import { CurrentActivitySkeleton } from "@/components/reusable/skeleton/CurrentActivitySkeleton";
+import AboutHero from "@/components/reusable/about/about-hero";
 import { ExperienceSkeleton } from "@/components/reusable/skeleton/ExperienceSkeleton";
 import { BriefcaseBusiness, CircleHelpIcon, List } from "lucide-react";
 import { toast } from "sonner";
@@ -29,14 +30,15 @@ export default function Page() {
 
   return (
     <div className="space-y-12 font-mono pt-9 pb-12 lg:pt-24 mx-auto w-full max-w-6xl px-6 lg:px-8 xl:px-0">
-      <div className="flex flex-col space-y-8 items-center  mx-auto w-full justify-center">
+      <div className="flex flex-col space-y-28 items-center  mx-auto w-full justify-center">
         <div className="space-y-4 items-center justify-center flex flex-col">
           <header className="text-5xl h1">Tentang Saya</header>
           <p className="transition-colors bg-gradient-to-r from-gray-500/80 via-black to-gray-500/80 bg-clip-text text-transparent">
             Cerita tentang pertumbuhan dan penemuan
           </p>
         </div>
-        <div className="flex flex-col gap-16 md:gap-20 mt-16 w-full">
+        <AboutHero />
+        <div className="flex flex-col gap-16 md:gap-20 w-full">
           <LoadingState
             data={!isLoading && !isError}
             loadingFallback={
