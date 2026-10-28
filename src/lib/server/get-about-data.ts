@@ -35,21 +35,19 @@ export type AboutData = {
 };
 
 /**
- * Data awal halaman /about untuk SSR (SEO): profil hero + pengalaman +
- * aktivitas. Profile dibungkus try/catch supaya halaman tetap tampil kalau
- * tabel about_profiles belum ada di environment tersebut.
+ * Profil saja, tanpa experience/currentActivity — dipakai halaman yang cuma
+ * butuh identitas (mis. hero beranda). Dibungkus try/catch supaya halaman tetap
+ * tampil kalau tabel about_profiles belum ada di environment tersebut.
  */
-export const getAboutData = cache(async (): Promise<AboutData> => {
-  const [experiences, currentActivities] = await Promise.all([
-    prisma.experience.findMany({ orderBy: { startDate: "desc" } }),
-    prisma.currentActivity.findMany({ orderBy: { createdAt: "desc" } }),
-  ]);
+export const getAboutProfile = cache(
+  async (): Promise<AboutProfileData | null> => {
+    try {
+      const row = await prisma.aboutProfile.findUnique({
+        where: { id: "main" },
+      });
+      if (!row) return null;
 
-  let profile: AboutProfileData | null = null;
-  try {
-    const row = await prisma.aboutProfile.findUnique({ where: { id: "main" } });
-    if (row) {
-      profile = {
+      return {
         name: row.name,
         nickname: row.nickname,
         role: row.role,
@@ -59,10 +57,22 @@ export const getAboutData = cache(async (): Promise<AboutData> => {
         photoUrl: row.photoUrl,
         techStack: row.techStack,
       };
+    } catch {
+      return null;
     }
-  } catch {
-    profile = null;
   }
+);
+
+/**
+ * Data awal halaman /about untuk SSR (SEO): profil hero + pengalaman +
+ * aktivitas.
+ */
+export const getAboutData = cache(async (): Promise<AboutData> => {
+  const [experiences, currentActivities, profile] = await Promise.all([
+    prisma.experience.findMany({ orderBy: { startDate: "desc" } }),
+    prisma.currentActivity.findMany({ orderBy: { createdAt: "desc" } }),
+    getAboutProfile(),
+  ]);
 
   return {
     success: true,
