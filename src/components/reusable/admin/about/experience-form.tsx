@@ -202,7 +202,7 @@ function ExperienceItem({
           <Label htmlFor={`experiences.${index}.location`}>Location</Label>
           <Input
             {...register(`experiences.${index}.location`)}
-            placeholder="e.g. Jakarta, Indonesia"
+            placeholder="e.g. Padang Panjang, Indonesia"
           />
         </div>
 

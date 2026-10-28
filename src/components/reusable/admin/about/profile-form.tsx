@@ -264,7 +264,7 @@ export default function ProfileForm({ profile }: ProfileFormProps) {
                     <FormLabel>Lokasi</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="Jakarta, Indonesia"
+                        placeholder="Padang Panjang, Indonesia"
                         {...field}
                         value={field.value ?? ""}
                       />

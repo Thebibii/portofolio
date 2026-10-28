@@ -30,7 +30,7 @@ const DEFAULT_PROFILE: AboutHeroProfile = {
   name: "Habibie Bayezid Wildan",
   nickname: "Bibi",
   role: "Software engineer di ekosistem React",
-  location: "Jakarta, Indonesia",
+  location: "Padang Panjang, Indonesia",
   paragraphs: [
     "Sehari-hari saya membangun antarmuka web dengan React dan ekosistem di sekitarnya dari halaman sederhana sampai dashboard yang penuh data.",
     "Semua ini berawal dari rasa penasaran. Dulu saya hobi membongkar situs orang lain lewat inspect element, mengubah-ubah warnanya, lalu mencoba membangun versi saya sendiri. Ternyata rasa penasaran itu yang akhirnya jadi pekerjaan.",
