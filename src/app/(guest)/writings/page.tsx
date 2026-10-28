@@ -8,7 +8,7 @@ export const revalidate = 3600;
 export const metadata: Metadata = buildListMetadata({
   title: "Tulisan",
   description:
-    "Cerita tentang pertumbuhan dan penemuan — tulisan tentang ide, pemikiran, dan pengalaman.",
+    "Tulisan pendek tentang ide, pemikiran, dan pengalaman sehari-hari.",
   path: "/writings",
 });
 

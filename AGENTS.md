@@ -39,6 +39,23 @@ Create `.env` with `DATABASE_URL`, `DIRECT_URL`, `NEXTAUTH_SECRET`, `NEXT_PUBLIC
   langsung, dipanggil oleh Server Component pages. Pakai `import "server-only"`
   untuk proteksi dari client import. Contoh: `getHomeData` di `get-home-data.ts`.
 
+## Gaya teks (berlaku untuk file baru)
+
+Teks yang tampil ke pengguna tidak memakai em dash (U+2014). Aturan ini berlaku untuk file baru dan baris baru; baris lama yang sudah ada tidak perlu diubah retroaktif.
+
+Pemisah yang dipakai:
+
+- Judul halaman, `<title>`, `openGraph.title`, `twitter.title`: pipe, contoh `"Blog | The Bibi"`
+- Metadata inline dan tanggal: middle dot `·`, contoh `"12 Agustus 2026 · Terakhir diperbarui 12 September 2026"`
+- `alt` dan `aria-label`: koma, contoh `"Judul, foto 2"`
+- Deskripsi dan kalimat: koma, titik dua, atau pecah jadi dua kalimat
+
+Jangan menukar em dash dengan hyphen `-`; yang perlu diperbaiki adalah struktur kalimatnya, bukan karakternya.
+
+Pengecualian yang jangan disentuh: pattern Markdown di `src/components/autoformat-kit.tsx`, berkas di `.agents/skills/**` (vendored, tertimpa saat update), dan arsip `docs/**`. Rentang angka tetap memakai en dash, contoh `Fase 0–5`.
+
+Status per 28 Okt 2026: 16 baris user-facing sudah dibersihkan di 9 file. Sisa 13 kemunculan di `src/` adalah komentar kode, satu pattern autoformat, dan satu dead branch di `src/lib/format-date.ts:52`. Jangan "membersihkan" komentar tanpa diminta.
+
 ## Prisma
 
 ```bash

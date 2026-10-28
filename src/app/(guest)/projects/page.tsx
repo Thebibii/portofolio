@@ -8,7 +8,7 @@ export const revalidate = 3600;
 export const metadata: Metadata = buildListMetadata({
   title: "Projek",
   description:
-    "Jelajahi projek portofolio saya — build unggulan, projek sampingan, dan eksperimen.",
+    "Projek unggulan, projek sampingan, dan eksperimen yang saya bangun.",
   path: "/projects",
 });
 

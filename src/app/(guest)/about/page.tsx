@@ -17,14 +17,14 @@ export const revalidate = 3600;
 
 const FALLBACK_NAME = "Habibie Bayezid Wildan";
 const FALLBACK_DESCRIPTION =
-  "Cerita tentang pertumbuhan dan penemuan — tentang Habibie Bayezid Wildan (The Bibi), developer yang menulis tentang web, React, dan pengalaman membangun produk.";
+  "Tentang Habibie Bayezid Wildan (The Bibi), developer yang menulis tentang web, React, dan pengalaman membangun produk.";
 
 function buildDescription(profile: AboutProfileData | null) {
   if (!profile) return FALLBACK_DESCRIPTION;
 
   const intro = profile.paragraphs?.[0]?.replace(/\s+/g, " ").trim();
   const headline = profile.role
-    ? `${profile.name} — ${profile.role}.`
+    ? `${profile.name}, ${profile.role}.`
     : profile.name;
   const description = [headline, intro].filter(Boolean).join(" ").trim();
 

@@ -24,13 +24,13 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "The Bibi — Portfolio",
+    default: "The Bibi | Portfolio",
     template: "%s | The Bibi",
   },
   description: "Portofolio pribadi Habibie Bayezid Wildan (The Bibi), menampilkan projek, blog, dan tulisan",
   applicationName: "The Bibi",
   openGraph: {
-    title: "The Bibi — Portfolio",
+    title: "The Bibi | Portfolio",
     description: "Portofolio pribadi Habibie Bayezid Wildan (The Bibi), menampilkan projek, blog, dan tulisan",
     url: SITE_URL,
     siteName: "The Bibi",
@@ -47,7 +47,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "The Bibi — Portfolio",
+    title: "The Bibi | Portfolio",
     description: "Portofolio pribadi Habibie Bayezid Wildan (The Bibi), menampilkan projek, blog, dan tulisan",
     images: ["/profile.png"],
   },

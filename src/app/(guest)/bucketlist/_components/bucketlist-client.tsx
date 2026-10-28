@@ -199,7 +199,7 @@ export default function BucketlistClient({ items }: Props) {
                 >
                   <Image
                     src={activeSrc}
-                    alt={`${activeItem.title} — foto ${activeIndex + 1}`}
+                    alt={`${activeItem.title}, foto ${activeIndex + 1}`}
                     width={1600}
                     height={1200}
                     sizes="(min-width: 1024px) 896px, 100vw"
@@ -309,12 +309,12 @@ function ThumbnailStrip({
             key={src + i}
             type="button"
             onClick={() => onOpen(i)}
-            aria-label={`Buka foto ${i + 1} dari ${images.length} — ${title}`}
+            aria-label={`Buka foto ${i + 1} dari ${images.length}, ${title}`}
             className="group/thumb relative h-11 w-16 shrink-0 overflow-hidden rounded-md border border-border/70 bg-muted/40 transition-colors duration-200 hover:border-foreground/30 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none md:h-14 md:w-20"
           >
             <Image
               src={src}
-              alt={`${title} — foto ${i + 1}`}
+              alt={`${title}, foto ${i + 1}`}
               fill
               sizes="(min-width: 768px) 80px, 64px"
               className="object-cover transition-transform duration-300 group-hover/thumb:scale-[1.04]"

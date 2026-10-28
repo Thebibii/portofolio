@@ -1,14 +1,15 @@
 import type { Metadata } from "next";
 import { absoluteUrl } from "@/lib/seo/site";
 
+const DESCRIPTION =
+  "Buku tamu untuk berbagi pemikiran, masukan, atau sekadar menyapa.";
+
 export const metadata: Metadata = {
   title: "Buku Tamu",
-  description:
-    "Tinggalkan pesan — buku tamu untuk pengunjung berbagi pemikiran, masukan, atau sekadar menyapa.",
+  description: DESCRIPTION,
   openGraph: {
     title: "Buku Tamu | The Bibi",
-    description:
-      "Tinggalkan pesan — buku tamu untuk pengunjung berbagi pemikiran, masukan, atau sekadar menyapa.",
+    description: DESCRIPTION,
   },
   alternates: {
     canonical: absoluteUrl("/guestbook"),

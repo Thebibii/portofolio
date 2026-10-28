@@ -8,7 +8,7 @@ export const revalidate = 60;
 export const metadata: Metadata = buildListMetadata({
   title: "Daftar Impian",
   description:
-    "Daftar impian saya — hal yang ingin dilakukan, tempat yang ingin didatangi, dan mimpi yang sudah tercapai.",
+    "Daftar impian: hal yang ingin dilakukan, tempat yang ingin didatangi, dan mimpi yang sudah tercapai.",
   path: "/bucketlist",
 });
 
