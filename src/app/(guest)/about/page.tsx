@@ -1,151 +1,95 @@
-"use client";
-import { useEffect } from "react";
-import { useGetDataAbout } from "@/hooks/react-query/guest/use-query";
-import { formattedDate } from "@/lib/format-date";
-import LoadingState from "@/components/reusable/state/loading-state";
-import { CurrentActivitySkeleton } from "@/components/reusable/skeleton/CurrentActivitySkeleton";
-import AboutHero from "@/components/reusable/about/about-hero";
-import { ExperienceSkeleton } from "@/components/reusable/skeleton/ExperienceSkeleton";
-import { BriefcaseBusiness, CircleHelpIcon, List } from "lucide-react";
-import { toast } from "sonner";
+import type { Metadata } from "next";
+import JsonLd from "@/components/seo/json-ld";
+import { breadcrumbSchema, personSchema } from "@/components/seo/schemas";
+import AboutClient from "./_components/about-client";
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+  getAboutData,
+  type AboutProfileData,
+} from "@/lib/server/get-about-data";
+import {
+  absoluteUrl,
+  DEFAULT_OG_IMAGE,
+  SITE_NAME,
+  SITE_URL,
+} from "@/lib/seo/site";
 
-export default function Page() {
-  const { data, isLoading, isError, error } = useGetDataAbout();
+export const revalidate = 3600;
 
-  // Toasting during render fired on every re-render; run it once per error.
-  useEffect(() => {
-    if (!isError || !error) return;
+const FALLBACK_NAME = "Habibie Bayezid Wildan";
+const FALLBACK_DESCRIPTION =
+  "Cerita tentang pertumbuhan dan penemuan — tentang Habibie Bayezid Wildan (The Bibi), developer yang menulis tentang web, React, dan pengalaman membangun produk.";
 
-    toast.error("Gagal memuat data", {
-      description: error.message,
-      id: "about-error",
-    });
-  }, [isError, error]);
+function buildDescription(profile: AboutProfileData | null) {
+  if (!profile) return FALLBACK_DESCRIPTION;
+
+  const intro = profile.paragraphs?.[0]?.replace(/\s+/g, " ").trim();
+  const headline = profile.role
+    ? `${profile.name} — ${profile.role}.`
+    : profile.name;
+  const description = [headline, intro].filter(Boolean).join(" ").trim();
+
+  if (!description) return FALLBACK_DESCRIPTION;
+  return description.length > 160
+    ? `${description.slice(0, 157).trimEnd()}...`
+    : description;
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  const { data } = await getAboutData();
+  const profile = data.profile;
+  const description = buildDescription(profile);
+  const title = "Tentang Saya";
+  const pageTitle = `${title} | ${SITE_NAME}`;
+  const image = profile?.photoUrl || null;
+
+  return {
+    title,
+    description,
+    alternates: { canonical: absoluteUrl("/about") },
+    openGraph: {
+      type: "profile",
+      title: pageTitle,
+      description,
+      url: absoluteUrl("/about"),
+      images: image
+        ? [{ url: image, alt: `Foto ${profile?.name ?? FALLBACK_NAME}` }]
+        : [DEFAULT_OG_IMAGE],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: pageTitle,
+      description,
+      images: image ? [image] : ["/profile.png"],
+    },
+  };
+}
+
+export default async function AboutPage() {
+  const initialData = await getAboutData();
+  const profile = initialData.data.profile;
+  const description = buildDescription(profile);
 
   return (
-    <div className="space-y-12 font-mono pt-9 pb-12 lg:pt-24 mx-auto w-full max-w-6xl px-6 lg:px-8 xl:px-0">
-      <div className="flex flex-col space-y-28 items-center  mx-auto w-full justify-center">
-        <div className="space-y-4 items-center justify-center flex flex-col">
-          <header className="text-5xl h1">Tentang Saya</header>
-          <p className="transition-colors bg-gradient-to-r from-gray-500/80 via-black to-gray-500/80 bg-clip-text text-transparent">
-            Cerita tentang pertumbuhan dan penemuan
-          </p>
-        </div>
-        <AboutHero profile={data?.data?.profile} />
-        <div className="flex flex-col gap-16 md:gap-20 w-full">
-          <LoadingState
-            data={!isLoading && !isError}
-            loadingFallback={
-              <div className="flex flex-col gap-16">
-                <CurrentActivitySkeleton />
-                <ExperienceSkeleton />
-              </div>
-            }
-          >
-            {data?.data?.currentActivity?.length > 0 && (
-              <div className="flex flex-col gap-6">
-                <div className="flex items-center justify-center flex-col gap-2">
-                  <div className="relative">
-                    <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-gray-300 via-gray-400 to-gray-300" />
-                    <div className="relative size-11 rounded-xl flex items-center justify-center bg-gray-100/95 backdrop-blur-md m-[1px]">
-                      <CircleHelpIcon
-                        className="size-[45%] text-muted-foreground"
-                        strokeWidth={1.3}
-                      />
-                    </div>
-                  </div>
-                  <h2 className="text-center">Aktivitas Saat Ini</h2>
-                </div>
-                {data?.data?.currentActivity?.map((item: any, idx: number) => (
-                  <div
-                    className="grid gap-4 md:grid-cols-[260px_1fr] w-full md:gap-8"
-                    key={idx}
-                  >
-                    <p className="tracking-wide uppercase self-start py-2 -mt-1 text-sm font-semibold">
-                      {idx + 1}. {item.title}
-                    </p>
-                    <div>
-                      <p className="text-sm text-muted-foreground whitespace-pre-line">
-                        {item.content}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            <div className="flex items-center justify-center flex-col gap-2">
-              <div className="relative">
-                <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-gray-300 via-gray-400 to-gray-300" />
-                <div className="relative size-11 rounded-xl flex items-center justify-center bg-gray-100/95 backdrop-blur-md m-[1px]">
-                  <BriefcaseBusiness
-                    className="size-[45%] text-muted-foreground"
-                    strokeWidth={1.3}
-                  />
-                </div>
-              </div>
-              <h2 className="text-center">Pengalaman</h2>
-            </div>
-
-            {data?.data?.experiences?.map((e: any, _: any) => (
-              <div
-                className="grid gap-4 md:grid-cols-[260px_1fr] w-full md:gap-8"
-                key={_}
-              >
-                <p className="tracking-wide uppercase self-start py-2 -mt-1 text-sm font-semibold">
-                  <span>
-                    {formattedDate(e.startDate, "default", "MMM yyyy")}
-                  </span>
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <span className="cursor-default">{" - "}</span>
-                      </TooltipTrigger>
-                      {e.duration && (
-                        <TooltipContent>
-                          <p>{e.duration}</p>
-                        </TooltipContent>
-                      )}
-                    </Tooltip>
-                  </TooltipProvider>
-                  <span>
-                    {e.endDate
-                      ? formattedDate(e.endDate, "default", "MMM yyyy")
-                      : "SEKARANG"}
-                  </span>
-                </p>
-                <div>
-                  <div className="space-y-4">
-                    <div className="space-y-1">
-                      <h3 className="font-semibold">{e.position}</h3>
-                      <p className="text-sm flex items-center gap-1.5">
-                        <span className="text-secondary-foreground/70 font-semibold">
-                          {e.company}
-                        </span>
-                        <span className="text-muted-foreground">
-                          {" "}
-                          - {e.location}
-                        </span>
-                      </p>
-                    </div>
-                    {e.description && (
-                      <p className="text-sm text-muted-foreground whitespace-pre-line">
-                        {e.description}
-                      </p>
-                    )}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </LoadingState>
-        </div>
-      </div>
-    </div>
+    <>
+      <JsonLd
+        schema={personSchema({
+          name: profile?.name ?? FALLBACK_NAME,
+          url: absoluteUrl("/about"),
+          image: profile?.photoUrl || `${SITE_URL}/profile.png`,
+          jobTitle: profile?.role || "Developer",
+          description,
+          sameAs: [],
+        })}
+      />
+      <JsonLd
+        schema={breadcrumbSchema({
+          items: [
+            { name: "Beranda", url: SITE_URL },
+            { name: "Tentang", url: absoluteUrl("/about") },
+          ],
+        })}
+      />
+      <AboutClient initialData={initialData} />
+    </>
   );
 }

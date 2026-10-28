@@ -3,6 +3,7 @@ import prisma from "@/lib/prisma";
 import { requireAdmin } from "@/lib/require-admin";
 import { parseJsonBody } from "@/lib/validate";
 import { aboutProfileSchema } from "@/types/validation/about";
+import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 
 const PROFILE_ID = "main";
@@ -42,6 +43,9 @@ export const PUT = withRouteHandler("admin/about/profile", async (req) => {
     update: payload,
     create: { id: PROFILE_ID, ...payload },
   });
+
+  // Halaman /about di-cache (revalidate 3600); segarkan setelah profil berubah.
+  revalidatePath("/about");
 
   return NextResponse.json({ success: true, data });
 });

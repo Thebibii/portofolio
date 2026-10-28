@@ -16,7 +16,7 @@ export const useGetDataHome = () => {
   });
 };
 
-export const useGetDataAbout = () => {
+export const useGetDataAbout = (initialData?: unknown) => {
   return useQuery({
     queryKey: ["get.guest.about"],
     queryFn: async () => {
@@ -26,5 +26,7 @@ export const useGetDataAbout = () => {
       if (!res.ok) throw new Error(data.error);
       return data;
     },
+    // Data dari Server Component dipakai sebagai isi awal (SEO + no spinner).
+    initialData: initialData as any,
   });
 };
