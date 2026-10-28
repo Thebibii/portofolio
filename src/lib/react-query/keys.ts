@@ -41,6 +41,7 @@ export const guestPostLikedKey = <T extends PostSlug>(
 export const qk = {
   admin: {
     about: ["get.admin.about"] as const,
+    aboutProfile: ["get.admin.about-profile"] as const,
     dashboard: ["get.admin.dashboard"] as const,
     categories: ["get.admin.category"] as const,
     tags: ["get.admin.tag"] as const,

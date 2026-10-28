@@ -258,6 +258,23 @@ model LoginThrottle {
 }
 
 
+// Profil hero halaman /about. Hanya satu baris (id = "main").
+model AboutProfile {
+  id         String   @id @default("main")
+  name       String
+  nickname   String
+  role       String?
+  location   String?
+  paragraphs String[] @default([])
+  stackLine  String
+  photoUrl   String?
+  techStack  String[] @default([])
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@map("about_profiles")
+}
+
 enum PostStatus {
   DRAFT
   PUBLISHED

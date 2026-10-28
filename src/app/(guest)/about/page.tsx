@@ -37,7 +37,7 @@ export default function Page() {
             Cerita tentang pertumbuhan dan penemuan
           </p>
         </div>
-        <AboutHero />
+        <AboutHero profile={data?.data?.profile} />
         <div className="flex flex-col gap-16 md:gap-20 w-full">
           <LoadingState
             data={!isLoading && !isError}

@@ -10,15 +10,24 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
+export type AboutHeroProfile = {
+  name: string;
+  nickname: string;
+  role?: string | null;
+  location?: string | null;
+  paragraphs: string[];
+  stackLine: string;
+  photoUrl?: string | null;
+  techStack: string[];
+};
+
 /**
- * Semua teks di bawah ini ditulis manual (hardcoded) — tidak ambil dari
- * database. Cukup edit objek ini kalau mau ganti nama, peran, kota,
- * atau ceritanya.
+ * Fallback dipakai kalau profil dari database belum diisi (profile = null).
+ * Teks Indonesia di bawah ini sengaja dipertahankan sebagai default.
  */
-const heroContent = {
+const DEFAULT_PROFILE: AboutHeroProfile = {
   name: "Habibie Bayezid Wildan",
   nickname: "Bibi",
-  // Placeholder: silakan sesuaikan peran & kota.
   role: "Software engineer di ekosistem React",
   location: "Jakarta, Indonesia",
   paragraphs: [
@@ -29,19 +38,29 @@ const heroContent = {
   ],
   stackLine:
     "Saya juga seorang full-stack engineer, berikut tech stack favorit saya saat ini:",
+  techStack: ["nextjs", "nodejs", "typescript", "tailwind", "react", "vercel"],
 };
 
 // Urutan logo mengikuti baris di atas.
-const techStack = [
-  { name: "Next.js", Icon: Icons.Nextjs },
-  { name: "Node.js", Icon: Icons.Nodejs },
-  { name: "TypeScript", Icon: Icons.TypeScript },
-  { name: "Tailwind CSS", Icon: Icons.Tailwind },
-  { name: "React", Icon: Icons.React },
-  { name: "Vercel", Icon: Icons.Vercel },
-];
+const TECH_STACK = [
+  { key: "nextjs", name: "Next.js", Icon: Icons.Nextjs },
+  { key: "nodejs", name: "Node.js", Icon: Icons.Nodejs },
+  { key: "typescript", name: "TypeScript", Icon: Icons.TypeScript },
+  { key: "tailwind", name: "Tailwind CSS", Icon: Icons.Tailwind },
+  { key: "react", name: "React", Icon: Icons.React },
+  { key: "vercel", name: "Vercel", Icon: Icons.Vercel },
+] as const;
 
-export default function AboutHero() {
+export default function AboutHero({
+  profile,
+}: {
+  profile?: AboutHeroProfile | null;
+}) {
+  const content = profile ?? DEFAULT_PROFILE;
+  const selectedTechStack = content.techStack?.length
+    ? TECH_STACK.filter(({ key }) => content.techStack.includes(key))
+    : TECH_STACK;
+
   const reduceMotion = useReducedMotion();
 
   const container: Variants = {
@@ -69,7 +88,7 @@ export default function AboutHero() {
         variants={container}
         initial="hidden"
         animate="show"
-        className="grid w-full items-center gap-14 md:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] md:gap-10 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.35fr)] lg:gap-16"
+        className="grid w-full items-center gap-12 md:grid-cols-[260px_minmax(0,1fr)] md:gap-16 lg:grid-cols-[300px_minmax(0,1fr)] lg:gap-28"
       >
         {/* Cetakan foto + klip kertas */}
         <motion.div
@@ -77,12 +96,18 @@ export default function AboutHero() {
           className="flex items-center justify-center lg:justify-start"
         >
           <div className="relative w-full max-w-[248px] sm:max-w-[300px] md:max-w-[260px] lg:max-w-[300px]">
-            {/* kertas foto: bingkai putih, sedikit miring seperti diletakkan di meja */}
-            <div className="group relative rotate-[2.5deg] bg-[#f7f5f0] p-3 pb-0 shadow-[0_22px_45px_-24px_rgba(0,0,0,0.55)] ring-1 ring-black/10 transition-transform duration-500 ease-out hover:rotate-0">
+            {/* cetakan kedua di belakang: hanya tepi kertas yang menyembul di atas & kiri */}
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute -top-1.5 -left-1.5 right-1.5 bottom-1.5 -rotate-[1deg] bg-[#1a1a1a] shadow-[0_10px_20px_-14px_rgba(0,0,0,0.7)] ring-1 ring-white/10"
+            />
+
+            {/* kertas foto: bingkai hitam, sedikit miring seperti diletakkan di meja */}
+            <div className="group relative rotate-[2.5deg] bg-neutral-950 p-3 pb-0 shadow-[0_22px_45px_-24px_rgba(0,0,0,0.55)] ring-1 ring-white/10 transition-transform duration-500 ease-out hover:rotate-0 dark:ring-white/20">
               <div className="relative aspect-[4/5] overflow-hidden bg-neutral-200">
                 <Image
-                  src="/profile.png"
-                  alt={`Foto ${heroContent.name}`}
+                  src={profile?.photoUrl || "/profile.png"}
+                  alt={`Foto ${content.name}`}
                   fill
                   priority
                   sizes="(min-width: 1024px) 300px, (min-width: 768px) 260px, 280px"
@@ -91,7 +116,7 @@ export default function AboutHero() {
               </div>
 
               <div className="flex h-[88px] items-end px-1 pb-4">
-                <Signature className="h-auto w-[108px] text-neutral-800" />
+                <Signature className="h-auto w-[108px] text-neutral-100" />
               </div>
 
               {/* klip binder di tengah atas, menjepit tepi kertas */}
@@ -109,7 +134,7 @@ export default function AboutHero() {
               id="about-hero-name"
               className="text-[2.25rem] leading-[1.05] font-bold tracking-tight sm:text-5xl"
             >
-              {heroContent.name}
+              {content.name}
             </h1>
             {/* <p className="text-sm text-muted-foreground sm:text-base">
               {heroContent.role}
@@ -123,25 +148,25 @@ export default function AboutHero() {
             </p> */}
           </div>
 
-          <div className="space-y-4 text-sm leading-relaxed text-muted-foreground sm:text-[15px]">
+          <div className="space-y-4 text-sm leading-relaxed text-foreground/85 sm:text-[15px]">
             <p className="text-foreground">
-              Halo, saya {heroContent.nickname}.
+              Halo, saya {content.nickname}.
             </p>
-            {heroContent.paragraphs.map((paragraph) => (
+            {content.paragraphs.map((paragraph) => (
               <p key={paragraph}>{paragraph}</p>
             ))}
           </div>
 
           <div className="flex flex-col gap-5">
             <p className="max-w-[52ch] text-sm text-foreground/80">
-              {heroContent.stackLine}
+              {content.stackLine}
             </p>
             <TooltipProvider>
               <ul
                 aria-label="Tech stack favorit"
                 className="flex flex-wrap items-center gap-x-7 gap-y-4"
               >
-                {techStack.map(({ name, Icon }) => (
+                {selectedTechStack.map(({ name, Icon }) => (
                   <li key={name}>
                     <Tooltip>
                       <TooltipTrigger asChild>

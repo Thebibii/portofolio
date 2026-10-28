@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/card";
 import { useAdminAbout } from "@/hooks/react-query/admin/about/use-query";
 import { CurrentActivity, Experience } from "@prisma/client";
-import { Activity, Briefcase, Plus } from "lucide-react";
+import { Activity, Briefcase, Plus, Sparkles } from "lucide-react";
 import Link from "next/link";
 
 export default function Page() {
@@ -58,6 +58,31 @@ export default function Page() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Hero Profile */}
+      <Card className="overflow-hidden border-primary/20 bg-gradient-to-br from-primary/[0.07] via-background to-background">
+        <CardContent className="flex flex-col gap-5 p-6 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-start gap-4">
+            <div className="flex size-11 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary ring-1 ring-primary/20">
+              <Sparkles className="size-5" />
+            </div>
+            <div className="space-y-1">
+              <h3 className="text-lg font-semibold text-foreground">
+                Hero Profile
+              </h3>
+              <p className="text-sm text-muted-foreground">
+                Manage the intro shown at the top of /about
+              </p>
+            </div>
+          </div>
+          <Button asChild className="w-full sm:w-auto">
+            <Link href="/admin/about/profile">
+              <Sparkles className="size-4" />
+              Manage Hero Profile
+            </Link>
+          </Button>
+        </CardContent>
+      </Card>
 
       {/* Quick Actions */}
       <div className="grid md:grid-cols-2 gap-6">

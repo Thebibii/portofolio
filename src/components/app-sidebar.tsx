@@ -71,6 +71,10 @@ const data = {
           url: "/admin/about/experiences",
         },
         {
+          title: "Hero Profile",
+          url: "/admin/about/profile",
+        },
+        {
           title: "Current Activity",
           url: "/admin/about/current-activities",
         },
