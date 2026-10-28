@@ -245,7 +245,7 @@ export default function ProfileForm({ profile }: ProfileFormProps) {
                     <FormLabel>Role/peran</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="Software engineer di ekosistem React"
+                        placeholder="Web Developer"
                         {...field}
                         value={field.value ?? ""}
                       />

@@ -18,7 +18,7 @@ export type HomeHeroProfile = {
 const DEFAULT_PROFILE: HomeHeroProfile = {
   name: "Habibie Bayezid Wildan",
   nickname: "Bibi",
-  role: "Software engineer di ekosistem React",
+  role: "Web Developer",
   paragraphs: [
     "Sehari-hari saya membangun antarmuka web dengan React dan ekosistem di sekitarnya dari halaman sederhana sampai dashboard yang penuh data.",
   ],
