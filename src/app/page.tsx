@@ -3,6 +3,7 @@ import JsonLd from "@/components/seo/json-ld";
 import { personSchema, websiteSchema } from "@/components/seo/schemas";
 import HomeClient from "@/components/home/home-client";
 import { getHomeData } from "@/lib/server/get-home-data";
+import { getAboutProfile } from "@/lib/server/get-about-data";
 import { SITE_URL } from "@/lib/seo/site";
 
 const baseUrl = SITE_URL;
@@ -33,7 +34,10 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const { projects, blogs } = await getHomeData();
+  const [{ projects, blogs }, profile] = await Promise.all([
+    getHomeData(),
+    getAboutProfile(),
+  ]);
 
   return (
     <>
@@ -55,7 +59,7 @@ export default async function HomePage() {
           searchUrl: `${baseUrl}/search?q={search_term_string}`,
         })}
       />
-      <HomeClient projects={projects} blogs={blogs} />
+      <HomeClient projects={projects} blogs={blogs} profile={profile} />
     </>
   );
 }

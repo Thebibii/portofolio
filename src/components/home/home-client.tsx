@@ -1,5 +1,8 @@
 "use client";
 import { AnimatedGridPattern } from "@/components/magicui/animated-grid-pattern";
+import HomeHero, {
+  type HomeHeroProfile,
+} from "@/components/reusable/home/home-hero";
 import FeaturedSection from "@/components/reusable/home/featured-section";
 import Footer from "@/components/reusable/home/footer";
 import Navbar from "@/components/reusable/navbar";
@@ -9,9 +12,10 @@ import { Fragment } from "react";
 type Props = {
   projects: any[];
   blogs: any[];
+  profile: HomeHeroProfile | null;
 };
 
-export default function HomeClient({ projects, blogs }: Props) {
+export default function HomeClient({ projects, blogs, profile }: Props) {
   return (
     <Fragment>
       <AnimatedGridPattern
@@ -25,6 +29,7 @@ export default function HomeClient({ projects, blogs }: Props) {
       />
       <Navbar />
       <main className="">
+        <HomeHero profile={profile} />
         <FeaturedSection
           data={{ projects, blogs }}
           isLoadingError={true}

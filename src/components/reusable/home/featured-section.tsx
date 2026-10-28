@@ -25,10 +25,10 @@ export default function FeaturedSection({
     <div className="mx-auto w-full max-w-6xl px-4 xl:px-0 font-mono">
       <section className="space-y-6 pt-9 pb-10 lg:pt-12 w-full">
         <header className="space-y-4">
-          <h1 className="h1">
+          <h2 className="h1">
             Projek{" "}
             <span className="underline-offset-1 underline">Unggulan</span>
-          </h1>
+          </h2>
           <p className="text-neutral-500 italic">
             Projek unggulan dengan perhatian penuh dan tujuan jangka panjang.
           </p>
@@ -62,9 +62,9 @@ export default function FeaturedSection({
       </section>
       <section className="lg:py-24 py-10 space-y-6">
         <header className="space-y-4">
-          <h1 className="font-bold tracking-tight font-mono text-4xl sm:text-5xl">
+          <h2 className="h1">
             Blog             <span className="underline-offset-1 underline">Unggulan</span>
-          </h1>
+          </h2>
           <p className="text-neutral-500 italic ">
             Artikel dan ide mendalam yang layak dibaca.
           </p>
