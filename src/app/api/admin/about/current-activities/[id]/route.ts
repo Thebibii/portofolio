@@ -2,6 +2,7 @@ import prisma from "@/lib/prisma";
 import { requireAdmin } from "@/lib/require-admin";
 import { withRouteHandler } from "@/lib/api-handler";
 import { parseId } from "@/lib/validate";
+import { revalidateAboutPage } from "@/lib/server/revalidate-about";
 import { NextResponse } from "next/server";
 
 type Context = { params: Promise<{ id: string }> };
@@ -27,6 +28,8 @@ export const DELETE = withRouteHandler<Context>(
       where: { id: idNumber },
       select: { id: true },
     });
+
+    revalidateAboutPage();
 
     return NextResponse.json(
       { data, message: "Data deleted successfully", success: true },

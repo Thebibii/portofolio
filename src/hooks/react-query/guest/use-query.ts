@@ -28,5 +28,8 @@ export const useGetDataAbout = (initialData?: unknown) => {
     },
     // Data dari Server Component dipakai sebagai isi awal (SEO + no spinner).
     initialData: initialData as any,
+    // initialData berasal dari snapshot ISR yang bisa berumur sampai satu jam.
+    // Tandai sudah usang supaya browser tetap ambil data baru saat mount.
+    initialDataUpdatedAt: 0,
   });
 };

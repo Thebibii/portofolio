@@ -2,6 +2,7 @@ import prisma from "@/lib/prisma";
 import { requireAdmin } from "@/lib/require-admin";
 import { withRouteHandler } from "@/lib/api-handler";
 import { parseId } from "@/lib/validate";
+import { revalidateAboutPage } from "@/lib/server/revalidate-about";
 import { NextRequest, NextResponse } from "next/server";
 
 export const POST = withRouteHandler("admin/about/experiences", async (req: NextRequest) => {
@@ -73,5 +74,7 @@ export const POST = withRouteHandler("admin/about/experiences", async (req: Next
   );
 
   // return NextResponse.json({ success: true, data: "as" });
+  revalidateAboutPage();
+
   return NextResponse.json({ success: true, data: results });
 });
