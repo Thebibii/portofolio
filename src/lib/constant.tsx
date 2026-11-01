@@ -21,10 +21,11 @@ export const NavList = [
 
 /**
  * URL CV untuk link "Resume (CV)" di hero beranda.
- * Sengaja dikosongkan sementara — selama string ini kosong, item-nya dirender
- * sebagai teks nonaktif (bukan link rusak). Isi dengan URL CV asli kalau sudah siap.
+ * Mengarah ke PDF di Google Drive (akses publik, link view). Kalau string ini
+ * dikosongkan lagi, item-nya balik jadi teks nonaktif, bukan link rusak.
  */
-export const RESUME_URL = "";
+export const RESUME_URL =
+  "https://drive.google.com/file/d/1kaqxdSkRxnJS0IqfmibwmX2dJWxYgOjg/view";
 
 export const SocialMediaList = [
   {
