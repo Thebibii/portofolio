@@ -33,9 +33,9 @@ export default function AboutClient({ initialData }: { initialData: AboutData })
   return (
     <div className="space-y-12 font-mono pt-9 pb-12 lg:pt-24 mx-auto w-full max-w-6xl px-6 lg:px-8 xl:px-0">
       <div className="flex flex-col space-y-28 items-center  mx-auto w-full justify-center">
-        <div className="space-y-4 items-center justify-center flex flex-col">
-          <header className="text-5xl h1">Tentang Saya</header>
-          <p className="transition-colors bg-gradient-to-r from-gray-500/80 via-black to-gray-500/80 bg-clip-text text-transparent">
+        <div className="space-y-4 items-center justify-center flex flex-col text-center">
+          <header className="h1">Tentang Saya</header>
+          <p className="transition-colors text-pretty leading-snug bg-gradient-to-r from-gray-500/80 via-black to-gray-500/80 bg-clip-text text-transparent">
             Cerita tentang pertumbuhan dan penemuan
           </p>
         </div>

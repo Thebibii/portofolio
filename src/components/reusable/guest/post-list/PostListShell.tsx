@@ -110,9 +110,9 @@ export default function PostListShell({
   return (
     <div className="space-y-12 font-mono pt-9 pb-12 lg:pt-24 mx-auto w-full max-w-6xl px-6 lg:px-8 xl:px-0">
       <div className="flex flex-col space-y-8 items-center max-w-3xl mx-auto w-full justify-center">
-        <div className="space-y-4 items-center justify-center flex flex-col">
+        <div className="space-y-4 items-center justify-center flex flex-col text-center">
           <header className="text-5xl h1">{config.listHeading}</header>
-          <p className="transition-colors bg-gradient-to-r from-gray-500/80 via-black to-gray-500/80 bg-clip-text text-transparent">
+          <p className="transition-colors leading-snug bg-gradient-to-r from-gray-500/80 via-black to-gray-500/80 bg-clip-text text-transparent">
             {config.listDescription}
           </p>
         </div>

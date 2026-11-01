@@ -61,12 +61,11 @@ export default function BucketlistClient({ items }: Props) {
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, ease: "easeOut" }}
-          className="space-y-4 items-center justify-center flex flex-col"
+          className="space-y-4 items-center justify-center flex flex-col text-center"
         >
-          <h1 className="text-5xl h1">Daftar Impian</h1>
-          <p className="transition-colors bg-gradient-to-r from-gray-500/80 via-black to-gray-500/80 bg-clip-text text-transparent">
-            Daftar hal yang ingin saya lakukan dan miliki, setidaknya sekali
-            dalam hidup.
+          <h1 className="h1 text-balance">Daftar Impian</h1>
+          <p className="transition-colors text-pretty leading-snug bg-gradient-to-r from-gray-500/80 via-black to-gray-500/80 bg-clip-text text-transparent">
+            Hal yang ingin saya lakukan dan miliki.
           </p>
         </motion.header>
 
